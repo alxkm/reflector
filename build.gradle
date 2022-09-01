@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'org.reflector'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+allprojects {
+    project.ext {
+        sl4jVersion = '2.0.0'
+        junitVersion = '5.8.1'
+    }
+}
+
+dependencies {
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: sl4jVersion
+    testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: sl4jVersion, ext: 'pom'
+
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
+    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+}
+
+test {
+    useJUnitPlatform()
+}
