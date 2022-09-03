@@ -19,13 +19,62 @@ import java.util.List;
 import java.util.Stack;
 import java.util.function.Predicate;
 
+/**
+ *
+ * Simple utility class for working with the reflection API
+ *
+ */
 public final class ReflectionUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
 
     /**
      * The private constructor of {@link ReflectionUtils}.
-     */
+     * */
     private ReflectionUtils() {
+    }
+
+    public static String getClassFullName(Object obj) {
+        return obj.getClass().getName();
+    }
+
+    public static String getClassCanonicalName(Object obj) {
+        return obj.getClass().getCanonicalName();
+    }
+
+    public static String getClassSimpleName(Object obj) {
+        return obj.getClass().getSimpleName();
+    }
+
+    public static String getPackage(Object obj) {
+        return obj.getClass().getPackage().getName();
+    }
+
+    public static String getClassFullNameByClass(Class<?> clazz) {
+        return clazz.getName();
+    }
+
+    public static String getClassCanonicalNameByClass(Class<?> clazz) {
+        return clazz.getCanonicalName();
+    }
+
+    public static String getClassSimpleNameByClass(Class<?> clazz) {
+        return clazz.getSimpleName();
+    }
+
+    public static String getPackageByClass(Class<?> clazz) {
+        return clazz.getPackage().getName();
+    }
+
+    public static String getSuperClassName(Object obj) {
+        return obj.getClass().getSuperclass().getName();
+    }
+
+    public static String getSuperClassNameByClass(Class<?> clazz) {
+        return clazz.getSuperclass().getName();
+    }
+
+    public static Class<?> getSuperClass(Object obj) {
+        return obj.getClass().getSuperclass();
     }
 
     public static void clearUnselectedFields(final Object object, final Collection<String> fields) {

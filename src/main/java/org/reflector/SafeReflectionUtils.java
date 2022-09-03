@@ -2,7 +2,16 @@ package org.reflector;
 
 import java.util.Optional;
 
+/**
+ *
+ * Simple wrapper for utility class for working with the reflection API
+ *
+ */
 public final class SafeReflectionUtils {
+
+    /**
+     * The private constructor of {@link ReflectionUtils}.
+     * */
     private SafeReflectionUtils() {}
 
     public static <T> Optional<T> readField(Object object, String fieldName) {
