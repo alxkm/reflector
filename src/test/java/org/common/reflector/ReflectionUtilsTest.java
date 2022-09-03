@@ -9,12 +9,65 @@ import org.reflector.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ReflectionUtilsTest {
+
+    @Test
+    public void getAllClassNamesTest() {
+        Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        assertAll("classNames",
+                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtils.getClassSimpleName(obj)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassFullName(obj)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassCanonicalName(obj))
+        );
+    }
+
+    @Test
+    public void getPackageNameTest() {
+        Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        assertEquals("org.common.reflector.data", ReflectionUtils.getPackage(obj));
+    }
+
+    @Test
+    public void getSuperClassNameTest() {
+        CustomTestInvokeClass obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        assertEquals("java.lang.Object", ReflectionUtils.getSuperClassName(obj));
+    }
+
+    @Test
+    public void getSuperClassTest() {
+        CustomTestInvokeClass obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        assertEquals(Object.class, ReflectionUtils.getSuperClass(obj));
+    }
+
+    @Test
+    public void getAllClassNamesByClassTest() {
+        assertAll("classNames",
+                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtils.getClassSimpleNameByClass(CustomTestInvokeClass.class)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassFullNameByClass(CustomTestInvokeClass.class)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassCanonicalNameByClass(CustomTestInvokeClass.class))
+        );
+    }
+
+    @Test
+    public void getPackageNameByClassTest() {
+        assertEquals("org.common.reflector.data", ReflectionUtils.getPackageByClass(CustomTestInvokeClass.class));
+    }
+
+    @Test
+    public void getSuperClassNameByClassTest() {
+        assertEquals("java.lang.Object", ReflectionUtils.getSuperClassNameByClass(CustomTestInvokeClass.class));
+    }
+
+    @Test
+    public void getSuperClassFoClassTest() {
+        assertEquals(Object.class, ReflectionUtils.getSuperClass(CustomTestInvokeClass.class));
+    }
 
     @Test
     void getAllPrivateFieldsTest() {
@@ -119,7 +172,11 @@ public class ReflectionUtilsTest {
         entry.setValue("entryValue");
         entry.setInfo("entryInfo");
 
-        ReflectionUtils.clearUnselectedFields(entry, List.of("key", "value"));
+        List<String> valuesList = new ArrayList<>();
+        valuesList.add("key");
+        valuesList.add("value");
+
+        ReflectionUtils.clearUnselectedFields(entry, valuesList);
 
         assertAll("classMultipleParametersInstance",
                 () -> assertEquals(entry.getInfo(), null),
@@ -129,7 +186,7 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void getAllPublicMethods() {
+    public void getAllPublicMethodsTest() {
         List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicProtectedMethods(SimpleAnnotatedEntry.class);
         assertAll("publicProtectedMethods",
                 () -> assertEquals(allPublicProtectedMethods.size(), 17)
@@ -137,7 +194,7 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void getAllPrivateMethods() {
+    public void getAllPrivateMethodsTest() {
         List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPrivateMethods(SimpleAnnotatedEntry.class);
         assertAll("privateMethods",
                 () -> assertEquals(allPublicProtectedMethods.size(), 1)
