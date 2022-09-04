@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -200,4 +201,32 @@ public class ReflectionUtilsTest {
                 () -> assertEquals(allPublicProtectedMethods.size(), 1)
         );
     }
+
+    @Test
+    public void getAllFieldsMap() {
+        Map<String, Field> fields = ReflectionUtils.getAllFieldsMap(CustomTestClassForType.class);
+
+        assertAll("allFields",
+                  () -> assertEquals(fields.get("stringField").getName(), "stringField"),
+                  () -> assertEquals(fields.get("objectField").getName(), "objectField"),
+                  () -> assertEquals(fields.get("floatField").getName(), "floatField"),
+                  () -> assertEquals(fields.get("notPrivateField").getName(), "notPrivateField"),
+                  () -> assertEquals(fields.get("oneConstant").getName(), "oneConstant"),
+                  () -> assertEquals(fields.size(), 5)
+        );
+    }
+
+    @Test
+    public void getAllPrivateFieldsMap() {
+        Map<String, Field> fields = ReflectionUtils.getAllPrivateFieldsMap(CustomTestClassForType.class);
+
+        assertAll("privateFields",
+                  () -> assertEquals(fields.get("stringField").getName(), "stringField"),
+                  () -> assertEquals(fields.get("objectField").getName(), "objectField"),
+                  () -> assertEquals(fields.get("floatField").getName(), "floatField"),
+                  () -> assertEquals(fields.size(), 3)
+        );
+    }
+
+
 }
