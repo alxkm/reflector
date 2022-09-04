@@ -15,7 +15,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
 
@@ -33,47 +35,47 @@ public final class ReflectionUtils {
     private ReflectionUtils() {
     }
 
-    public static String getClassFullName(Object obj) {
+    public static String getClassFullName(final Object obj) {
         return obj.getClass().getName();
     }
 
-    public static String getClassCanonicalName(Object obj) {
+    public static String getClassCanonicalName(final Object obj) {
         return obj.getClass().getCanonicalName();
     }
 
-    public static String getClassSimpleName(Object obj) {
+    public static String getClassSimpleName(final Object obj) {
         return obj.getClass().getSimpleName();
     }
 
-    public static String getPackage(Object obj) {
+    public static String getPackage(final Object obj) {
         return obj.getClass().getPackage().getName();
     }
 
-    public static String getClassFullNameByClass(Class<?> clazz) {
+    public static String getClassFullNameByClass(final Class<?> clazz) {
         return clazz.getName();
     }
 
-    public static String getClassCanonicalNameByClass(Class<?> clazz) {
+    public static String getClassCanonicalNameByClass(final Class<?> clazz) {
         return clazz.getCanonicalName();
     }
 
-    public static String getClassSimpleNameByClass(Class<?> clazz) {
+    public static String getClassSimpleNameByClass(final Class<?> clazz) {
         return clazz.getSimpleName();
     }
 
-    public static String getPackageByClass(Class<?> clazz) {
+    public static String getPackageByClass(final Class<?> clazz) {
         return clazz.getPackage().getName();
     }
 
-    public static String getSuperClassName(Object obj) {
+    public static String getSuperClassName(final Object obj) {
         return obj.getClass().getSuperclass().getName();
     }
 
-    public static String getSuperClassNameByClass(Class<?> clazz) {
+    public static String getSuperClassNameByClass(final Class<?> clazz) {
         return clazz.getSuperclass().getName();
     }
 
-    public static Class<?> getSuperClass(Object obj) {
+    public static Class<?> getSuperClass(final Object obj) {
         return obj.getClass().getSuperclass();
     }
 
@@ -92,7 +94,7 @@ public final class ReflectionUtils {
         }
     }
 
-    public static List<Field> getAllFields(Class<?> type) {
+    public static List<Field> getAllFields(final Class<?> type) {
         return getAllFields(new ArrayList<>(), type);
     }
 
@@ -119,15 +121,33 @@ public final class ReflectionUtils {
         return fields;
     }
 
-    public static <T> List<Method> getAllPrivateMethods(final Class<?> clazz) {
+    public static Map<String, Field> getAllFieldsMap(final Class<?> clazz) {
+        List<Field> allFields = getAllFields(clazz);
+        return getFieldsMap(allFields);
+    }
+
+    public static Map<String, Field> getAllPrivateFieldsMap(final Class<?> clazz) {
+        List<Field> allFields = getAllPrivateFields(clazz);
+        return getFieldsMap(allFields);
+    }
+
+    private static Map<String, Field> getFieldsMap(List<Field> fields) {
+        Map<String, Field> map = new HashMap<>();
+        for (Field field : fields) {
+            map.put(field.getName(), field);
+        }
+        return map;
+    }
+
+    public static List<Method> getAllPrivateMethods(final Class<?> clazz) {
         return getAllMethodsWithModifiers(clazz, Collections.singletonList(Modifier::isPrivate));
     }
 
-    public static <T> List<Method> getAllPublicProtectedMethods(final Class<?> clazz) {
+    public static List<Method> getAllPublicProtectedMethods(final Class<?> clazz) {
         return getAllMethodsWithModifiers(clazz, Arrays.asList(Modifier::isPublic, Modifier::isProtected));
     }
 
-    private static <T> List<Method> getAllMethodsWithModifiers(final Class<?> clazz1, final List<Predicate<Integer>> predicates) {
+    private static List<Method> getAllMethodsWithModifiers(final Class<?> clazz1, final List<Predicate<Integer>> predicates) {
         List<Method> result = new ArrayList<>();
         Stack<Class<?>> classStack = new Stack<>();
         classStack.push(clazz1);
