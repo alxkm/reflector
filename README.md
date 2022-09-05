@@ -12,7 +12,8 @@ Library main usage is:
 - invoke new instance of class
 - invoke object method
 - read object field
-- other
+- read object field as map
+- other (get class name, package, super)
 
 
 ### Quick start
@@ -24,7 +25,7 @@ Get all private fields:
 
 ```java
 
-    List<Field> fields = ReflectionUtils.getAllPrivateFields(List.class);
+List<Field> fields = ReflectionUtils.getAllPrivateFields(List.class);
 
 ```
 Get all public and protected methods:
