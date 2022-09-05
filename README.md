@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+[![Build Status](https://app.travis-ci.com/alxkm/reflector.svg?branch=master)](https://app.travis-ci.com/alxkm/reflector)
+
 Reflector is small and simple reflection Java library.
 
 Library main usage is:
@@ -67,4 +69,4 @@ User instance = (User) ReflectionUtils.invokeInstance(fullClassNameWithPackage, 
 ### Changelog
 
 #### 0.0.1:
-- initial release`
+- initial release

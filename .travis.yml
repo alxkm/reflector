@@ -1,6 +1,10 @@
+os: linux
+dist: bionic
+
 language: java
+
 jdk:
   - oraclejdk8
+
 script:
-  - gradle check
   - gradle build
