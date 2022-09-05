@@ -1,8 +1,7 @@
 # Reflector <img src="https://www.svgrepo.com/show/144446/mirror-horizontally.svg" height="32px" alt="Reflector" />
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 [![Build Status](https://app.travis-ci.com/alxkm/reflector.svg?branch=master)](https://app.travis-ci.com/alxkm/reflector)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Reflector is small and simple reflection Java library.
 
