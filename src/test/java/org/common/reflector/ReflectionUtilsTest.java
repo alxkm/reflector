@@ -197,9 +197,7 @@ public class ReflectionUtilsTest {
     @Test
     public void getAllPrivateMethodsTest() {
         List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPrivateMethods(SimpleAnnotatedEntry.class);
-        assertAll("privateMethods",
-                () -> assertEquals(allPublicProtectedMethods.size(), 1)
-        );
+        assertEquals(allPublicProtectedMethods.get(0).getName(), "doSomething");
     }
 
     @Test
