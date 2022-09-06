@@ -4,9 +4,11 @@ import org.common.reflector.data.CustomAnnotationForTest;
 import org.common.reflector.data.CustomTestClassForType;
 import org.common.reflector.data.CustomTestInvokeClass;
 import org.common.reflector.data.SimpleAnnotatedEntry;
+import org.common.reflector.data.SimpleEntryClass;
 import org.junit.jupiter.api.Test;
 import org.reflector.ReflectionUtils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -226,5 +228,15 @@ public class ReflectionUtilsTest {
         );
     }
 
+    @Test
+    public void getConstructors() {
+        Constructor<?>[] constructors = ReflectionUtils.getConstructors(SimpleEntryClass.class);
+        assertEquals(constructors.length, 3);
+    }
 
+    @Test
+    public void getDeclaredConstructors() {
+        Constructor<?>[] constructors = ReflectionUtils.getDeclaredConstructors(SimpleEntryClass.class);
+        assertEquals(constructors.length, 4);
+    }
 }
