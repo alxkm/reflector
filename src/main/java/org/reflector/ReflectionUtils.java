@@ -282,4 +282,12 @@ public final class ReflectionUtils {
         ctor.setAccessible(true);
         return ctor;
     }
+
+    public static Constructor<?>[] getConstructors(Class<?> clazz) {
+        return clazz.getConstructors();
+    }
+
+    public static Constructor<?>[] getDeclaredConstructors(Class<?> clazz) {
+        return clazz.getDeclaredConstructors();
+    }
 }
