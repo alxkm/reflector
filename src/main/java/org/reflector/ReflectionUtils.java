@@ -269,7 +269,7 @@ public final class ReflectionUtils {
         throw new InstanceInvocationException("Error during instance invoke has been happened");
     }
 
-    private static Class<?>[] getArrayValuesTypes(Object[] args) {
+    private static Class<?>[] getArrayValuesTypes(final Object[] args) {
         final Class<?>[] ctorTypes = new Class[args.length];
         for (int i = 0; i < args.length; i++) {
             ctorTypes[i] = args[i].getClass();
@@ -277,17 +277,50 @@ public final class ReflectionUtils {
         return ctorTypes;
     }
 
-    private static <T> Constructor<T> getAccessibleConstructor(Class<?>[] contTypes, Class<T> clazz) throws NoSuchMethodException {
+    private static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) throws NoSuchMethodException {
         final Constructor<T> ctor = clazz.getConstructor(contTypes);
         ctor.setAccessible(true);
         return ctor;
     }
 
-    public static Constructor<?>[] getConstructors(Class<?> clazz) {
+    public static Constructor<?>[] getConstructors(final Class<?> clazz) {
         return clazz.getConstructors();
     }
 
-    public static Constructor<?>[] getDeclaredConstructors(Class<?> clazz) {
+    public static Constructor<?>[] getDeclaredConstructors(final Class<?> clazz) {
         return clazz.getDeclaredConstructors();
+    }
+
+    private static boolean isFieldPrimitiveType(final Field field) {
+        return field.getType().isPrimitive()
+                || field.getType().equals(String.class)
+                || field.getType().getSuperclass().equals(Number.class)
+                || field.getType().equals(Boolean.class);
+    }
+
+    public static Object copy(final Object object) {
+        Object copyObj = null;
+        try {
+            copyObj = object.getClass().newInstance();
+            for (Field field : object.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                if (field.get(object) == null || Modifier.isFinal(field.getModifiers())) {
+                    continue;
+                }
+                if (isFieldPrimitiveType(field)) {
+                    field.set(copyObj, field.get(object));
+                } else {
+                    Object childObj = field.get(object);
+                    if(childObj == object) {
+                        field.set(copyObj,copyObj);
+                    } else {
+                        field.set(copyObj, copy(field.get(object)));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error during copy object", e);
+        }
+        return copyObj;
     }
 }

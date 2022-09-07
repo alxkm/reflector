@@ -19,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ReflectionUtilsTest {
-
     @Test
     public void getAllClassNamesTest() {
         Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
@@ -238,5 +237,12 @@ public class ReflectionUtilsTest {
     public void getDeclaredConstructors() {
         Constructor<?>[] constructors = ReflectionUtils.getDeclaredConstructors(SimpleEntryClass.class);
         assertEquals(constructors.length, 4);
+    }
+
+    @Test
+    public void copyObjectTest() {
+        SimpleEntryClass simpleEntryClass = new SimpleEntryClass("K", "V");
+        SimpleEntryClass simpleEntryClassCopy = (SimpleEntryClass) ReflectionUtils.copy(simpleEntryClass);
+        assertEquals(simpleEntryClass, simpleEntryClassCopy);
     }
 }
