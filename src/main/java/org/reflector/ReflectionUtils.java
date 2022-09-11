@@ -147,6 +147,32 @@ public final class ReflectionUtils {
         return getAllMethodsWithModifiers(clazz, Arrays.asList(Modifier::isPublic, Modifier::isProtected));
     }
 
+    public static List<Field> getAllAnnotatedFields(final Class<?> type,
+                                                    final Class<? extends Annotation> annotation) {
+        List<Field> fieldList = new ArrayList<>();
+        for (Field allField : getAllFields(type)) {
+            if (allField.getAnnotation(annotation) != null) {
+                fieldList.add(allField);
+            }
+        }
+        for (Field field : fieldList) {
+            field.setAccessible(true);
+        }
+        return fieldList;
+    }
+
+    public static Object readField(final Object object,
+                                   final String fieldName) {
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (Exception e) {
+            LOGGER.error("Could not invoke method ", e);
+        }
+        throw new FieldAccessException("Requested field is not accessible");
+    }
+
     private static List<Method> getAllMethodsWithModifiers(final Class<?> clazz1, final List<Predicate<Integer>> predicates) {
         List<Method> result = new ArrayList<>();
         Stack<Class<?>> classStack = new Stack<>();
@@ -182,32 +208,6 @@ public final class ReflectionUtils {
             }
         }
         return result;
-    }
-
-    public static Object readField(final Object object,
-                                   final String fieldName) {
-        try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (Exception e) {
-            LOGGER.error("Could not invoke method ", e);
-        }
-        throw new FieldAccessException("Requested field is not accessible");
-    }
-
-    public static List<Field> getAllAnnotatedFields(final Class<?> type,
-                                                    final Class<? extends Annotation> annotation) {
-        List<Field> fieldList = new ArrayList<>();
-        for (Field allField : getAllFields(type)) {
-            if (allField.getAnnotation(annotation) != null) {
-                fieldList.add(allField);
-            }
-        }
-        for (Field field : fieldList) {
-            field.setAccessible(true);
-        }
-        return fieldList;
     }
 
     public static Object invokeMethod(final Object objectToInvokeOn,
