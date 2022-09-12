@@ -25,6 +25,10 @@ import java.util.function.Predicate;
  *
  * Simple utility class for working with the reflection API
  *
+ * provides work with methods, fields, names, classes, instantiation
+ *
+ * simple object copy
+ *
  */
 public final class ReflectionUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
