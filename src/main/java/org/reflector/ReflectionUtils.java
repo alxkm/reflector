@@ -98,6 +98,14 @@ public final class ReflectionUtils {
         }
     }
 
+    public static Annotation[] getAnnotations(Class<?> clazz) {
+        return clazz.getAnnotations();
+    }
+
+    public static Annotation[] getMethodDeclaredAnnotations(Method method) {
+        return method.getDeclaredAnnotations();
+    }
+
     public static List<Field> getAllFields(final Class<?> type) {
         return getAllFields(new ArrayList<>(), type);
     }
