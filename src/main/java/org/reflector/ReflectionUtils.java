@@ -105,7 +105,6 @@ public final class ReflectionUtils {
         return method.getDeclaredAnnotations();
     }
 
-
     public static boolean isMethodHasAnnotation(Method method, Class clazz) {
         Annotation annotation = method.getAnnotation(clazz);
         return clazz.isInstance(annotation);
