@@ -1,11 +1,5 @@
 package org.reflector;
 
-import org.reflector.exception.FieldAccessException;
-import org.reflector.exception.InstanceInvocationException;
-import org.reflector.exception.MethodInvokeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -20,6 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
+import org.reflector.exception.FieldAccessException;
+import org.reflector.exception.InstanceInvocationException;
+import org.reflector.exception.MethodInvokeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -104,6 +103,38 @@ public final class ReflectionUtils {
 
     public static Annotation[] getMethodDeclaredAnnotations(Method method) {
         return method.getDeclaredAnnotations();
+    }
+
+    public static boolean isMethodHasAnnotation(Method method, Class clazz) {
+        Annotation annotation = method.getAnnotation(clazz);
+        return clazz.isInstance(annotation);
+    }
+
+    public static <T> boolean isMethodParameterAnnotated(Method method, Class<T> clazz) {
+        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        for (Annotation[] annotations : parameterAnnotations) {
+            for (Annotation annotation : annotations) {
+                if (clazz.isInstance(annotation)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static <T> boolean isFieldAnnotated(Field field, Class<T> clazz) {
+        Annotation[] annotations = field.getDeclaredAnnotations();
+        for (Annotation annotation : annotations) {
+            if (clazz.isInstance(annotation)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isFieldExactAnnotated(Field field, Class type) {
+        Annotation annotation = field.getAnnotation(type);
+        return type.isInstance(annotation);
     }
 
     public static List<Field> getAllFields(final Class<?> type) {
