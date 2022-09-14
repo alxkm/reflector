@@ -122,7 +122,7 @@ public final class ReflectionUtils {
         return false;
     }
 
-    public static <T> boolean isFieldParameterAnnotated(Field field, Class<T> clazz) {
+    public static <T> boolean isFieldAnnotated(Field field, Class<T> clazz) {
         Annotation[] annotations = field.getDeclaredAnnotations();
         for (Annotation annotation : annotations) {
             if (clazz.isInstance(annotation)) {
@@ -130,6 +130,11 @@ public final class ReflectionUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isFieldExactAnnotated(Field field, Class type) {
+        Annotation annotation = field.getAnnotation(type);
+        return type.isInstance(annotation);
     }
 
     public static List<Field> getAllFields(final Class<?> type) {
