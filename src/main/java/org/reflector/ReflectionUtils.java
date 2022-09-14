@@ -106,6 +106,24 @@ public final class ReflectionUtils {
         return method.getDeclaredAnnotations();
     }
 
+
+    public static boolean isMethodHasAnnotation(Method method, Class clazz) {
+        Annotation annotation = method.getAnnotation(clazz);
+        return clazz.isInstance(annotation);
+    }
+
+    public static <T> boolean isMethodParameterAnnotated(Method method, Class<T> clazz) {
+        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        for (Annotation[] annotations : parameterAnnotations) {
+            for (Annotation annotation : annotations) {
+                if (clazz.isInstance(annotation)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public static List<Field> getAllFields(final Class<?> type) {
         return getAllFields(new ArrayList<>(), type);
     }
