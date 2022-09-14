@@ -97,7 +97,7 @@ public final class ReflectionUtils {
         }
     }
 
-    public static Annotation[] getAnnotations(Class<?> clazz) {
+    public static Annotation[] getClassAnnotations(Class<?> clazz) {
         return clazz.getAnnotations();
     }
 
@@ -105,7 +105,7 @@ public final class ReflectionUtils {
         return method.getDeclaredAnnotations();
     }
 
-    public static boolean isMethodHasAnnotation(Method method, Class clazz) {
+    public static boolean isMethodAnnotated(Method method, Class clazz) {
         Annotation annotation = method.getAnnotation(clazz);
         return clazz.isInstance(annotation);
     }
@@ -147,7 +147,6 @@ public final class ReflectionUtils {
         if (type.getSuperclass() != null) {
             getAllFields(fields, type.getSuperclass());
         }
-
         return fields;
     }
 
