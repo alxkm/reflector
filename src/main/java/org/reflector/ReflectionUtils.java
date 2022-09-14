@@ -1,11 +1,5 @@
 package org.reflector;
 
-import org.reflector.exception.FieldAccessException;
-import org.reflector.exception.InstanceInvocationException;
-import org.reflector.exception.MethodInvokeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -20,6 +14,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
+import org.reflector.exception.FieldAccessException;
+import org.reflector.exception.InstanceInvocationException;
+import org.reflector.exception.MethodInvokeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -119,6 +118,16 @@ public final class ReflectionUtils {
                 if (clazz.isInstance(annotation)) {
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    public static <T> boolean isFieldParameterAnnotated(Field field, Class<T> clazz) {
+        Annotation[] annotations = field.getDeclaredAnnotations();
+        for (Annotation annotation : annotations) {
+            if (clazz.isInstance(annotation)) {
+                return true;
             }
         }
         return false;
