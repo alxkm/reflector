@@ -97,20 +97,20 @@ public final class ReflectionUtils {
         }
     }
 
-    public static Annotation[] getClassAnnotations(Class<?> clazz) {
+    public static Annotation[] getClassAnnotations(final Class<?> clazz) {
         return clazz.getAnnotations();
     }
 
-    public static Annotation[] getMethodDeclaredAnnotations(Method method) {
+    public static Annotation[] getMethodDeclaredAnnotations(final Method method) {
         return method.getDeclaredAnnotations();
     }
 
-    public static boolean isMethodAnnotated(Method method, Class clazz) {
+    public static boolean isMethodAnnotated(final Method method, final Class clazz) {
         Annotation annotation = method.getAnnotation(clazz);
         return clazz.isInstance(annotation);
     }
 
-    public static <T> boolean isMethodParameterAnnotated(Method method, Class<T> clazz) {
+    public static <T> boolean isMethodParameterAnnotated(final Method method, final Class<T> clazz) {
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
         for (Annotation[] annotations : parameterAnnotations) {
             for (Annotation annotation : annotations) {
@@ -122,7 +122,7 @@ public final class ReflectionUtils {
         return false;
     }
 
-    public static <T> boolean isFieldAnnotated(Field field, Class<T> clazz) {
+    public static <T> boolean isFieldAnnotated(final Field field, final Class<T> clazz) {
         Annotation[] annotations = field.getDeclaredAnnotations();
         for (Annotation annotation : annotations) {
             if (clazz.isInstance(annotation)) {
@@ -132,7 +132,7 @@ public final class ReflectionUtils {
         return false;
     }
 
-    public static boolean isFieldExactAnnotated(Field field, Class type) {
+    public static boolean isFieldExactAnnotated(final Field field, final Class type) {
         Annotation annotation = field.getAnnotation(type);
         return type.isInstance(annotation);
     }
