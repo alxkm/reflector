@@ -7,8 +7,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.common.reflector.data.CustomAnnotationForTest;
 import org.common.reflector.data.CustomMethodAnnotation;
 import org.common.reflector.data.CustomTestClassForType;
@@ -20,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.reflector.ReflectionUtils;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -258,7 +261,7 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void doesHasAnnotations() {
+    public void methodAnnotationTest() {
         List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicProtectedMethods(MethodAnnotatedClass.class);
         Method[] methods = new Method[allPublicProtectedMethods.size()];
         for (int i = 0; i < allPublicProtectedMethods.size(); i++) {
@@ -274,5 +277,20 @@ public class ReflectionUtilsTest {
             }
         }
         assertEquals(actualAnnotation.annotationType(), CustomMethodAnnotation.class);
+    }
+
+    @Test
+    public void doesHasAnnotations() {
+        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicMethods(MethodAnnotatedClass.class);
+        List<String> expected = new ArrayList<>(Arrays.asList("getClass",
+                                                              "annotatedMethod",
+                                                              "wait",
+                                                              "hashCode",
+                                                              "equals",
+                                                              "notifyAll",
+                                                              "toString",
+                                                              "notify"));
+        List<String> actual = allPublicProtectedMethods.stream().map(Method::getName).collect(Collectors.toList());
+        assertFalse(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
     }
 }
