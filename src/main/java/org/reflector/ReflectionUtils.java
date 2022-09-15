@@ -105,6 +105,14 @@ public final class ReflectionUtils {
         return method.getDeclaredAnnotations();
     }
 
+    public static Map<Method, Annotation[]> getMethodDeclaredAnnotations(final Method[] methods) {
+        Map<Method, Annotation[]> methodToAnnotations = new HashMap<>();
+        for (Method method : methods) {
+            methodToAnnotations.put(method, getMethodDeclaredAnnotations(method));
+        }
+        return methodToAnnotations;
+    }
+
     public static boolean isMethodAnnotated(final Method method, final Class clazz) {
         Annotation annotation = method.getAnnotation(clazz);
         return clazz.isInstance(annotation);
@@ -187,6 +195,10 @@ public final class ReflectionUtils {
 
     public static List<Method> getAllPublicProtectedMethods(final Class<?> clazz) {
         return getAllMethodsWithModifiers(clazz, Arrays.asList(Modifier::isPublic, Modifier::isProtected));
+    }
+
+    public static List<Method> getAllPublicMethods(final Class<?> clazz) {
+        return getAllMethodsWithModifiers(clazz, Collections.singletonList(Modifier::isPublic));
     }
 
     public static List<Field> getAllAnnotatedFields(final Class<?> type,
