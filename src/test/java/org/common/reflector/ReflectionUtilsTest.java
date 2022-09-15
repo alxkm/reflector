@@ -1,6 +1,7 @@
 package org.common.reflector;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -9,8 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.common.reflector.data.CustomAnnotationForTest;
+import org.common.reflector.data.CustomMethodAnnotation;
 import org.common.reflector.data.CustomTestClassForType;
 import org.common.reflector.data.CustomTestInvokeClass;
+import org.common.reflector.data.MethodAnnotatedClass;
 import org.common.reflector.data.SimpleAnnotatedEntry;
 import org.common.reflector.data.SimpleEntryClass;
 import org.junit.jupiter.api.Test;
@@ -252,5 +255,24 @@ public class ReflectionUtilsTest {
     public void findAllClassesByPackageTest() throws IOException, URISyntaxException, ClassNotFoundException {
         List<Class<?>> classesByPackage = ReflectionUtils.getClassesByPackage("org.common.reflector");
         assertTrue(classesByPackage.size() >= 7);
+    }
+
+    @Test
+    public void doesHasAnnotations() {
+        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicProtectedMethods(MethodAnnotatedClass.class);
+        Method[] methods = new Method[allPublicProtectedMethods.size()];
+        for (int i = 0; i < allPublicProtectedMethods.size(); i++) {
+            methods[i] = allPublicProtectedMethods.get(i);
+        }
+        Map<Method, Annotation[]> methodDeclaredAnnotations = ReflectionUtils.getMethodDeclaredAnnotations(methods);
+        String expectedMethodName = "annotatedMethod";
+        Annotation actualAnnotation = null;
+        for (Map.Entry<Method, Annotation[]> methodEntry : methodDeclaredAnnotations.entrySet()) {
+            if (methodEntry.getKey().getName().equals(expectedMethodName)) {
+                actualAnnotation = methodEntry.getValue()[0];
+                break;
+            }
+        }
+        assertEquals(actualAnnotation.annotationType(), CustomMethodAnnotation.class);
     }
 }
