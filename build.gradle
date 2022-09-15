@@ -21,7 +21,6 @@ dependencies {
     implementation group: 'org.slf4j', name: 'slf4j-api', version: sl4jVersion
     testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: sl4jVersion, ext: 'pom'
 
-
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
 }
