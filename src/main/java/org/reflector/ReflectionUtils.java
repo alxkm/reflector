@@ -1,14 +1,20 @@
 package org.reflector;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +37,13 @@ import org.slf4j.LoggerFactory;
  */
 public final class ReflectionUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
+
+    private static final ClassLoader CLASSLOADER;
+
+    static {
+        final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : ReflectionUtils.class.getClassLoader();
+    }
 
     /**
      * The private constructor of {@link ReflectionUtils}.
@@ -376,5 +389,37 @@ public final class ReflectionUtils {
             LOGGER.error("Error during copy object", e);
         }
         return copyObj;
+    }
+
+    public static List<Class<?>> getClassesByPackage(String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+        String path = packageName.replace('.', '/');
+        Enumeration<URL> resources = CLASSLOADER.getResources(path);
+        List<File> directories = new ArrayList<>();
+        while (resources.hasMoreElements()) {
+            directories.add(new File(new URI(resources.nextElement().toString()).getPath()));
+        }
+        List<Class<?>> classes = new ArrayList<>();
+        for (File directory : directories) {
+            classes.addAll(getClassesByDirectoryAndPackage(directory, packageName));
+        }
+        return classes;
+    }
+
+    public static List<Class<?>> getClassesByDirectoryAndPackage(File directory, String packageName) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<>();
+        if (!directory.exists()) {
+            return classes;
+        }
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    classes.addAll(getClassesByDirectoryAndPackage(file, packageName + "." + file.getName()));
+                } else if (file.getName().endsWith(".class")) {
+                    classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+                }
+            }
+        }
+        return classes;
     }
 }
