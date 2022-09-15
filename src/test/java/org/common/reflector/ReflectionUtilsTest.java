@@ -1,5 +1,13 @@
 package org.common.reflector;
 
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.common.reflector.data.CustomAnnotationForTest;
 import org.common.reflector.data.CustomTestClassForType;
 import org.common.reflector.data.CustomTestInvokeClass;
@@ -7,16 +15,10 @@ import org.common.reflector.data.SimpleAnnotatedEntry;
 import org.common.reflector.data.SimpleEntryClass;
 import org.junit.jupiter.api.Test;
 import org.reflector.ReflectionUtils;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilsTest {
     @Test
@@ -244,5 +246,11 @@ public class ReflectionUtilsTest {
         SimpleEntryClass simpleEntryClass = new SimpleEntryClass("K", "V");
         SimpleEntryClass simpleEntryClassCopy = (SimpleEntryClass) ReflectionUtils.copy(simpleEntryClass);
         assertEquals(simpleEntryClass, simpleEntryClassCopy);
+    }
+
+    @Test
+    public void findAllClassesByPackageTest() throws IOException, URISyntaxException, ClassNotFoundException {
+        List<Class<?>> classesByPackage = ReflectionUtils.getClassesByPackage("org.common.reflector");
+        assertTrue(classesByPackage.size() >= 7);
     }
 }
