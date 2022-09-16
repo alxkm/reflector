@@ -391,7 +391,7 @@ public final class ReflectionUtils {
         return copyObj;
     }
 
-    public static List<Class<?>> getClassesByPackage(String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+    public static List<Class<?>> getClassesByPackage(final String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
         String path = packageName.replace('.', '/');
         Enumeration<URL> resources = CLASSLOADER.getResources(path);
         List<File> directories = new ArrayList<>();
@@ -405,7 +405,7 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static List<Class<?>> getClassesByDirectoryAndPackage(File directory, String packageName) throws ClassNotFoundException {
+    public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName) throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
