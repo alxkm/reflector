@@ -422,4 +422,16 @@ public final class ReflectionUtils {
         }
         return classes;
     }
+
+    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation)
+            throws IOException, URISyntaxException, ClassNotFoundException {
+        List<Class<?>> classesByPackage = getClassesByPackage(packageName);
+        List<Class<?>> classes = new ArrayList<>();
+        for (Class<?> aClass : classesByPackage) {
+            if (aClass.isAnnotationPresent(annotation)) {
+                classes.add(aClass);
+            }
+        }
+        return classes;
+    }
 }
