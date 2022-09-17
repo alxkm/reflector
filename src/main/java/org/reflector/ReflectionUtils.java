@@ -194,7 +194,7 @@ public final class ReflectionUtils {
         return getFieldsMap(allFields);
     }
 
-    private static Map<String, Field> getFieldsMap(List<Field> fields) {
+    private static Map<String, Field> getFieldsMap(final List<Field> fields) {
         Map<String, Field> map = new HashMap<>();
         for (Field field : fields) {
             map.put(field.getName(), field);
