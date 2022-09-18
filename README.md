@@ -16,6 +16,9 @@ Library main usage is:
 - read object field as map
 - other (get class name, package, super)
 
+Required java version is java 8
+
+Specially not used java 8 features to keep more obvious code.
 
 ### Quick start
 
