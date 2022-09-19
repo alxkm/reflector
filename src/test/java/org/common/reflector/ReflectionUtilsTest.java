@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.common.reflector.data.ClassAnnotated;
+import org.common.reflector.data.ClassAnnotation;
 import org.common.reflector.data.CustomAnnotationForTest;
 import org.common.reflector.data.CustomMethodAnnotation;
 import org.common.reflector.data.CustomTestClassForType;
@@ -292,5 +294,12 @@ public class ReflectionUtilsTest {
                                                               "notify"));
         List<String> actual = allPublicProtectedMethods.stream().map(Method::getName).collect(Collectors.toList());
         assertFalse(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
+    }
+
+    @Test
+    public void getAnnotatedClasses() throws IOException, URISyntaxException, ClassNotFoundException {
+        List<Class<?>> classes = ReflectionUtils.getAllAnnotatedClassesByPackage("org.common.reflector.data", ClassAnnotation.class);
+        int expectedAnnotationClassesQuantity = 2;
+        assertEquals(expectedAnnotationClassesQuantity, classes.size());
     }
 }
