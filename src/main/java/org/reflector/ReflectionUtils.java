@@ -228,8 +228,7 @@ public final class ReflectionUtils {
         return fieldList;
     }
 
-    public static Object readField(final Object object,
-                                   final String fieldName) {
+    public static Object readField(final Object object, final String fieldName) {
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
