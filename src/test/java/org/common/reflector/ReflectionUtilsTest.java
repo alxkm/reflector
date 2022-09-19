@@ -297,9 +297,16 @@ public class ReflectionUtilsTest {
     }
 
     @Test
-    public void getAnnotatedClasses() throws IOException, URISyntaxException, ClassNotFoundException {
+    public void getAnnotatedClassesTest() throws IOException, URISyntaxException, ClassNotFoundException {
         List<Class<?>> classes = ReflectionUtils.getAllAnnotatedClassesByPackage("org.common.reflector.data", ClassAnnotation.class);
         int expectedAnnotationClassesQuantity = 2;
+        assertEquals(expectedAnnotationClassesQuantity, classes.size());
+    }
+
+    @Test
+    public void getNotAnnotatedClassesTest() throws IOException, URISyntaxException, ClassNotFoundException {
+        List<Class<?>> classes = ReflectionUtils.getAllAnnotatedClassesByPackage("org.common.reflector.data", CustomMethodAnnotation.class);
+        int expectedAnnotationClassesQuantity = 0;
         assertEquals(expectedAnnotationClassesQuantity, classes.size());
     }
 }
