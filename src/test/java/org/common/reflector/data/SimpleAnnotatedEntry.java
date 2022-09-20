@@ -1,6 +1,8 @@
 package org.common.reflector.data;
 
 
+import org.common.reflector.data.annotation.CustomAnnotationForTest;
+
 public class SimpleAnnotatedEntry {
     @CustomAnnotationForTest
     private String key;
