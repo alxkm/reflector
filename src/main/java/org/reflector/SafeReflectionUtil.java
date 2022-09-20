@@ -7,16 +7,16 @@ import java.util.Optional;
  * Simple wrapper for utility class for working with the reflection API
  *
  */
-public final class SafeReflectionUtils {
+public final class SafeReflectionUtil {
 
     /**
-     * The private constructor of {@link ReflectionUtils}.
+     * The private constructor of {@link ReflectionUtil}.
      * */
-    private SafeReflectionUtils() {}
+    private SafeReflectionUtil() {}
 
     public static <T> Optional<T> readField(Object object, String fieldName) {
         try {
-            Optional.of(ReflectionUtils.readField(object, fieldName));
+            Optional.of(ReflectionUtil.readField(object, fieldName));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -24,7 +24,7 @@ public final class SafeReflectionUtils {
 
     public static <T> Optional<T> invokeMethod(Object objectToInvokeOn, String methodName, Class<?>[] parameterTypes, Object[] args) {
         try {
-            Optional.of(ReflectionUtils.invokeMethod(objectToInvokeOn, methodName, parameterTypes, args));
+            Optional.of(ReflectionUtil.invokeMethod(objectToInvokeOn, methodName, parameterTypes, args));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -32,7 +32,7 @@ public final class SafeReflectionUtils {
 
     public static <T> Optional<T> invokeSingleMethod(Object objectToInvokeOn, String methodName, Class<?> parameterType, Object parameter) {
         try {
-            Optional.of(ReflectionUtils.invokeSingleMethod(objectToInvokeOn, methodName, parameterType, parameter));
+            Optional.of(ReflectionUtil.invokeSingleMethod(objectToInvokeOn, methodName, parameterType, parameter));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -40,7 +40,7 @@ public final class SafeReflectionUtils {
 
     public static <T> Optional<T> invokeInstance(String className) {
         try {
-            Optional.of(ReflectionUtils.invokeInstance(className));
+            Optional.of(ReflectionUtil.invokeInstance(className));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -48,7 +48,7 @@ public final class SafeReflectionUtils {
 
     public static <T> Optional<T> invokeInstance(String classFullName, Class<?>[] contTypes, Object[] obj) {
         try {
-            Optional.of(ReflectionUtils.invokeInstance(classFullName, contTypes, obj));
+            Optional.of(ReflectionUtil.invokeInstance(classFullName, contTypes, obj));
         } catch (Exception ignored) {
         }
         return Optional.empty();

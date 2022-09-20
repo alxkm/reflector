@@ -35,20 +35,20 @@ import org.slf4j.LoggerFactory;
  * simple object copy
  *
  */
-public final class ReflectionUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
+public final class ReflectionUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
 
     private static final ClassLoader CLASSLOADER;
 
     static {
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : ReflectionUtils.class.getClassLoader();
+        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : ReflectionUtil.class.getClassLoader();
     }
 
     /**
-     * The private constructor of {@link ReflectionUtils}.
+     * The private constructor of {@link ReflectionUtil}.
      * */
-    private ReflectionUtils() {
+    private ReflectionUtil() {
     }
 
     public static String getClassFullName(final Object obj) {
