@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.common.reflector.data.ClassAnnotated;
 import org.common.reflector.data.ClassAnnotation;
 import org.common.reflector.data.CustomAnnotationForTest;
 import org.common.reflector.data.CustomMethodAnnotation;
@@ -21,70 +20,73 @@ import org.common.reflector.data.MethodAnnotatedClass;
 import org.common.reflector.data.SimpleAnnotatedEntry;
 import org.common.reflector.data.SimpleEntryClass;
 import org.junit.jupiter.api.Test;
-import org.reflector.ReflectionUtils;
+import org.reflector.ReflectionUtil;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ReflectionUtilsTest {
+public class ReflectionUtilTest {
+
+    public static final String REFLECTOR_DATA_PACKAGE = "org.common.reflector.data";
+
     @Test
     public void getAllClassNamesTest() {
         Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
         assertAll("classNames",
-                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtils.getClassSimpleName(obj)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassFullName(obj)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassCanonicalName(obj))
+                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtil.getClassSimpleName(obj)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassFullName(obj)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassCanonicalName(obj))
         );
     }
 
     @Test
     public void getPackageNameTest() {
         Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
-        assertEquals("org.common.reflector.data", ReflectionUtils.getPackage(obj));
+        assertEquals("org.common.reflector.data", ReflectionUtil.getPackage(obj));
     }
 
     @Test
     public void getSuperClassNameTest() {
         CustomTestInvokeClass obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
-        assertEquals("java.lang.Object", ReflectionUtils.getSuperClassName(obj));
+        assertEquals("java.lang.Object", ReflectionUtil.getSuperClassName(obj));
     }
 
     @Test
     public void getSuperClassTest() {
         CustomTestInvokeClass obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
-        assertEquals(Object.class, ReflectionUtils.getSuperClass(obj));
+        assertEquals(Object.class, ReflectionUtil.getSuperClass(obj));
     }
 
     @Test
     public void getAllClassNamesByClassTest() {
         assertAll("classNames",
-                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtils.getClassSimpleNameByClass(CustomTestInvokeClass.class)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassFullNameByClass(CustomTestInvokeClass.class)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtils.getClassCanonicalNameByClass(CustomTestInvokeClass.class))
+                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtil.getClassSimpleNameByClass(CustomTestInvokeClass.class)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassFullNameByClass(CustomTestInvokeClass.class)),
+                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassCanonicalNameByClass(CustomTestInvokeClass.class))
         );
     }
 
     @Test
     public void getPackageNameByClassTest() {
-        assertEquals("org.common.reflector.data", ReflectionUtils.getPackageByClass(CustomTestInvokeClass.class));
+        assertEquals("org.common.reflector.data", ReflectionUtil.getPackageByClass(CustomTestInvokeClass.class));
     }
 
     @Test
     public void getSuperClassNameByClassTest() {
-        assertEquals("java.lang.Object", ReflectionUtils.getSuperClassNameByClass(CustomTestInvokeClass.class));
+        assertEquals("java.lang.Object", ReflectionUtil.getSuperClassNameByClass(CustomTestInvokeClass.class));
     }
 
     @Test
     public void getSuperClassFoClassTest() {
-        assertEquals(Object.class, ReflectionUtils.getSuperClass(CustomTestInvokeClass.class));
+        assertEquals(Object.class, ReflectionUtil.getSuperClass(CustomTestInvokeClass.class));
     }
 
     @Test
     void getAllPrivateFieldsTest() {
 
-        List<Field> fields = ReflectionUtils.getAllPrivateFields(CustomTestClassForType.class);
+        List<Field> fields = ReflectionUtil.getAllPrivateFields(CustomTestClassForType.class);
 
         assertAll("privateFields",
                 () -> assertEquals(fields.get(0).getName(), "stringField"),
@@ -102,10 +104,10 @@ public class ReflectionUtilsTest {
         String setMethodName = "setValue";
         String getMethodName = "getValue";
 
-        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtils.invokeInstance(classFullNameWithPackage);
-        Object ret1 = ReflectionUtils.invokeMethod(instance, setMethodName,
-                new Class[]{String.class}, new String[]{classValue});
-        String ret2 = (String) ReflectionUtils.invokeMethod(instance, getMethodName, null, null);
+        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(classFullNameWithPackage);
+        Object ret1 = ReflectionUtil.invokeMethod(instance, setMethodName,
+                                                  new Class[]{String.class}, new String[]{classValue});
+        String ret2 = (String) ReflectionUtil.invokeMethod(instance, getMethodName, null, null);
 
         assertAll("invokedMethodValues",
                 () -> assertEquals(ret1, null),
@@ -116,7 +118,7 @@ public class ReflectionUtilsTest {
     @Test
     void invokeClassInstanceTest() {
         String classFullNameWithPackage = "org.common.reflector.data.CustomTestInvokeClass";
-        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtils.invokeInstance(classFullNameWithPackage);
+        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(classFullNameWithPackage);
         assertAll("classInstance",
                 () -> assertNotEquals(instance, null)
         );
@@ -127,7 +129,7 @@ public class ReflectionUtilsTest {
     void readSingleField() {
         CustomTestClassForType customClass = new CustomTestClassForType();
 
-        Object oneConstant = ReflectionUtils.readField(customClass, "oneConstant");
+        Object oneConstant = ReflectionUtil.readField(customClass, "oneConstant");
         System.out.println(oneConstant);
 
         assertAll("readedSingleField",
@@ -144,9 +146,9 @@ public class ReflectionUtilsTest {
         String setMethodName = "setValue";
         String getMethodName = "getValue";
 
-        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtils.invokeInstance(classFullNameWithPackage);
-        Object ret1 = ReflectionUtils.invokeSingleMethod(instance, setMethodName, String.class, classValue);
-        String ret2 = (String) ReflectionUtils.invokeMethod(instance, getMethodName, null, null);
+        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(classFullNameWithPackage);
+        Object ret1 = ReflectionUtil.invokeSingleMethod(instance, setMethodName, String.class, classValue);
+        String ret2 = (String) ReflectionUtil.invokeMethod(instance, getMethodName, null, null);
 
         assertAll("singleClassMethodValue",
                 () -> assertEquals(ret1, null),
@@ -159,7 +161,7 @@ public class ReflectionUtilsTest {
         Object[] obj = {"SomeValue"};
 
         String classFullNameWithPackage = "org.common.reflector.data.CustomTestInvokeClass";
-        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtils.invokeInstance(
+        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(
                 classFullNameWithPackage, obj);
         assertAll("classMultipleParametersInstance",
                 () -> assertNotEquals(instance, null),
@@ -169,7 +171,7 @@ public class ReflectionUtilsTest {
 
     @Test
     void getAllAnnotatedFieldsTest() {
-        List<Field> fields = ReflectionUtils.getAllAnnotatedFields(SimpleAnnotatedEntry.class, CustomAnnotationForTest.class);
+        List<Field> fields = ReflectionUtil.getAllAnnotatedFields(SimpleAnnotatedEntry.class, CustomAnnotationForTest.class);
         assertAll("classMultipleParametersInstance",
                 () -> assertEquals(fields.size(), 2),
                 () -> assertEquals(fields.get(0).getName(), "key"),
@@ -188,7 +190,7 @@ public class ReflectionUtilsTest {
         valuesList.add("key");
         valuesList.add("value");
 
-        ReflectionUtils.clearUnselectedFields(entry, valuesList);
+        ReflectionUtil.clearUnselectedFields(entry, valuesList);
 
         assertAll("classMultipleParametersInstance",
                 () -> assertEquals(entry.getInfo(), null),
@@ -199,7 +201,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void getAllPublicMethodsTest() {
-        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicProtectedMethods(SimpleAnnotatedEntry.class);
+        List<Method> allPublicProtectedMethods = ReflectionUtil.getAllPublicProtectedMethods(SimpleAnnotatedEntry.class);
         assertAll("publicProtectedMethods",
                 () -> assertEquals(allPublicProtectedMethods.size(), 17)
         );
@@ -207,13 +209,13 @@ public class ReflectionUtilsTest {
 
     @Test
     public void getAllPrivateMethodsTest() {
-        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPrivateMethods(SimpleAnnotatedEntry.class);
+        List<Method> allPublicProtectedMethods = ReflectionUtil.getAllPrivateMethods(SimpleAnnotatedEntry.class);
         assertEquals(allPublicProtectedMethods.get(0).getName(), "doSomething");
     }
 
     @Test
     public void getAllFieldsMap() {
-        Map<String, Field> fields = ReflectionUtils.getAllFieldsMap(CustomTestClassForType.class);
+        Map<String, Field> fields = ReflectionUtil.getAllFieldsMap(CustomTestClassForType.class);
 
         assertAll("allFields",
                   () -> assertEquals(fields.get("stringField").getName(), "stringField"),
@@ -227,7 +229,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void getAllPrivateFieldsMap() {
-        Map<String, Field> fields = ReflectionUtils.getAllPrivateFieldsMap(CustomTestClassForType.class);
+        Map<String, Field> fields = ReflectionUtil.getAllPrivateFieldsMap(CustomTestClassForType.class);
 
         assertAll("privateFields",
                   () -> assertEquals(fields.get("stringField").getName(), "stringField"),
@@ -239,37 +241,37 @@ public class ReflectionUtilsTest {
 
     @Test
     public void getConstructors() {
-        Constructor<?>[] constructors = ReflectionUtils.getConstructors(SimpleEntryClass.class);
+        Constructor<?>[] constructors = ReflectionUtil.getConstructors(SimpleEntryClass.class);
         assertEquals(constructors.length, 3);
     }
 
     @Test
     public void getDeclaredConstructors() {
-        Constructor<?>[] constructors = ReflectionUtils.getDeclaredConstructors(SimpleEntryClass.class);
+        Constructor<?>[] constructors = ReflectionUtil.getDeclaredConstructors(SimpleEntryClass.class);
         assertEquals(constructors.length, 4);
     }
 
     @Test
     public void copyObjectTest() {
         SimpleEntryClass simpleEntryClass = new SimpleEntryClass("K", "V");
-        SimpleEntryClass simpleEntryClassCopy = (SimpleEntryClass) ReflectionUtils.copy(simpleEntryClass);
+        SimpleEntryClass simpleEntryClassCopy = (SimpleEntryClass) ReflectionUtil.copy(simpleEntryClass);
         assertEquals(simpleEntryClass, simpleEntryClassCopy);
     }
 
     @Test
     public void findAllClassesByPackageTest() throws IOException, URISyntaxException, ClassNotFoundException {
-        List<Class<?>> classesByPackage = ReflectionUtils.getClassesByPackage("org.common.reflector");
+        List<Class<?>> classesByPackage = ReflectionUtil.getClassesByPackage("org.common.reflector");
         assertTrue(classesByPackage.size() >= 7);
     }
 
     @Test
     public void methodAnnotationTest() {
-        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicProtectedMethods(MethodAnnotatedClass.class);
+        List<Method> allPublicProtectedMethods = ReflectionUtil.getAllPublicProtectedMethods(MethodAnnotatedClass.class);
         Method[] methods = new Method[allPublicProtectedMethods.size()];
         for (int i = 0; i < allPublicProtectedMethods.size(); i++) {
             methods[i] = allPublicProtectedMethods.get(i);
         }
-        Map<Method, Annotation[]> methodDeclaredAnnotations = ReflectionUtils.getMethodDeclaredAnnotations(methods);
+        Map<Method, Annotation[]> methodDeclaredAnnotations = ReflectionUtil.getMethodDeclaredAnnotations(methods);
         String expectedMethodName = "annotatedMethod";
         Annotation actualAnnotation = null;
         for (Map.Entry<Method, Annotation[]> methodEntry : methodDeclaredAnnotations.entrySet()) {
@@ -283,7 +285,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void doesHasAnnotations() {
-        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicMethods(MethodAnnotatedClass.class);
+        List<Method> allPublicProtectedMethods = ReflectionUtil.getAllPublicMethods(MethodAnnotatedClass.class);
         List<String> expected = new ArrayList<>(Arrays.asList("getClass",
                                                               "annotatedMethod",
                                                               "wait",
@@ -298,14 +300,14 @@ public class ReflectionUtilsTest {
 
     @Test
     public void getAnnotatedClassesTest() throws IOException, URISyntaxException, ClassNotFoundException {
-        List<Class<?>> classes = ReflectionUtils.getAllAnnotatedClassesByPackage("org.common.reflector.data", ClassAnnotation.class);
+        List<Class<?>> classes = ReflectionUtil.getAllAnnotatedClassesByPackage("org.common.reflector.data", ClassAnnotation.class);
         int expectedAnnotationClassesQuantity = 2;
         assertEquals(expectedAnnotationClassesQuantity, classes.size());
     }
 
     @Test
     public void getNotAnnotatedClassesTest() throws IOException, URISyntaxException, ClassNotFoundException {
-        List<Class<?>> classes = ReflectionUtils.getAllAnnotatedClassesByPackage("org.common.reflector.data", CustomMethodAnnotation.class);
+        List<Class<?>> classes = ReflectionUtil.getAllAnnotatedClassesByPackage(REFLECTOR_DATA_PACKAGE, CustomMethodAnnotation.class);
         int expectedAnnotationClassesQuantity = 0;
         assertEquals(expectedAnnotationClassesQuantity, classes.size());
     }
