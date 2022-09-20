@@ -19,6 +19,7 @@ import org.common.reflector.data.CustomTestInvokeClass;
 import org.common.reflector.data.MethodAnnotatedClass;
 import org.common.reflector.data.SimpleAnnotatedEntry;
 import org.common.reflector.data.SimpleEntryClass;
+import org.common.reflector.util.TestConstant;
 import org.junit.jupiter.api.Test;
 import org.reflector.ReflectionUtil;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilTest {
 
-    public static final String REFLECTOR_DATA_PACKAGE = "org.common.reflector.data";
+
 
     @Test
     public void getAllClassNamesTest() {
@@ -300,14 +301,14 @@ public class ReflectionUtilTest {
 
     @Test
     public void getAnnotatedClassesTest() throws IOException, URISyntaxException, ClassNotFoundException {
-        List<Class<?>> classes = ReflectionUtil.getAllAnnotatedClassesByPackage("org.common.reflector.data", ClassAnnotation.class);
+        List<Class<?>> classes = ReflectionUtil.getAllAnnotatedClassesByPackage(TestConstant.REFLECTOR_DATA_PACKAGE, ClassAnnotation.class);
         int expectedAnnotationClassesQuantity = 2;
         assertEquals(expectedAnnotationClassesQuantity, classes.size());
     }
 
     @Test
     public void getNotAnnotatedClassesTest() throws IOException, URISyntaxException, ClassNotFoundException {
-        List<Class<?>> classes = ReflectionUtil.getAllAnnotatedClassesByPackage(REFLECTOR_DATA_PACKAGE, CustomMethodAnnotation.class);
+        List<Class<?>> classes = ReflectionUtil.getAllAnnotatedClassesByPackage(TestConstant.REFLECTOR_DATA_PACKAGE, CustomMethodAnnotation.class);
         int expectedAnnotationClassesQuantity = 0;
         assertEquals(expectedAnnotationClassesQuantity, classes.size());
     }
