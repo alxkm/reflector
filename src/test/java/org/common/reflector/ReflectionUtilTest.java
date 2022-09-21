@@ -261,7 +261,7 @@ public class ReflectionUtilTest {
 
     @Test
     public void findAllClassesByPackageTest() throws IOException, URISyntaxException, ClassNotFoundException {
-        List<Class<?>> classesByPackage = ReflectionUtil.getClassesByPackage("org.common.reflector");
+        List<Class<?>> classesByPackage = ReflectionUtil.getClassesByPackage(TestConstant.REFLECTOR_PACKAGE);
         assertTrue(classesByPackage.size() >= 7);
     }
 
@@ -273,10 +273,9 @@ public class ReflectionUtilTest {
             methods[i] = allPublicProtectedMethods.get(i);
         }
         Map<Method, Annotation[]> methodDeclaredAnnotations = ReflectionUtil.getMethodDeclaredAnnotations(methods);
-        String expectedMethodName = "annotatedMethod";
         Annotation actualAnnotation = null;
         for (Map.Entry<Method, Annotation[]> methodEntry : methodDeclaredAnnotations.entrySet()) {
-            if (methodEntry.getKey().getName().equals(expectedMethodName)) {
+            if (methodEntry.getKey().getName().equals(TestConstant.ANNOTATED_METHOD_NAME)) {
                 actualAnnotation = methodEntry.getValue()[0];
                 break;
             }
