@@ -12,4 +12,8 @@ public final class TestConstant {
     public static final String ENTRY_INFO = "entryInfo";
     public static final String KEY = "key";
     public static final String VALUE = "value";
+    public static final String SIMPLE_VALUE = "SimpleValue";
+    public static final String SET_VALUE = "setValue";
+    public static final String GET_VALUE = "getValue";
+    public static final String CUSTOM_TEST_INVOKE_CLASS_PACKAGE = "org.common.reflector.data.CustomTestInvokeClass";
 }
