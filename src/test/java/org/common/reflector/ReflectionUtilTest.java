@@ -30,8 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilTest {
 
-
-
     @Test
     public void getAllClassNamesTest() {
         Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
@@ -183,13 +181,13 @@ public class ReflectionUtilTest {
     @Test
     void clearUnselectedFieldsTest() {
         SimpleAnnotatedEntry entry = new SimpleAnnotatedEntry();
-        entry.setKey("entryKey");
-        entry.setValue("entryValue");
-        entry.setInfo("entryInfo");
+        entry.setKey(TestConstant.ENTRY_KEY);
+        entry.setValue(TestConstant.ENTRY_VALUE);
+        entry.setInfo(TestConstant.ENTRY_INFO);
 
         List<String> valuesList = new ArrayList<>();
-        valuesList.add("key");
-        valuesList.add("value");
+        valuesList.add(TestConstant.KEY);
+        valuesList.add(TestConstant.VALUE);
 
         ReflectionUtil.clearUnselectedFields(entry, valuesList);
 
@@ -211,7 +209,7 @@ public class ReflectionUtilTest {
     @Test
     public void getAllPrivateMethodsTest() {
         List<Method> allPublicProtectedMethods = ReflectionUtil.getAllPrivateMethods(SimpleAnnotatedEntry.class);
-        assertEquals(allPublicProtectedMethods.get(0).getName(), "doSomething");
+        assertEquals(allPublicProtectedMethods.get(0).getName(), TestConstant.DO_SOMETHING_METHOD_NAME);
     }
 
     @Test
