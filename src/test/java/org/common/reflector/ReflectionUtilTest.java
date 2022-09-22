@@ -131,7 +131,7 @@ public class ReflectionUtilTest {
         Object oneConstant = ReflectionUtil.readField(customClass, "oneConstant");
         System.out.println(oneConstant);
 
-        assertAll("readedSingleField",
+        assertAll("readSingleField",
                 () -> assertEquals(oneConstant, 1),
                 () -> assertEquals(oneConstant.getClass(), Integer.class)
         );
@@ -139,19 +139,13 @@ public class ReflectionUtilTest {
 
     @Test
     void invokeSingleClassMethodTest() {
-        String classFullNameWithPackage = "org.common.reflector.data.CustomTestInvokeClass";
-
-        String classValue = "SimpleValue";
-        String setMethodName = "setValue";
-        String getMethodName = "getValue";
-
-        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(classFullNameWithPackage);
-        Object ret1 = ReflectionUtil.invokeSingleMethod(instance, setMethodName, String.class, classValue);
-        String ret2 = (String) ReflectionUtil.invokeMethod(instance, getMethodName, null, null);
+        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE);
+        Object ret1 = ReflectionUtil.invokeSingleMethod(instance, TestConstant.SET_VALUE, String.class, TestConstant.SIMPLE_VALUE);
+        String ret2 = (String) ReflectionUtil.invokeMethod(instance, TestConstant.GET_VALUE, null, null);
 
         assertAll("singleClassMethodValue",
                 () -> assertEquals(ret1, null),
-                () -> assertEquals(ret2, classValue)
+                () -> assertEquals(ret2, TestConstant.SIMPLE_VALUE)
         );
     }
 
