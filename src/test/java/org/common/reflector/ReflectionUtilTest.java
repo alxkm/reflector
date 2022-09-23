@@ -69,12 +69,12 @@ public class ReflectionUtilTest {
 
     @Test
     public void getPackageNameByClassTest() {
-        assertEquals("org.common.reflector.data", ReflectionUtil.getPackageByClass(CustomTestInvokeClass.class));
+        assertEquals(TestConstant.ORG_COMMON_REFLECTOR_DATA, ReflectionUtil.getPackageByClass(CustomTestInvokeClass.class));
     }
 
     @Test
     public void getSuperClassNameByClassTest() {
-        assertEquals("java.lang.Object", ReflectionUtil.getSuperClassNameByClass(CustomTestInvokeClass.class));
+        assertEquals(TestConstant.JAVA_LANG_OBJECT, ReflectionUtil.getSuperClassNameByClass(CustomTestInvokeClass.class));
     }
 
     @Test
@@ -88,22 +88,22 @@ public class ReflectionUtilTest {
         List<Field> fields = ReflectionUtil.getAllPrivateFields(CustomTestClassForType.class);
 
         assertAll("privateFields",
-                () -> assertEquals(fields.get(0).getName(), "stringField"),
-                () -> assertEquals(fields.get(1).getName(), "objectField"),
-                () -> assertEquals(fields.get(2).getName(), "floatField"),
+                () -> assertEquals(fields.get(0).getName(), TestConstant.STRING_FIELD),
+                () -> assertEquals(fields.get(1).getName(), TestConstant.OBJECT_FIELD),
+                () -> assertEquals(fields.get(2).getName(), TestConstant.FLOAT_FIELD),
                 () -> assertEquals(fields.size(), 3)
         );
     }
 
     @Test
     void invokeClassMethodTest() {
-        String classFullNameWithPackage = "org.common.reflector.data.CustomTestInvokeClass";
 
         String classValue = "SimpleValue";
         String setMethodName = "setValue";
         String getMethodName = "getValue";
 
-        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(classFullNameWithPackage);
+        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(
+                TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE);
         Object ret1 = ReflectionUtil.invokeMethod(instance, setMethodName,
                                                   new Class[]{String.class}, new String[]{classValue});
         String ret2 = (String) ReflectionUtil.invokeMethod(instance, getMethodName, null, null);
@@ -116,8 +116,8 @@ public class ReflectionUtilTest {
 
     @Test
     void invokeClassInstanceTest() {
-        String classFullNameWithPackage = "org.common.reflector.data.CustomTestInvokeClass";
-        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(classFullNameWithPackage);
+        CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(
+                TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE);
         assertAll("classInstance",
                 () -> assertNotEquals(instance, null)
         );
@@ -128,7 +128,7 @@ public class ReflectionUtilTest {
     void readSingleField() {
         CustomTestClassForType customClass = new CustomTestClassForType();
 
-        Object oneConstant = ReflectionUtil.readField(customClass, "oneConstant");
+        Object oneConstant = ReflectionUtil.readField(customClass, TestConstant.ONE_CONSTANT);
         System.out.println(oneConstant);
 
         assertAll("readSingleField",
@@ -151,11 +151,9 @@ public class ReflectionUtilTest {
 
     @Test
     void invokeClassInstanceWithParametersTest() {
-        Object[] obj = {"SomeValue"};
-
-        String classFullNameWithPackage = "org.common.reflector.data.CustomTestInvokeClass";
+        Object[] obj = {TestConstant.SOME_VALUE};
         CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(
-                classFullNameWithPackage, obj);
+                TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, obj);
         assertAll("classMultipleParametersInstance",
                 () -> assertNotEquals(instance, null),
                 () -> assertEquals(instance.getValue(), obj[0])
