@@ -29,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilTest {
-
     @Test
     public void getAllClassNamesTest() {
         Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
@@ -61,9 +60,9 @@ public class ReflectionUtilTest {
     @Test
     public void getAllClassNamesByClassTest() {
         assertAll("classNames",
-                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtil.getClassSimpleNameByClass(CustomTestInvokeClass.class)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassFullNameByClass(CustomTestInvokeClass.class)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassCanonicalNameByClass(CustomTestInvokeClass.class))
+                  () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS, ReflectionUtil.getClassSimpleNameByClass(CustomTestInvokeClass.class)),
+                  () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtil.getClassFullNameByClass(CustomTestInvokeClass.class)),
+                  () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtil.getClassCanonicalNameByClass(CustomTestInvokeClass.class))
         );
     }
 
@@ -97,20 +96,15 @@ public class ReflectionUtilTest {
 
     @Test
     void invokeClassMethodTest() {
-
-        String classValue = "SimpleValue";
-        String setMethodName = "setValue";
-        String getMethodName = "getValue";
-
         CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtil.invokeInstance(
                 TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE);
-        Object ret1 = ReflectionUtil.invokeMethod(instance, setMethodName,
-                                                  new Class[]{String.class}, new String[]{classValue});
-        String ret2 = (String) ReflectionUtil.invokeMethod(instance, getMethodName, null, null);
+        Object ret1 = ReflectionUtil.invokeMethod(instance, TestConstant.SET_VALUE,
+                                                  new Class[]{String.class}, new String[]{TestConstant.SIMPLE_VALUE});
+        String ret2 = (String) ReflectionUtil.invokeMethod(instance, TestConstant.GET_VALUE, null, null);
 
         assertAll("invokedMethodValues",
                 () -> assertEquals(ret1, null),
-                () -> assertEquals(ret2, classValue)
+                () -> assertEquals(ret2, TestConstant.SIMPLE_VALUE)
         );
     }
 
@@ -165,8 +159,8 @@ public class ReflectionUtilTest {
         List<Field> fields = ReflectionUtil.getAllAnnotatedFields(SimpleAnnotatedEntry.class, CustomAnnotationForTest.class);
         assertAll("classMultipleParametersInstance",
                 () -> assertEquals(fields.size(), 2),
-                () -> assertEquals(fields.get(0).getName(), "key"),
-                () -> assertEquals(fields.get(1).getName(), "value")
+                () -> assertEquals(fields.get(0).getName(), TestConstant.KEY),
+                () -> assertEquals(fields.get(1).getName(), TestConstant.VALUE)
         );
     }
 

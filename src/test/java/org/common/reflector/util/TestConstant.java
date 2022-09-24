@@ -1,8 +1,10 @@
 package org.common.reflector.util;
 
 public final class TestConstant {
+
     private TestConstant() {}
 
+    public static final String CUSTOM_TEST_INVOKE_CLASS = "CustomTestInvokeClass";
     public static final String REFLECTOR_DATA_PACKAGE = "org.common.reflector.data";
     public static final String REFLECTOR_PACKAGE = "org.common.reflector";
     public static final String ANNOTATED_METHOD_NAME = "annotatedMethod";
@@ -23,4 +25,5 @@ public final class TestConstant {
     public static final String ORG_COMMON_REFLECTOR_DATA = "org.common.reflector.data";
     public static final String SOME_VALUE = "SomeValue";
     public static final String ONE_CONSTANT = "oneConstant";
+
 }
