@@ -34,7 +34,7 @@ public class ReflectionUtilTest {
     public void getAllClassNamesTest() {
         Object obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
         assertAll("classNames",
-                  () ->  assertEquals("CustomTestInvokeClass", ReflectionUtil.getClassSimpleName(obj)),
+                  () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS, ReflectionUtil.getClassSimpleName(obj)),
                   () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassFullName(obj)),
                   () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassCanonicalName(obj))
         );
@@ -49,7 +49,7 @@ public class ReflectionUtilTest {
     @Test
     public void getSuperClassNameTest() {
         CustomTestInvokeClass obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
-        assertEquals("java.lang.Object", ReflectionUtil.getSuperClassName(obj));
+        assertEquals(TestConstant.JAVA_LANG_OBJECT, ReflectionUtil.getSuperClassName(obj));
     }
 
     @Test
