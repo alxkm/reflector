@@ -29,21 +29,20 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilTest {
-
     @Test
     public void getAllClassNamesTest() {
         Object obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
         assertAll("classNames",
                   () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS, ReflectionUtil.getClassSimpleName(obj)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassFullName(obj)),
-                  () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassCanonicalName(obj))
+                  () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtil.getClassFullName(obj)),
+                  () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtil.getClassCanonicalName(obj))
         );
     }
 
     @Test
     public void getPackageNameTest() {
         Object obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
-        assertEquals("org.common.reflector.data", ReflectionUtil.getPackage(obj));
+        assertEquals(TestConstant.REFLECTOR_DATA_PACKAGE, ReflectionUtil.getPackage(obj));
     }
 
     @Test
@@ -271,14 +270,14 @@ public class ReflectionUtilTest {
     @Test
     public void doesHasAnnotations() {
         List<Method> allPublicProtectedMethods = ReflectionUtil.getAllPublicMethods(MethodAnnotatedClass.class);
-        List<String> expected = new ArrayList<>(Arrays.asList("getClass",
-                                                              "annotatedMethod",
-                                                              "wait",
-                                                              "hashCode",
-                                                              "equals",
-                                                              "notifyAll",
-                                                              "toString",
-                                                              "notify"));
+        List<String> expected = new ArrayList<>(Arrays.asList(TestConstant.GET_CLASS_METHOD_METHOD_ANNOTATED_CLASS,
+                                                              TestConstant.ANNOTATED_METHOD_ANNOTATED_CLASS,
+                                                              TestConstant.WAIT_METHOD_ANNOTATED_CLASS,
+                                                              TestConstant.HASH_CODE_METHOD_ANNOTATED_CLASS,
+                                                              TestConstant.EQUALS_METHOD_ANNOTATED_CLASS,
+                                                              TestConstant.NOTIFY_ALL_METHOD_ANNOTATED_CLASS,
+                                                              TestConstant.TO_STRING_METHOD_ANNOTATED_CLASS,
+                                                              TestConstant.NOTIFY_METHOD_ANNOTATED_CLASS));
         List<String> actual = allPublicProtectedMethods.stream().map(Method::getName).collect(Collectors.toList());
         assertFalse(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
     }
