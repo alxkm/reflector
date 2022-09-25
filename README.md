@@ -19,6 +19,7 @@ Library main usage is:
 Required java version is java 8
 
 Specially not used java 8 features to keep more obvious code.
+And formatting also not according to official java code style for such reason.
 
 ### Quick start
 
