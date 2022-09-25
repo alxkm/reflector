@@ -3,6 +3,14 @@ package org.common.reflector.util;
 public final class TestConstant {
     private TestConstant() {}
 
+    public static final String ANNOTATED_METHOD_ANNOTATED_CLASS = "annotatedMethod";
+    public static final String GET_CLASS_METHOD_METHOD_ANNOTATED_CLASS = "getClass";
+    public static final String WAIT_METHOD_ANNOTATED_CLASS = "wait";
+    public static final String HASH_CODE_METHOD_ANNOTATED_CLASS = "hashCode";
+    public static final String EQUALS_METHOD_ANNOTATED_CLASS = "equals";
+    public static final String NOTIFY_ALL_METHOD_ANNOTATED_CLASS = "notifyAll";
+    public static final String TO_STRING_METHOD_ANNOTATED_CLASS = "toString";
+    public static final String NOTIFY_METHOD_ANNOTATED_CLASS = "notify";
     public static final String SIMPLE_CLASS_SIMPLE_VALUE = "SimpleClassSimpleValue";
     public static final String CUSTOM_TEST_INVOKE_CLASS = "CustomTestInvokeClass";
     public static final String REFLECTOR_DATA_PACKAGE = "org.common.reflector.data";
