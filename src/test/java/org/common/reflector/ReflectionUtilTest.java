@@ -29,9 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilTest {
+
     @Test
     public void getAllClassNamesTest() {
-        Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        Object obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
         assertAll("classNames",
                   () ->  assertEquals("CustomTestInvokeClass", ReflectionUtil.getClassSimpleName(obj)),
                   () ->  assertEquals("org.common.reflector.data.CustomTestInvokeClass", ReflectionUtil.getClassFullName(obj)),
@@ -41,19 +42,19 @@ public class ReflectionUtilTest {
 
     @Test
     public void getPackageNameTest() {
-        Object obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        Object obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
         assertEquals("org.common.reflector.data", ReflectionUtil.getPackage(obj));
     }
 
     @Test
     public void getSuperClassNameTest() {
-        CustomTestInvokeClass obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        CustomTestInvokeClass obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
         assertEquals("java.lang.Object", ReflectionUtil.getSuperClassName(obj));
     }
 
     @Test
     public void getSuperClassTest() {
-        CustomTestInvokeClass obj = new CustomTestInvokeClass("SimpleClassSimpleValue");
+        CustomTestInvokeClass obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
         assertEquals(Object.class, ReflectionUtil.getSuperClass(obj));
     }
 

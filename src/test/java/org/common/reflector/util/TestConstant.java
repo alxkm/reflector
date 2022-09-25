@@ -1,9 +1,9 @@
 package org.common.reflector.util;
 
 public final class TestConstant {
-
     private TestConstant() {}
 
+    public static final String SIMPLE_CLASS_SIMPLE_VALUE = "SimpleClassSimpleValue";
     public static final String CUSTOM_TEST_INVOKE_CLASS = "CustomTestInvokeClass";
     public static final String REFLECTOR_DATA_PACKAGE = "org.common.reflector.data";
     public static final String REFLECTOR_PACKAGE = "org.common.reflector";
