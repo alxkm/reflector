@@ -203,11 +203,11 @@ public class ReflectionUtilTest {
         Map<String, Field> fields = ReflectionUtil.getAllFieldsMap(CustomTestClassForType.class);
 
         assertAll("allFields",
-                  () -> assertEquals(fields.get("stringField").getName(), "stringField"),
-                  () -> assertEquals(fields.get("objectField").getName(), "objectField"),
-                  () -> assertEquals(fields.get("floatField").getName(), "floatField"),
-                  () -> assertEquals(fields.get("notPrivateField").getName(), "notPrivateField"),
-                  () -> assertEquals(fields.get("oneConstant").getName(), "oneConstant"),
+                  () -> assertEquals(fields.get(TestConstant.STRING_FIELD).getName(), TestConstant.STRING_FIELD),
+                  () -> assertEquals(fields.get(TestConstant.OBJECT_FIELD).getName(), TestConstant.OBJECT_FIELD),
+                  () -> assertEquals(fields.get(TestConstant.FLOAT_FIELD).getName(), TestConstant.FLOAT_FIELD),
+                  () -> assertEquals(fields.get(TestConstant.NOT_PRIVATE_FIELD).getName(), TestConstant.NOT_PRIVATE_FIELD),
+                  () -> assertEquals(fields.get(TestConstant.ONE_CONSTANT).getName(), TestConstant.ONE_CONSTANT),
                   () -> assertEquals(fields.size(), 5)
         );
     }
@@ -215,12 +215,12 @@ public class ReflectionUtilTest {
     @Test
     public void getAllPrivateFieldsMap() {
         Map<String, Field> fields = ReflectionUtil.getAllPrivateFieldsMap(CustomTestClassForType.class);
-
+        int fieldsCounter = 3;
         assertAll("privateFields",
-                  () -> assertEquals(fields.get("stringField").getName(), "stringField"),
-                  () -> assertEquals(fields.get("objectField").getName(), "objectField"),
-                  () -> assertEquals(fields.get("floatField").getName(), "floatField"),
-                  () -> assertEquals(fields.size(), 3)
+                  () -> assertEquals(fields.get(TestConstant.STRING_FIELD).getName(), TestConstant.STRING_FIELD),
+                  () -> assertEquals(fields.get(TestConstant.OBJECT_FIELD).getName(), TestConstant.OBJECT_FIELD),
+                  () -> assertEquals(fields.get(TestConstant.FLOAT_FIELD).getName(), TestConstant.FLOAT_FIELD),
+                  () -> assertEquals(fields.size(), fieldsCounter)
         );
     }
 
