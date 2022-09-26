@@ -3,6 +3,7 @@ package org.common.reflector.util;
 public final class TestConstant {
     private TestConstant() {}
 
+    public static final String NOT_PRIVATE_FIELD = "notPrivateField";
     public static final String ANNOTATED_METHOD_ANNOTATED_CLASS = "annotatedMethod";
     public static final String GET_CLASS_METHOD_METHOD_ANNOTATED_CLASS = "getClass";
     public static final String WAIT_METHOD_ANNOTATED_CLASS = "wait";
@@ -33,5 +34,4 @@ public final class TestConstant {
     public static final String ORG_COMMON_REFLECTOR_DATA = "org.common.reflector.data";
     public static final String SOME_VALUE = "SomeValue";
     public static final String ONE_CONSTANT = "oneConstant";
-
 }
