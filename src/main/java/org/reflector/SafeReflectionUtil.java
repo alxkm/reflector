@@ -1,5 +1,6 @@
 package org.reflector;
 
+import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -97,6 +98,14 @@ public final class SafeReflectionUtil {
     public static Optional<String> getSuperClass(final Class<?> clazz) {
         try {
             Optional.of(ReflectionUtil.getSuperClass(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<String> clearUnselectedFields(final Object object, final Collection<String> fields)  {
+        try {
+           ReflectionUtil.clearUnselectedFields(object, fields);
         } catch (Exception ignored) {
         }
         return Optional.empty();
