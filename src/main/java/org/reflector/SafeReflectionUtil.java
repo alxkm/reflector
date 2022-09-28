@@ -54,6 +54,54 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
+    public static Optional<String> getClassCanonicalNameByClass(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getClassCanonicalNameByClass(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<String> getClassSimpleNameByClass(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getClassSimpleNameByClass(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<String> getPackageByClass(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getPackageByClass(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<String> getSuperClassName(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getSuperClassName(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<String> getSuperClassNameByClass(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getSuperClassNameByClass(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<String> getSuperClass(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getSuperClass(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
     public static <T> Optional<T> readField(Object object, String fieldName) {
         try {
             Optional.of(ReflectionUtil.readField(object, fieldName));
