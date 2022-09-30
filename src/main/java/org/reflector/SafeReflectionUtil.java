@@ -1,8 +1,11 @@
 package org.reflector;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -133,6 +136,22 @@ public final class SafeReflectionUtil {
     public static Optional<Map<Method, Annotation[]>> getMethodDeclaredAnnotations(final Method[] methods) {
         try {
             Optional.of(ReflectionUtil.getMethodDeclaredAnnotations(methods));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<Field>> getAllFields(final Class<?> type) {
+        try {
+            Optional.of(ReflectionUtil.getAllFields(type));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<Field>> getAllFields(final List<Field> fields, final Class<?> type) {
+        try {
+            Optional.of(ReflectionUtil.getAllFields(type));
         } catch (Exception ignored) {
         }
         return Optional.empty();
