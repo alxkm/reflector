@@ -157,6 +157,38 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
+    public static Optional<List<Field>> getAllPrivateFields(final Class<?> clazz)  {
+        try {
+            Optional.of(ReflectionUtil.getAllPrivateFields(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Map<String, Field>> getAllFieldsMap(final Class<?> clazz)  {
+        try {
+            Optional.of(ReflectionUtil.getAllFieldsMap(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Map<String, Field>> getAllPrivateFieldsMap(final Class<?> clazz)  {
+        try {
+            Optional.of(ReflectionUtil.getAllPrivateFieldsMap(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<Method>> getAllPrivateMethods(final Class<?> clazz)  {
+        try {
+            Optional.of(ReflectionUtil.getAllPrivateMethods(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
     public static <T> Optional<T> readField(Object object, String fieldName) {
         try {
             Optional.of(ReflectionUtil.readField(object, fieldName));
