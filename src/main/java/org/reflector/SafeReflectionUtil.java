@@ -189,6 +189,30 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
+    public static Optional<List<Method>> getAllPublicProtectedMethods(final Class<?> clazz)  {
+        try {
+            Optional.of(ReflectionUtil.getAllPublicProtectedMethods(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<Method>> getAllPublicMethods(final Class<?> clazz)  {
+        try {
+            Optional.of(ReflectionUtil.getAllPublicMethods(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<Field>> getAllAnnotatedFields(final Class<?> type, final Class<? extends Annotation> annotation)  {
+        try {
+            Optional.of(ReflectionUtil.getAllAnnotatedFields(type, annotation));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
     public static <T> Optional<T> readField(Object object, String fieldName) {
         try {
             Optional.of(ReflectionUtil.readField(object, fieldName));
