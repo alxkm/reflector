@@ -1,6 +1,7 @@
 package org.reflector;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -248,6 +249,22 @@ public final class SafeReflectionUtil {
     public static <T> Optional<T> invokeInstance(String classFullName, Class<?>[] contTypes, Object[] obj) {
         try {
             Optional.of(ReflectionUtil.invokeInstance(classFullName, contTypes, obj));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static <T> Optional<T> invokeInstance(final Class<T> clazz, final Object... args) {
+        try {
+            Optional.of(ReflectionUtil.invokeInstance(clazz, args));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Constructor<?>[]> getConstructors(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getConstructors(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();

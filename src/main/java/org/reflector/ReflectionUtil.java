@@ -214,8 +214,7 @@ public final class ReflectionUtil {
         return getAllMethodsWithModifiers(clazz, Collections.singletonList(Modifier::isPublic));
     }
 
-    public static List<Field> getAllAnnotatedFields(final Class<?> type,
-                                                    final Class<? extends Annotation> annotation) {
+    public static List<Field> getAllAnnotatedFields(final Class<?> type, final Class<? extends Annotation> annotation) {
         List<Field> fieldList = new ArrayList<>();
         for (Field allField : getAllFields(type)) {
             if (allField.getAnnotation(annotation) != null) {
