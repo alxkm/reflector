@@ -302,4 +302,12 @@ public final class SafeReflectionUtil {
         }
         return Optional.empty();
     }
+
+    public static Optional<List<Class<?>>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation) {
+        try {
+            Optional.of(ReflectionUtil.getAllAnnotatedClassesByPackage(packageName, annotation));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
 }
