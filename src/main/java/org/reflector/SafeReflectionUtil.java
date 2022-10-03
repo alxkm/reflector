@@ -1,5 +1,6 @@
 package org.reflector;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -265,6 +266,38 @@ public final class SafeReflectionUtil {
     public static Optional<Constructor<?>[]> getConstructors(final Class<?> clazz) {
         try {
             Optional.of(ReflectionUtil.getConstructors(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Constructor<?>[]> getDeclaredConstructors(final Class<?> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getDeclaredConstructors(clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<Object> copy(final Object object) {
+        try {
+            Optional.of(ReflectionUtil.copy(object));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<Class<?>>> getClassesByPackage(final String packageName) {
+        try {
+            Optional.of(ReflectionUtil.getClassesByPackage(packageName));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<List<Class<?>>> getClassesByDirectoryAndPackage(final File directory, final String packageName) {
+        try {
+            Optional.of(ReflectionUtil.getClassesByDirectoryAndPackage(directory, packageName));
         } catch (Exception ignored) {
         }
         return Optional.empty();
