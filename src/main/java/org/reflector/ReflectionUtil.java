@@ -314,7 +314,7 @@ public final class ReflectionUtil {
     public static Object invokeInstance(final String classFullName, final Object... args) throws InstanceInvocationException {
         try {
             final Class<?> clazz = Class.forName(classFullName);
-            final Class<?>[] ctorTypes = getArrayValuesTypes(args);
+            final Class<?>[] ctorTypes = getArrayValuesTypesByArgs(args);
             final Constructor<?> ctor = getAccessibleConstructor(ctorTypes, clazz);
             return ctor.newInstance(args);
         } catch (Exception e) {
@@ -325,7 +325,7 @@ public final class ReflectionUtil {
 
     public static <T> T invokeInstance(final Class<T> clazz, final Object... args) throws InstanceInvocationException {
         try {
-            final Class<?>[] ctorTypes = getArrayValuesTypes(args);
+            final Class<?>[] ctorTypes = getArrayValuesTypesByArgs(args);
             final Constructor<T> ctor = getAccessibleConstructor(ctorTypes, clazz);
             return ctor.newInstance(args);
         } catch (Exception e) {
@@ -334,7 +334,7 @@ public final class ReflectionUtil {
         throw new InstanceInvocationException("Error during instance invoke has been happened");
     }
 
-    private static Class<?>[] getArrayValuesTypes(final Object[] args) {
+    public static Class<?>[] getArrayValuesTypesByArgs(final Object[] args) {
         final Class<?>[] ctorTypes = new Class[args.length];
         for (int i = 0; i < args.length; i++) {
             ctorTypes[i] = args[i].getClass();
