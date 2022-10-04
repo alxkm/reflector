@@ -263,6 +263,14 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
+    public static <T> Optional<Class<?>[]> getArrayValuesTypesByArgs(final Object[] args) {
+        try {
+            Optional.of(ReflectionUtil.getArrayValuesTypesByArgs(args));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
     public static Optional<Constructor<?>[]> getConstructors(final Class<?> clazz) {
         try {
             Optional.of(ReflectionUtil.getConstructors(clazz));
