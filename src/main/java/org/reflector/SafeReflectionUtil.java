@@ -271,6 +271,14 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
+    public static <T> Optional<Constructor<T>> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) {
+        try {
+            Optional.of(ReflectionUtil.getAccessibleConstructor(contTypes, clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
     public static Optional<Constructor<?>[]> getConstructors(final Class<?> clazz) {
         try {
             Optional.of(ReflectionUtil.getConstructors(clazz));
