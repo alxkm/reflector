@@ -311,7 +311,8 @@ public final class ReflectionUtil {
         throw new InstanceInvocationException("Error during instance invoke has been happened");
     }
 
-    public static Object invokeInstance(final String classFullName, final Object... args) throws InstanceInvocationException {
+    public static Object invokeInstance(final String classFullName, final Object... args)
+            throws InstanceInvocationException {
         try {
             final Class<?> clazz = Class.forName(classFullName);
             final Class<?>[] ctorTypes = getArrayValuesTypesByArgs(args);
@@ -342,7 +343,8 @@ public final class ReflectionUtil {
         return ctorTypes;
     }
 
-    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) throws NoSuchMethodException {
+    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz)
+            throws NoSuchMethodException {
         final Constructor<T> ctor = clazz.getConstructor(contTypes);
         ctor.setAccessible(true);
         return ctor;
@@ -389,7 +391,8 @@ public final class ReflectionUtil {
         return copyObj;
     }
 
-    public static List<Class<?>> getClassesByPackage(final String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+    public static List<Class<?>> getClassesByPackage(final String packageName)
+            throws ClassNotFoundException, IOException, URISyntaxException {
         String path = packageName.replace('.', '/');
         Enumeration<URL> resources = CLASSLOADER.getResources(path);
         List<File> directories = new ArrayList<>();
@@ -403,7 +406,8 @@ public final class ReflectionUtil {
         return classes;
     }
 
-    public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName) throws ClassNotFoundException {
+    public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName)
+            throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
