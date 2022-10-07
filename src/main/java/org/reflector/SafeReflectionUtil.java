@@ -143,6 +143,14 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
+    public static Optional<Boolean> isMethodAnnotated(final Method method, final Class clazz) {
+        try {
+            Optional.of(ReflectionUtil.isMethodAnnotated(method, clazz));
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
     public static Optional<List<Field>> getAllFields(final Class<?> type) {
         try {
             Optional.of(ReflectionUtil.getAllFields(type));

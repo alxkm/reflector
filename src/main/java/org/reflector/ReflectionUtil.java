@@ -343,8 +343,7 @@ public final class ReflectionUtil {
         return ctorTypes;
     }
 
-    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz)
-            throws NoSuchMethodException {
+    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) throws NoSuchMethodException {
         final Constructor<T> ctor = clazz.getConstructor(contTypes);
         ctor.setAccessible(true);
         return ctor;
