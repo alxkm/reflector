@@ -12,7 +12,7 @@ repositories {
 
 allprojects {
     project.ext {
-        sl4jVersion = '2.0.0'
+        sl4jVersion = '2.0.3'
         junitVersion = '5.9.0'
     }
 }
