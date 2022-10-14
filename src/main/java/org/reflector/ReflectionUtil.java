@@ -173,7 +173,6 @@ public final class ReflectionUtil {
 
     public static List<Field> getAllPrivateFields(final Class<?> clazz) {
         List<Field> fields = new ArrayList<>();
-
         Field[] classFields = clazz.getDeclaredFields();
 
         for (Field field : classFields) {
