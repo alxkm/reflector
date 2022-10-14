@@ -161,7 +161,7 @@ public final class SafeReflectionUtil {
 
     public static <T> Optional<Boolean> isFieldAnnotated(final Field field, final Class<T> clazz) {
         try {
-            Optional.of(ReflectionUtil.isFieldAnnotated(field, clazz));
+            return Optional.of(ReflectionUtil.isFieldAnnotated(field, clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -169,7 +169,7 @@ public final class SafeReflectionUtil {
 
     public static <T> Optional<Boolean> isFieldExactAnnotated(final Field field, final Class type) {
         try {
-            Optional.of(ReflectionUtil.isFieldExactAnnotated(field, type));
+            return Optional.of(ReflectionUtil.isFieldExactAnnotated(field, type));
         } catch (Exception ignored) {
         }
         return Optional.empty();
