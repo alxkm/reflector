@@ -209,7 +209,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<Map<String, Field>> getAllPrivateFieldsMap(final Class<?> clazz)  {
         try {
-            Optional.of(ReflectionUtil.getAllPrivateFieldsMap(clazz));
+            return Optional.of(ReflectionUtil.getAllPrivateFieldsMap(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -217,7 +217,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<List<Method>> getAllPrivateMethods(final Class<?> clazz)  {
         try {
-            Optional.of(ReflectionUtil.getAllPrivateMethods(clazz));
+           return Optional.of(ReflectionUtil.getAllPrivateMethods(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -225,7 +225,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<List<Method>> getAllPublicProtectedMethods(final Class<?> clazz)  {
         try {
-            Optional.of(ReflectionUtil.getAllPublicProtectedMethods(clazz));
+            return Optional.of(ReflectionUtil.getAllPublicProtectedMethods(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
