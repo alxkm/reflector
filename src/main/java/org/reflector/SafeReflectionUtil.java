@@ -25,7 +25,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getClassFullName(final Object obj) {
         try {
-            Optional.of(ReflectionUtil.getClassFullName(obj));
+            return Optional.of(ReflectionUtil.getClassFullName(obj));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -33,7 +33,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getClassCanonicalName(final Object obj) {
         try {
-            Optional.of(ReflectionUtil.getClassCanonicalName(obj));
+            return Optional.of(ReflectionUtil.getClassCanonicalName(obj));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -41,7 +41,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getClassSimpleName(final Object obj) {
         try {
-            Optional.of(ReflectionUtil.getClassSimpleName(obj));
+            return Optional.of(ReflectionUtil.getClassSimpleName(obj));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -49,7 +49,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getPackage(final Object obj) {
         try {
-            Optional.of(ReflectionUtil.getPackage(obj));
+            return Optional.of(ReflectionUtil.getPackage(obj));
         } catch (Exception ignored) {
         }
         return Optional.empty();
