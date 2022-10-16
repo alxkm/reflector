@@ -57,7 +57,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getClassFullNameByClass(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getClassFullNameByClass(clazz));
+            return Optional.of(ReflectionUtil.getClassFullNameByClass(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -65,7 +65,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getClassCanonicalNameByClass(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getClassCanonicalNameByClass(clazz));
+            return Optional.of(ReflectionUtil.getClassCanonicalNameByClass(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -73,7 +73,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getClassSimpleNameByClass(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getClassSimpleNameByClass(clazz));
+            return Optional.of(ReflectionUtil.getClassSimpleNameByClass(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -81,7 +81,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getPackageByClass(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getPackageByClass(clazz));
+            return Optional.of(ReflectionUtil.getPackageByClass(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -89,7 +89,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getSuperClassName(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getSuperClassName(clazz));
+            return Optional.of(ReflectionUtil.getSuperClassName(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
