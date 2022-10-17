@@ -97,31 +97,30 @@ public final class SafeReflectionUtil {
 
     public static Optional<String> getSuperClassNameByClass(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getSuperClassNameByClass(clazz));
+            return Optional.of(ReflectionUtil.getSuperClassNameByClass(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static Optional<String> getSuperClass(final Class<?> clazz) {
+    public static Optional<?> getSuperClass(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getSuperClass(clazz));
+            return Optional.of(ReflectionUtil.getSuperClass(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static Optional<String> clearUnselectedFields(final Object object, final Collection<String> fields)  {
+    public static void clearUnselectedFields(final Object object, final Collection<String> fields)  {
         try {
            ReflectionUtil.clearUnselectedFields(object, fields);
         } catch (Exception ignored) {
         }
-        return Optional.empty();
     }
 
     public static Optional<Annotation[]> getClassAnnotations(final Class<?> clazz)   {
         try {
-            Optional.of(ReflectionUtil.getClassAnnotations(clazz));
+            return Optional.of(ReflectionUtil.getClassAnnotations(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -129,7 +128,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<Annotation[]> getMethodDeclaredAnnotations(final Method method)   {
         try {
-            Optional.of(ReflectionUtil.getMethodDeclaredAnnotations(method));
+            return Optional.of(ReflectionUtil.getMethodDeclaredAnnotations(method));
         } catch (Exception ignored) {
         }
         return Optional.empty();
