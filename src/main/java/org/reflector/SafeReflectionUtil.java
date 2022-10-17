@@ -136,7 +136,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<Map<Method, Annotation[]>> getMethodDeclaredAnnotations(final Method[] methods) {
         try {
-            Optional.of(ReflectionUtil.getMethodDeclaredAnnotations(methods));
+            return Optional.of(ReflectionUtil.getMethodDeclaredAnnotations(methods));
         } catch (Exception ignored) {
         }
         return Optional.empty();
