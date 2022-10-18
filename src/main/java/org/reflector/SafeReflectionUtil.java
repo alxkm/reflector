@@ -144,7 +144,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<Boolean> isMethodAnnotated(final Method method, final Class clazz) {
         try {
-            Optional.of(ReflectionUtil.isMethodAnnotated(method, clazz));
+            return Optional.of(ReflectionUtil.isMethodAnnotated(method, clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -152,7 +152,7 @@ public final class SafeReflectionUtil {
 
     public static <T> Optional<Boolean> isMethodParameterAnnotated(final Method method, final Class<T> clazz) {
         try {
-            Optional.of(ReflectionUtil.isMethodParameterAnnotated(method, clazz));
+            return Optional.of(ReflectionUtil.isMethodParameterAnnotated(method, clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -176,7 +176,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<List<Field>> getAllFields(final Class<?> type) {
         try {
-            Optional.of(ReflectionUtil.getAllFields(type));
+            return Optional.of(ReflectionUtil.getAllFields(type));
         } catch (Exception ignored) {
         }
         return Optional.empty();
