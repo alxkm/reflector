@@ -254,49 +254,49 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
-    public static <T> Optional<T> invokeMethod(Object objectToInvokeOn, String methodName, Class<?>[] parameterTypes, Object[] args) {
+    public static Optional<Object> invokeMethod(Object objectToInvokeOn, String methodName, Class<?>[] parameterTypes, Object[] args) {
         try {
-            Optional.of(ReflectionUtil.invokeMethod(objectToInvokeOn, methodName, parameterTypes, args));
+            return Optional.of(ReflectionUtil.invokeMethod(objectToInvokeOn, methodName, parameterTypes, args));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static <T> Optional<T> invokeSingleMethod(Object objectToInvokeOn, String methodName, Class<?> parameterType, Object parameter) {
+    public static Optional<Object> invokeSingleMethod(Object objectToInvokeOn, String methodName, Class<?> parameterType, Object parameter) {
         try {
-            Optional.of(ReflectionUtil.invokeSingleMethod(objectToInvokeOn, methodName, parameterType, parameter));
+            return Optional.of(ReflectionUtil.invokeSingleMethod(objectToInvokeOn, methodName, parameterType, parameter));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static <T> Optional<T> invokeInstance(String className) {
+    public static Optional<Object> invokeInstance(String className) {
         try {
-            Optional.of(ReflectionUtil.invokeInstance(className));
+            return Optional.of(ReflectionUtil.invokeInstance(className));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static <T> Optional<T> invokeInstance(String classFullName, Class<?>[] contTypes, Object[] obj) {
+    public static Optional<Object> invokeInstance(String classFullName, Class<?>[] contTypes, Object[] obj) {
         try {
-            Optional.of(ReflectionUtil.invokeInstance(classFullName, contTypes, obj));
+            return Optional.of(ReflectionUtil.invokeInstance(classFullName, contTypes, obj));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static <T> Optional<T> invokeInstance(final Class<T> clazz, final Object... args) {
+    public static <T> Optional<Object> invokeInstance(final Class<T> clazz, final Object... args) {
         try {
-            Optional.of(ReflectionUtil.invokeInstance(clazz, args));
+            return Optional.of(ReflectionUtil.invokeInstance(clazz, args));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static <T> Optional<Class<?>[]> getArrayValuesTypesByArgs(final Object[] args) {
+    public static Optional<Class<?>[]> getArrayValuesTypesByArgs(final Object[] args) {
         try {
-            Optional.of(ReflectionUtil.getArrayValuesTypesByArgs(args));
+            return Optional.of(ReflectionUtil.getArrayValuesTypesByArgs(args));
         } catch (Exception ignored) {
         }
         return Optional.empty();
