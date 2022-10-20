@@ -304,7 +304,7 @@ public final class SafeReflectionUtil {
 
     public static <T> Optional<Constructor<T>> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) {
         try {
-            Optional.of(ReflectionUtil.getAccessibleConstructor(contTypes, clazz));
+            return Optional.of(ReflectionUtil.getAccessibleConstructor(contTypes, clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -312,7 +312,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<Constructor<?>[]> getConstructors(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getConstructors(clazz));
+            return Optional.of(ReflectionUtil.getConstructors(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -320,7 +320,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<Constructor<?>[]> getDeclaredConstructors(final Class<?> clazz) {
         try {
-            Optional.of(ReflectionUtil.getDeclaredConstructors(clazz));
+            return Optional.of(ReflectionUtil.getDeclaredConstructors(clazz));
         } catch (Exception ignored) {
         }
         return Optional.empty();
