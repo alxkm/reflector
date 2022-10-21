@@ -328,7 +328,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<Object> copy(final Object object) {
         try {
-            Optional.of(ReflectionUtil.copy(object));
+            return Optional.of(ReflectionUtil.copy(object));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -336,7 +336,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<List<Class<?>>> getClassesByPackage(final String packageName) {
         try {
-            Optional.of(ReflectionUtil.getClassesByPackage(packageName));
+            return Optional.of(ReflectionUtil.getClassesByPackage(packageName));
         } catch (Exception ignored) {
         }
         return Optional.empty();
