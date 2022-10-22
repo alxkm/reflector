@@ -344,7 +344,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<List<Class<?>>> getClassesByDirectoryAndPackage(final File directory, final String packageName) {
         try {
-            Optional.of(ReflectionUtil.getClassesByDirectoryAndPackage(directory, packageName));
+            return Optional.of(ReflectionUtil.getClassesByDirectoryAndPackage(directory, packageName));
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -352,7 +352,7 @@ public final class SafeReflectionUtil {
 
     public static Optional<List<Class<?>>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation) {
         try {
-            Optional.of(ReflectionUtil.getAllAnnotatedClassesByPackage(packageName, annotation));
+            return Optional.of(ReflectionUtil.getAllAnnotatedClassesByPackage(packageName, annotation));
         } catch (Exception ignored) {
         }
         return Optional.empty();
