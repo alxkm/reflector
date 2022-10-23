@@ -232,7 +232,7 @@ public final class ReflectionUtil {
             field.setAccessible(true);
             return field.get(object);
         } catch (Exception e) {
-            LOGGER.error("Could not invoke method ", e);
+            LOGGER.error("Could not invoke method", e);
         }
         throw new FieldAccessException("Requested field is not accessible");
     }
@@ -282,7 +282,7 @@ public final class ReflectionUtil {
             Method method = objectToInvokeOn.getClass().getDeclaredMethod(methodName, parameterTypes);
             return method.invoke(objectToInvokeOn, args);
         } catch (Exception e) {
-            LOGGER.error("Could not invoke method ", e);
+            LOGGER.error("Could not invoke method", e);
         }
         throw new MethodInvokeException("Error during method invoke has been happened");
     }
