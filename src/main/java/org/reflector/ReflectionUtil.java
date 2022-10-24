@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import org.reflector.exception.FieldAccessException;
 import org.reflector.exception.InstanceInvocationException;
 import org.reflector.exception.MethodInvokeException;
+import org.reflector.util.ReflectionConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -414,9 +415,9 @@ public final class ReflectionUtil {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory()) {
-                    classes.addAll(getClassesByDirectoryAndPackage(file, packageName + "." + file.getName()));
-                } else if (file.getName().endsWith(".class")) {
-                    classes.add(Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+                    classes.addAll(getClassesByDirectoryAndPackage(file, packageName + ReflectionConstant.DOT + file.getName()));
+                } else if (file.getName().endsWith(ReflectionConstant.CLASS)) {
+                    classes.add(Class.forName(packageName + ReflectionConstant.DOT + file.getName().substring(0, file.getName().length() - 6)));
                 }
             }
         }
