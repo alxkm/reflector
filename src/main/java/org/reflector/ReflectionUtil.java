@@ -417,7 +417,7 @@ public final class ReflectionUtil {
                 if (file.isDirectory()) {
                     classes.addAll(getClassesByDirectoryAndPackage(file, packageName + ReflectionConstant.DOT + file.getName()));
                 } else if (file.getName().endsWith(ReflectionConstant.CLASS)) {
-                    classes.add(Class.forName(packageName + ReflectionConstant.DOT + file.getName().substring(0, file.getName().length() - 6)));
+                    classes.add(Class.forName(packageName + ReflectionConstant.DOT + file.getName().substring(0, file.getName().length() - ReflectionConstant.CLASS_NAME_CONSTANT)));
                 }
             }
         }
