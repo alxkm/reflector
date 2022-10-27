@@ -246,7 +246,7 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
-    public static Optional<Object> readField(Object object, String fieldName) {
+    public static Optional<Object> readField(final Object object, final String fieldName) {
         try {
             return Optional.of(ReflectionUtil.readField(object, fieldName));
         } catch (Exception ignored) {
@@ -254,15 +254,21 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
-    public static Optional<Object> invokeMethod(Object objectToInvokeOn, String methodName, Class<?>[] parameterTypes, Object[] args) {
+    public static Optional<Object> invokeMethod(final Object objectToInvokeOn,
+                                                final String methodName,
+                                                final Class<?>[] parameterTypes,
+                                                final Object[] args) {
         try {
-            return Optional.of(ReflectionUtil.invokeMethod(objectToInvokeOn, methodName, parameterTypes, args));
+            return Optional.of(ReflectionUtil.invokeMethod(objectToInvokeOn, methodName, parameterTypes,  args));
         } catch (Exception ignored) {
         }
         return Optional.empty();
     }
 
-    public static Optional<Object> invokeSingleMethod(Object objectToInvokeOn, String methodName, Class<?> parameterType, Object parameter) {
+    public static Optional<Object> invokeSingleMethod(final Object objectToInvokeOn,
+                                                      final String methodName,
+                                                      final Class<?> parameterType,
+                                                      final Object parameter) {
         try {
             return Optional.of(ReflectionUtil.invokeSingleMethod(objectToInvokeOn, methodName, parameterType, parameter));
         } catch (Exception ignored) {
@@ -278,7 +284,9 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
-    public static Optional<Object> invokeInstance(String classFullName, Class<?>[] contTypes, Object[] obj) {
+    public static Optional<Object> invokeInstance(final String classFullName,
+                                                  final Class<?>[] contTypes,
+                                                  final Object[] obj) {
         try {
             return Optional.of(ReflectionUtil.invokeInstance(classFullName, contTypes, obj));
         } catch (Exception ignored) {
