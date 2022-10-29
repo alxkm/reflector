@@ -238,8 +238,7 @@ public final class SafeReflectionUtil {
         return Optional.empty();
     }
 
-    public static Optional<List<Field>> getAllAnnotatedFields(final Class<?> type,
-                                                              final Class<? extends Annotation> annotation)  {
+    public static Optional<List<Field>> getAllAnnotatedFields(final Class<?> type, final Class<? extends Annotation> annotation)  {
         try {
             return Optional.of(ReflectionUtil.getAllAnnotatedFields(type, annotation));
         } catch (Exception ignored) {
