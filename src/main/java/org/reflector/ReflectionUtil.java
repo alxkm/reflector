@@ -311,8 +311,7 @@ public final class ReflectionUtil {
         throw new InstanceInvocationException("Error during instance invoke has been happened");
     }
 
-    public static Object invokeInstance(final String classFullName, final Object... args)
-            throws InstanceInvocationException {
+    public static Object invokeInstance(final String classFullName, final Object... args) throws InstanceInvocationException {
         try {
             final Class<?> clazz = Class.forName(classFullName);
             final Class<?>[] ctorTypes = getArrayValuesTypesByArgs(args);
