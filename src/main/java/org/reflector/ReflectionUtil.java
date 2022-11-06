@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
  */
 public final class ReflectionUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
-
     private static final ClassLoader CLASSLOADER;
 
     static {
