@@ -391,7 +391,7 @@ public final class ReflectionUtil {
 
     public static List<Class<?>> getClassesByPackage(final String packageName)
             throws ClassNotFoundException, IOException, URISyntaxException {
-        String path = packageName.replace('.', '/');
+        String path = packageName.replace(ReflectionConstant.DOT_SYMBOL, ReflectionConstant.SLASH);
         Enumeration<URL> resources = CLASSLOADER.getResources(path);
         List<File> directories = new ArrayList<>();
         while (resources.hasMoreElements()) {
