@@ -274,10 +274,7 @@ public final class ReflectionUtil {
         return result;
     }
 
-    public static Object invokeMethod(final Object objectToInvokeOn,
-                                      final String methodName,
-                                      final Class<?>[] parameterTypes,
-                                      final Object[] args) {
+    public static Object invokeMethod(final Object objectToInvokeOn, final String methodName, final Class<?>[] parameterTypes, final Object[] args) {
         try {
             Method method = objectToInvokeOn.getClass().getDeclaredMethod(methodName, parameterTypes);
             return method.invoke(objectToInvokeOn, args);
@@ -287,10 +284,7 @@ public final class ReflectionUtil {
         throw new MethodInvokeException("Error during method invoke has been happened");
     }
 
-    public static Object invokeSingleMethod(final Object objectToInvokeOn,
-                                            final String methodName,
-                                            final Class<?> parameterType,
-                                            final Object parameter) {
+    public static Object invokeSingleMethod(final Object objectToInvokeOn, final String methodName, final Class<?> parameterType, final Object parameter) {
         try {
             final Class<?> clazz = objectToInvokeOn.getClass();
             final Method method = clazz.getMethod(methodName, parameterType);
