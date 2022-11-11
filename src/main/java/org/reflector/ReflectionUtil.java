@@ -218,10 +218,8 @@ public final class ReflectionUtil {
         for (Field allField : getAllFields(type)) {
             if (allField.getAnnotation(annotation) != null) {
                 fieldList.add(allField);
+                allField.setAccessible(true);
             }
-        }
-        for (Field field : fieldList) {
-            field.setAccessible(true);
         }
         return fieldList;
     }
@@ -284,7 +282,10 @@ public final class ReflectionUtil {
         throw new MethodInvokeException("Error during method invoke has been happened");
     }
 
-    public static Object invokeSingleMethod(final Object objectToInvokeOn, final String methodName, final Class<?> parameterType, final Object parameter) {
+    public static Object invokeSingleMethod(final Object objectToInvokeOn,
+                                            final String methodName,
+                                            final Class<?> parameterType,
+                                            final Object parameter) {
         try {
             final Class<?> clazz = objectToInvokeOn.getClass();
             final Method method = clazz.getMethod(methodName, parameterType);
@@ -370,11 +371,7 @@ public final class ReflectionUtil {
                     field.set(copyObj, field.get(object));
                 } else {
                     Object childObj = field.get(object);
-                    if(childObj == object) {
-                        field.set(copyObj,copyObj);
-                    } else {
-                        field.set(copyObj, copy(field.get(object)));
-                    }
+                    field.set(copyObj, (childObj == object) ? copyObj : copy(field.get(object)));
                 }
             }
         } catch (Exception e) {
