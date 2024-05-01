@@ -15,6 +15,9 @@ Library main usage is:
 - read object field
 - read object field as map
 - other (get class name, package, super)
+- get method
+- get declard methods
+- get default interfaces methods
 
 Required java version is java 8
 
@@ -68,6 +71,36 @@ User instance = (User) ReflectionUtils.invokeInstance(fullClassNameWithPackage, 
 
 ```
 
+Get method by name:
+
+```java
+
+ReflectionUtil.findMethod(Person.class, "getId")
+
+```
+Get declared methods by class:
+
+```java
+
+List<Method> methods = ReflectionUtil.getDeclaredMethodsList(Person.class)
+
+```
+
+Get declared methods by class:
+
+```java
+
+Method[] methods = ReflectionUtil.getDeclaredMethods(Person.class)
+
+```
+
+Get declared methods by class:
+
+```java
+
+List<Method> methods = ReflectionUtil.findDefaultMethodsOnInterfaces(Person.class)
+
+```
 
 ### Changelog
 
