@@ -459,6 +459,18 @@ public final class ReflectionUtil {
         return result;
     }
 
+    public static List<Method> getDeclaredMethodsList(final Class<?> clazz) {
+        List<Method> methods = new ArrayList<>();
+        try {
+            methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+            methods.addAll(findDefaultMethodsOnInterfaces(clazz));
+        }
+        catch (Throwable ex) {
+            throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
+        }
+        return methods;
+    }
+
     public static Method findMethod(final Class<?> clazz, final String name) {
         Class<?> classSearchType = clazz;
         while (classSearchType != null) {
