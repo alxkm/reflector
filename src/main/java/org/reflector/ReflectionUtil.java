@@ -376,6 +376,7 @@ public final class ReflectionUtil {
             }
         } catch (Exception e) {
             LOGGER.error("Error during copy object", e);
+            throw new IllegalStateException("Failed to get declared methods for Class [" + object.getClass().getName() + "] from ClassLoader [" + object.getClass().getClassLoader() + "]", e);
         }
         return copyObj;
     }
@@ -424,5 +425,51 @@ public final class ReflectionUtil {
             }
         }
         return classes;
+    }
+
+    public static List<Method> findDefaultMethodsOnInterfaces(final Class<?> clazz) {
+        List<Method> result = new ArrayList<>();
+        for (Class<?> ifc : clazz.getInterfaces()) {
+            for (Method method : ifc.getMethods()) {
+                if (method.isDefault()) {
+                    result.add(method);
+                }
+            }
+        }
+        return result;
+    }
+
+    public static Method[] getDeclaredMethods(final Class<?> clazz) {
+        Method[] result;
+        try {
+            Method[] declaredMethods = clazz.getDeclaredMethods();
+            List<Method> defaultMethods = findDefaultMethodsOnInterfaces(clazz);
+            result = new Method[declaredMethods.length + defaultMethods.size()];
+            System.arraycopy(declaredMethods, 0, result, 0, declaredMethods.length);
+            int index = declaredMethods.length;
+            for (Method defaultMethod : defaultMethods) {
+                result[index] = defaultMethod;
+                index++;
+            }
+        }
+        catch (Throwable ex) {
+            throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
+        }
+
+        return result;
+    }
+
+    public static Method findMethod(final Class<?> clazz, final String name) {
+        Class<?> classSearchType = clazz;
+        while (classSearchType != null) {
+            Method[] methods = (classSearchType.isInterface() ? classSearchType.getMethods() : getDeclaredMethods(classSearchType));
+            for (Method method : methods) {
+                if (name.equals(method.getName())) {
+                    return method;
+                }
+            }
+            classSearchType = classSearchType.getSuperclass();
+        }
+        return null;
     }
 }

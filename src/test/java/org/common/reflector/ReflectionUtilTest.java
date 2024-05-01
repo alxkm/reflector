@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.common.reflector.data.Person;
 import org.common.reflector.data.annotation.ClassAnnotation;
 import org.common.reflector.data.annotation.CustomAnnotationForTest;
 import org.common.reflector.data.annotation.CustomMethodAnnotation;
@@ -294,5 +296,11 @@ public class ReflectionUtilTest {
         List<Class<?>> classes = ReflectionUtil.getAllAnnotatedClassesByPackage(TestConstant.REFLECTOR_DATA_PACKAGE, CustomMethodAnnotation.class);
         int expectedAnnotationClassesQuantity = 0;
         assertEquals(expectedAnnotationClassesQuantity, classes.size());
+    }
+
+    @Test
+    public void findMethodsTest() {
+        Method method = ReflectionUtil.findMethod(Person.class, TestConstant.METHOD_NAME_GET_ID);
+        assertEquals(TestConstant.METHOD_NAME_GET_ID, method.getName());
     }
 }
