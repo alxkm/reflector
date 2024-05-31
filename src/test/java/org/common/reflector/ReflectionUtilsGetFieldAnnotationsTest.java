@@ -3,7 +3,7 @@ package org.common.reflector;
 import org.common.reflector.data.annotation.CustomAnnotationForTest;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.reflector.ReflectionUtil;
+import org.reflector.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ReflectionUtilGetFieldAnnotationsTest {
+public class ReflectionUtilsGetFieldAnnotationsTest {
     private static Field deprecatedField;
     private static Field customAnnotatedField;
     private static Field nonAnnotatedField;
@@ -35,7 +35,7 @@ public class ReflectionUtilGetFieldAnnotationsTest {
 
     @Test
     public void testGetFieldAnnotations_DeprecatedField() {
-        Annotation[] annotations = ReflectionUtil.getFieldAnnotations(deprecatedField);
+        Annotation[] annotations = ReflectionUtils.getFieldAnnotations(deprecatedField);
         assertNotNull(annotations);
         assertEquals(1, annotations.length);
         assertTrue(annotations[0] instanceof Deprecated);
@@ -43,7 +43,7 @@ public class ReflectionUtilGetFieldAnnotationsTest {
 
     @Test
     public void testGetFieldAnnotations_SuppressedField() {
-        Annotation[] annotations = ReflectionUtil.getFieldAnnotations(customAnnotatedField);
+        Annotation[] annotations = ReflectionUtils.getFieldAnnotations(customAnnotatedField);
         assertNotNull(annotations);
         assertEquals(1, annotations.length);
         assertTrue(annotations[0] instanceof CustomAnnotationForTest);
@@ -51,7 +51,7 @@ public class ReflectionUtilGetFieldAnnotationsTest {
 
     @Test
     public void testGetFieldAnnotations_NonAnnotatedField() {
-        Annotation[] annotations = ReflectionUtil.getFieldAnnotations(nonAnnotatedField);
+        Annotation[] annotations = ReflectionUtils.getFieldAnnotations(nonAnnotatedField);
         assertNotNull(annotations);
         assertEquals(0, annotations.length);
     }
@@ -59,7 +59,7 @@ public class ReflectionUtilGetFieldAnnotationsTest {
     @Test
     public void testGetFieldAnnotations_NullField() {
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            ReflectionUtil.getFieldAnnotations(null);
+            ReflectionUtils.getFieldAnnotations(null);
         });
 
         String expectedMessage = "Field must not be null";

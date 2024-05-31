@@ -35,53 +35,134 @@ import org.slf4j.LoggerFactory;
  * <p>
  * simple object copy
  */
-public final class ReflectionUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
+public final class ReflectionUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
     private static final ClassLoader CLASSLOADER;
 
     static {
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : ReflectionUtil.class.getClassLoader();
+        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : ReflectionUtils.class.getClassLoader();
     }
 
     /**
-     * The private constructor of {@link ReflectionUtil}.
+     * The private constructor of {@link ReflectionUtils}.
      */
-    private ReflectionUtil() {
+    private ReflectionUtils() {
     }
 
     /*Class and Interface Methods*/
 
+    /**
+     * Gets the full name (including the package name) of the class of the given object.
+     *
+     * @param obj the object whose class full name is to be retrieved
+     * @return the full name of the class of the object
+     * @throws IllegalArgumentException if the input object is null
+     */
     public static String getClassFullName(final Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("Object must not be null");
+        }
         return obj.getClass().getName();
     }
 
+    /**
+     * Gets the canonical name of the class of the given object.
+     *
+     * @param obj the object whose class canonical name is to be retrieved
+     * @return the canonical name of the class of the object
+     * @throws IllegalArgumentException if the input object is null
+     */
     public static String getClassCanonicalName(final Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("Object must not be null");
+        }
         return obj.getClass().getCanonicalName();
     }
 
+    /**
+     * Gets the simple name of the class of the given object.
+     *
+     * @param obj the object whose class simple name is to be retrieved
+     * @return the simple name of the class of the object
+     * @throws IllegalArgumentException if the input object is null
+     */
     public static String getClassSimpleName(final Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException("Object must not be null");
+        }
         return obj.getClass().getSimpleName();
     }
 
+    /**
+     * Gets the package name of the class of the given object.
+     *
+     * @param obj the object whose class package name is to be retrieved
+     * @return the package name of the class of the object, or null if the class has no package
+     * @throws IllegalArgumentException if the input object is null
+     */
     public static String getPackage(final Object obj) {
-        return obj.getClass().getPackage().getName();
+        if (obj == null) {
+            throw new IllegalArgumentException("Object must not be null");
+        }
+        Package pkg = obj.getClass().getPackage();
+        return (pkg != null) ? pkg.getName() : null;
     }
 
+    /**
+     * Gets the full name (including the package name) of the given class.
+     *
+     * @param clazz the class whose full name is to be retrieved
+     * @return the full name of the class, or an empty string if the class is null
+     */
     public static String getClassFullNameByClass(final Class<?> clazz) {
+        if (clazz == null) {
+            return "";
+        }
         return clazz.getName();
     }
 
+    /**
+     * Gets the canonical name of the given class.
+     *
+     * @param clazz the class whose canonical name is to be retrieved
+     * @return the canonical name of the class, or null if the class is null
+     */
     public static String getClassCanonicalNameByClass(final Class<?> clazz) {
+        if (clazz == null) {
+            return null;
+        }
         return clazz.getCanonicalName();
     }
 
+    /**
+     * Gets the simple name of the given class.
+     *
+     * @param clazz the class whose simple name is to be retrieved
+     * @return the simple name of the class
+     * @throws IllegalArgumentException if the input class is null
+     */
     public static String getClassSimpleNameByClass(final Class<?> clazz) {
+        if (clazz == null) {
+            throw new IllegalArgumentException("Class must not be null");
+        }
         return clazz.getSimpleName();
     }
 
+    /**
+     * Gets the package name of the given class.
+     *
+     * @param clazz the class whose package name is to be retrieved
+     * @return the package name of the class, or null if the class has no package
+     * @throws IllegalArgumentException if the input class is null
+     */
     public static String getPackageByClass(final Class<?> clazz) {
-        return clazz.getPackage().getName();
+        if (clazz == null) {
+            throw new IllegalArgumentException("Class must not be null");
+        }
+
+        Package pkg = clazz.getPackage();
+        return (pkg != null) ? pkg.getName() : null;
     }
 
     /**
@@ -381,14 +462,18 @@ public final class ReflectionUtil {
         return clazz.getDeclaredConstructors();
     }
 
-    private static boolean isFieldPrimitiveType(final Field field) {
-        return field.getType().isPrimitive()
-                || field.getType().equals(String.class)
-                || field.getType().getSuperclass().equals(Number.class)
-                || field.getType().equals(Boolean.class);
-    }
 
+    /**
+     * Creates a deep copy of the given object.
+     *
+     * @param object the object to be copied
+     * @return the deep copy of the object
+     * @throws IllegalStateException if copying fails
+     */
     public static Object copy(final Object object) {
+        if (object == null) {
+            throw new IllegalArgumentException("Object must not be null");
+        }
         Object copyObj = null;
         try {
             copyObj = object.getClass().newInstance();
@@ -409,6 +494,14 @@ public final class ReflectionUtil {
             throw new IllegalStateException("Failed to get declared methods for Class [" + object.getClass().getName() + "] from ClassLoader [" + object.getClass().getClassLoader() + "]", e);
         }
         return copyObj;
+    }
+
+    private static boolean isFieldPrimitiveType(final Field field) {
+        return field.getType().isPrimitive() || field.getType() == String.class ||
+                field.getType() == Integer.class || field.getType() == Long.class ||
+                field.getType() == Boolean.class || field.getType() == Byte.class ||
+                field.getType() == Character.class || field.getType() == Short.class ||
+                field.getType() == Float.class || field.getType() == Double.class;
     }
 
     public static List<Class<?>> getClassesByPackage(final String packageName)
