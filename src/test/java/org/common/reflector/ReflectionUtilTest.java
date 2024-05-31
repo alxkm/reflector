@@ -28,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilTest {
@@ -48,9 +51,65 @@ public class ReflectionUtilTest {
     }
 
     @Test
-    public void getSuperClassNameTest() {
-        CustomTestInvokeClass obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
-        assertEquals(TestConstant.JAVA_LANG_OBJECT, ReflectionUtil.getSuperClassName(obj));
+    public void testGetSuperClassName_ValidObject() {
+        // Test with a valid object whose class has a superclass
+        String superClassName = ReflectionUtil.getSuperClassName("Test String");
+        assertNotNull(superClassName);
+        assertEquals("java.lang.Object", superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassName_ObjectClass() {
+        // Test with an object of class Object which has no superclass
+        Object obj = new Object();
+        String superClassName = ReflectionUtil.getSuperClassName(obj);
+        assertNull(superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassName_NullObject() {
+        // Test with a null object (should throw IllegalArgumentException)
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ReflectionUtil.getSuperClassName(null);
+        });
+
+        String expectedMessage = "Object must not be null";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void testGetSuperClassName_PrimitiveWrapper() {
+        // Test with a primitive wrapper type (Integer in this case)
+        Integer integer = 5;
+        String superClassName = ReflectionUtil.getSuperClassName(integer);
+        assertNotNull(superClassName);
+        assertEquals("java.lang.Number", superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassName_CustomClass() {
+        // Test with a custom class with a superclass
+        class SuperClass {}
+        class SubClass extends SuperClass {}
+
+        SubClass subClassInstance = new SubClass();
+        String superClassName = ReflectionUtil.getSuperClassName(subClassInstance);
+        assertNotNull(superClassName);
+        assertEquals(SuperClass.class.getName(), superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassName_Interface() {
+        // Test with an interface (should return null as it has no superclass)
+        class Example implements Runnable {
+            public void run() {}
+        }
+
+        Example example = new Example();
+        String superClassName = ReflectionUtil.getSuperClassName(example);
+        assertNotNull(superClassName);
+        assertEquals("java.lang.Object", superClassName);
     }
 
     @Test
@@ -74,8 +133,44 @@ public class ReflectionUtilTest {
     }
 
     @Test
-    public void getSuperClassNameByClassTest() {
-        assertEquals(TestConstant.JAVA_LANG_OBJECT, ReflectionUtil.getSuperClassNameByClass(CustomTestInvokeClass.class));
+    public void testGetSuperClassNameByClass_ValidClass() {
+        // Test with a class that has a superclass
+        String superClassName = ReflectionUtil.getSuperClassNameByClass(String.class);
+        assertNotNull(superClassName);
+        assertEquals("java.lang.Object", superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassNameByClass_ObjectClass() {
+        // Test with Object class which has no superclass
+        String superClassName = ReflectionUtil.getSuperClassNameByClass(Object.class);
+        assertNull(superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassNameByClass_PrimitiveClass() {
+        // Test with a primitive type class (should return null)
+        String superClassName = ReflectionUtil.getSuperClassNameByClass(int.class);
+        assertNull(superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassNameByClass_Interface() {
+        // Test with an interface (should return null)
+        String superClassName = ReflectionUtil.getSuperClassNameByClass(Runnable.class);
+        assertNull(superClassName);
+    }
+
+    @Test
+    public void testGetSuperClassNameByClass_NullClass() {
+        // Test with null class (should throw IllegalArgumentException)
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            ReflectionUtil.getSuperClassNameByClass(null);
+        });
+
+        String expectedMessage = "Class must not be null";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
 
     @Test
@@ -299,8 +394,8 @@ public class ReflectionUtilTest {
     }
 
     @Test
-    public void findMethodsTest() {
-        Method method = ReflectionUtil.findMethod(Person.class, TestConstant.METHOD_NAME_GET_ID);
+    public void findMethodsTestByName() {
+        Method method = ReflectionUtil.findMethodByName(Person.class, TestConstant.METHOD_NAME_GET_ID);
         assertEquals(TestConstant.METHOD_NAME_GET_ID, method.getName());
     }
 }

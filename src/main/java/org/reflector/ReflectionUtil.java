@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
+
 import org.reflector.exception.FieldAccessException;
 import org.reflector.exception.InstanceInvocationException;
 import org.reflector.exception.MethodInvokeException;
@@ -28,13 +29,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * Simple utility class for working with the reflection API
- *
+ * <p>
  * provides work with methods, fields, names, classes, instantiation
- *
+ * <p>
  * simple object copy
- *
  */
 public final class ReflectionUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtil.class);
@@ -47,9 +46,11 @@ public final class ReflectionUtil {
 
     /**
      * The private constructor of {@link ReflectionUtil}.
-     * */
+     */
     private ReflectionUtil() {
     }
+
+    /*Class and Interface Methods*/
 
     public static String getClassFullName(final Object obj) {
         return obj.getClass().getName();
@@ -83,38 +84,67 @@ public final class ReflectionUtil {
         return clazz.getPackage().getName();
     }
 
+    /**
+     * Gets the name of the superclass of the given object's class.
+     *
+     * @param obj the object whose superclass name is to be retrieved
+     * @return the name of the superclass, or null if the class has no superclass
+     * @throws IllegalArgumentException if the input object is null
+     */
     public static String getSuperClassName(final Object obj) {
-        return obj.getClass().getSuperclass().getName();
+        if (obj == null) {
+            throw new IllegalArgumentException("Object must not be null");
+        }
+
+        Class<?> superClass = obj.getClass().getSuperclass();
+        if (superClass == null) {
+            return null;
+        }
+
+        return superClass.getName();
     }
 
     public static String getSuperClassNameByClass(final Class<?> clazz) {
-        return clazz.getSuperclass().getName();
+        if (clazz == null) {
+            throw new IllegalArgumentException("Class must not be null");
+        }
+
+        Class<?> superClass = clazz.getSuperclass();
+        if (superClass == null) {
+            return null;
+        }
+
+        return superClass.getName();
     }
 
     public static Class<?> getSuperClass(final Object obj) {
-        return obj.getClass().getSuperclass();
-    }
-
-    public static void clearUnselectedFields(final Object object, final Collection<String> fields) {
-        if (fields != null && !fields.isEmpty()) {
-            for (Field field : getAllFields(object.getClass())) {
-                if (!fields.contains(field.getName())) {
-                    try {
-                        field.setAccessible(true);
-                        field.set(object, null);
-                    } catch (Exception e) {
-                        LOGGER.error("Could not clear private field. " + e.getMessage());
-                    }
-                }
-            }
+        if (obj == null) {
+            throw new IllegalStateException("Object must not be null");
         }
+        return obj.getClass().getSuperclass();
     }
 
     public static Annotation[] getClassAnnotations(final Class<?> clazz) {
         return clazz.getAnnotations();
     }
 
+    /**
+     * Gets all annotations present on a given field.
+     *
+     * @param field the field whose annotations are to be retrieved
+     * @return an array of annotations present on the field
+     */
+    public static Annotation[] getFieldAnnotations(final Field field) {
+        if (field == null) {
+            throw new IllegalArgumentException("Field must not be null");
+        }
+        return field.getAnnotations();
+    }
+
     public static Annotation[] getMethodDeclaredAnnotations(final Method method) {
+        if (method == null) {
+            throw new IllegalStateException("Method must not be null");
+        }
         return method.getDeclaredAnnotations();
     }
 
@@ -451,8 +481,7 @@ public final class ReflectionUtil {
                 result[index] = defaultMethod;
                 index++;
             }
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
         }
 
@@ -464,14 +493,13 @@ public final class ReflectionUtil {
         try {
             methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
             methods.addAll(findDefaultMethodsOnInterfaces(clazz));
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
         }
         return methods;
     }
 
-    public static Method findMethod(final Class<?> clazz, final String name) {
+    public static Method findMethodByName(final Class<?> clazz, final String name) {
         Class<?> classSearchType = clazz;
         while (classSearchType != null) {
             Method[] methods = (classSearchType.isInterface() ? classSearchType.getMethods() : getDeclaredMethods(classSearchType));
@@ -483,5 +511,20 @@ public final class ReflectionUtil {
             classSearchType = classSearchType.getSuperclass();
         }
         return null;
+    }
+
+    public static void clearUnselectedFields(final Object object, final Collection<String> fields) {
+        if (fields != null && !fields.isEmpty()) {
+            for (Field field : getAllFields(object.getClass())) {
+                if (!fields.contains(field.getName())) {
+                    try {
+                        field.setAccessible(true);
+                        field.set(object, null);
+                    } catch (Exception e) {
+                        LOGGER.error("Could not clear private field. " + e.getMessage());
+                    }
+                }
+            }
+        }
     }
 }

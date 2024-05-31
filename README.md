@@ -16,7 +16,7 @@ Library main usage is:
 - read object field as map
 - other (get class name, package, super)
 - get method
-- get declard methods
+- get declared methods
 - get default interfaces methods
 
 Required java version is java 8
