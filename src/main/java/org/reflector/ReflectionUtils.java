@@ -13,13 +13,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
-import java.util.function.Predicate;
 
 import org.reflector.exception.FieldAccessException;
 import org.reflector.exception.InstanceInvocationException;
@@ -50,238 +47,6 @@ public final class ReflectionUtils {
     private ReflectionUtils() {
     }
 
-    /*Class and Interface Methods*/
-
-    /**
-     * Gets the full name (including the package name) of the class of the given object.
-     *
-     * @param obj the object whose class full name is to be retrieved
-     * @return the full name of the class of the object
-     * @throws IllegalArgumentException if the input object is null
-     */
-    public static String getClassFullName(final Object obj) {
-        if (obj == null) {
-            throw new IllegalArgumentException("Object must not be null");
-        }
-        return obj.getClass().getName();
-    }
-
-    /**
-     * Gets the canonical name of the class of the given object.
-     *
-     * @param obj the object whose class canonical name is to be retrieved
-     * @return the canonical name of the class of the object
-     * @throws IllegalArgumentException if the input object is null
-     */
-    public static String getClassCanonicalName(final Object obj) {
-        if (obj == null) {
-            throw new IllegalArgumentException("Object must not be null");
-        }
-        return obj.getClass().getCanonicalName();
-    }
-
-    /**
-     * Gets the simple name of the class of the given object.
-     *
-     * @param obj the object whose class simple name is to be retrieved
-     * @return the simple name of the class of the object
-     * @throws IllegalArgumentException if the input object is null
-     */
-    public static String getClassSimpleName(final Object obj) {
-        if (obj == null) {
-            throw new IllegalArgumentException("Object must not be null");
-        }
-        return obj.getClass().getSimpleName();
-    }
-
-    /**
-     * Gets the package name of the class of the given object.
-     *
-     * @param obj the object whose class package name is to be retrieved
-     * @return the package name of the class of the object, or null if the class has no package
-     * @throws IllegalArgumentException if the input object is null
-     */
-    public static String getPackage(final Object obj) {
-        if (obj == null) {
-            throw new IllegalArgumentException("Object must not be null");
-        }
-        Package pkg = obj.getClass().getPackage();
-        return (pkg != null) ? pkg.getName() : null;
-    }
-
-    /**
-     * Gets the full name (including the package name) of the given class.
-     *
-     * @param clazz the class whose full name is to be retrieved
-     * @return the full name of the class, or an empty string if the class is null
-     */
-    public static String getClassFullNameByClass(final Class<?> clazz) {
-        if (clazz == null) {
-            return "";
-        }
-        return clazz.getName();
-    }
-
-    /**
-     * Gets the canonical name of the given class.
-     *
-     * @param clazz the class whose canonical name is to be retrieved
-     * @return the canonical name of the class, or null if the class is null
-     */
-    public static String getClassCanonicalNameByClass(final Class<?> clazz) {
-        if (clazz == null) {
-            return null;
-        }
-        return clazz.getCanonicalName();
-    }
-
-    /**
-     * Gets the simple name of the given class.
-     *
-     * @param clazz the class whose simple name is to be retrieved
-     * @return the simple name of the class
-     * @throws IllegalArgumentException if the input class is null
-     */
-    public static String getClassSimpleNameByClass(final Class<?> clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("Class must not be null");
-        }
-        return clazz.getSimpleName();
-    }
-
-    /**
-     * Gets the package name of the given class.
-     *
-     * @param clazz the class whose package name is to be retrieved
-     * @return the package name of the class, or null if the class has no package
-     * @throws IllegalArgumentException if the input class is null
-     */
-    public static String getPackageByClass(final Class<?> clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("Class must not be null");
-        }
-
-        Package pkg = clazz.getPackage();
-        return (pkg != null) ? pkg.getName() : null;
-    }
-
-    /**
-     * Gets the name of the superclass of the given object's class.
-     *
-     * @param obj the object whose superclass name is to be retrieved
-     * @return the name of the superclass, or null if the class has no superclass
-     * @throws IllegalArgumentException if the input object is null
-     */
-    public static String getSuperClassName(final Object obj) {
-        if (obj == null) {
-            throw new IllegalArgumentException("Object must not be null");
-        }
-
-        Class<?> superClass = obj.getClass().getSuperclass();
-        if (superClass == null) {
-            return null;
-        }
-
-        return superClass.getName();
-    }
-
-    public static String getSuperClassNameByClass(final Class<?> clazz) {
-        if (clazz == null) {
-            throw new IllegalArgumentException("Class must not be null");
-        }
-
-        Class<?> superClass = clazz.getSuperclass();
-        if (superClass == null) {
-            return null;
-        }
-
-        return superClass.getName();
-    }
-
-    public static Class<?> getSuperClass(final Object obj) {
-        if (obj == null) {
-            throw new IllegalStateException("Object must not be null");
-        }
-        return obj.getClass().getSuperclass();
-    }
-
-    public static Annotation[] getClassAnnotations(final Class<?> clazz) {
-        return clazz.getAnnotations();
-    }
-
-    /**
-     * Gets all annotations present on a given field.
-     *
-     * @param field the field whose annotations are to be retrieved
-     * @return an array of annotations present on the field
-     */
-    public static Annotation[] getFieldAnnotations(final Field field) {
-        if (field == null) {
-            throw new IllegalArgumentException("Field must not be null");
-        }
-        return field.getAnnotations();
-    }
-
-    public static Annotation[] getMethodDeclaredAnnotations(final Method method) {
-        if (method == null) {
-            throw new IllegalStateException("Method must not be null");
-        }
-        return method.getDeclaredAnnotations();
-    }
-
-    public static Map<Method, Annotation[]> getMethodDeclaredAnnotations(final Method[] methods) {
-        Map<Method, Annotation[]> methodToAnnotations = new HashMap<>();
-        for (Method method : methods) {
-            methodToAnnotations.put(method, getMethodDeclaredAnnotations(method));
-        }
-        return methodToAnnotations;
-    }
-
-    public static boolean isMethodAnnotated(final Method method, final Class clazz) {
-        Annotation annotation = method.getAnnotation(clazz);
-        return clazz.isInstance(annotation);
-    }
-
-    public static <T> boolean isMethodParameterAnnotated(final Method method, final Class<T> clazz) {
-        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        for (Annotation[] annotations : parameterAnnotations) {
-            for (Annotation annotation : annotations) {
-                if (clazz.isInstance(annotation)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public static <T> boolean isFieldAnnotated(final Field field, final Class<T> clazz) {
-        Annotation[] annotations = field.getDeclaredAnnotations();
-        for (Annotation annotation : annotations) {
-            if (clazz.isInstance(annotation)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static boolean isFieldExactAnnotated(final Field field, final Class type) {
-        Annotation annotation = field.getAnnotation(type);
-        return type.isInstance(annotation);
-    }
-
-    public static List<Field> getAllFields(final Class<?> type) {
-        return getAllFields(new ArrayList<>(), type);
-    }
-
-    private static List<Field> getAllFields(final List<Field> fields, final Class<?> type) {
-        fields.addAll(Arrays.asList(type.getDeclaredFields()));
-
-        if (type.getSuperclass() != null) {
-            getAllFields(fields, type.getSuperclass());
-        }
-        return fields;
-    }
-
     public static List<Field> getAllPrivateFields(final Class<?> clazz) {
         List<Field> fields = new ArrayList<>();
         Field[] classFields = clazz.getDeclaredFields();
@@ -295,7 +60,7 @@ public final class ReflectionUtils {
     }
 
     public static Map<String, Field> getAllFieldsMap(final Class<?> clazz) {
-        List<Field> allFields = getAllFields(clazz);
+        List<Field> allFields = FieldUtils.getAllFields(clazz);
         return getFieldsMap(allFields);
     }
 
@@ -312,21 +77,9 @@ public final class ReflectionUtils {
         return map;
     }
 
-    public static List<Method> getAllPrivateMethods(final Class<?> clazz) {
-        return getAllMethodsWithModifiers(clazz, Collections.singletonList(Modifier::isPrivate));
-    }
-
-    public static List<Method> getAllPublicProtectedMethods(final Class<?> clazz) {
-        return getAllMethodsWithModifiers(clazz, Arrays.asList(Modifier::isPublic, Modifier::isProtected));
-    }
-
-    public static List<Method> getAllPublicMethods(final Class<?> clazz) {
-        return getAllMethodsWithModifiers(clazz, Collections.singletonList(Modifier::isPublic));
-    }
-
     public static List<Field> getAllAnnotatedFields(final Class<?> type, final Class<? extends Annotation> annotation) {
         List<Field> fieldList = new ArrayList<>();
-        for (Field allField : getAllFields(type)) {
+        for (Field allField : FieldUtils.getAllFields(type)) {
             if (allField.getAnnotation(annotation) != null) {
                 fieldList.add(allField);
                 allField.setAccessible(true);
@@ -346,43 +99,6 @@ public final class ReflectionUtils {
         throw new FieldAccessException("Requested field is not accessible");
     }
 
-    private static List<Method> getAllMethodsWithModifiers(final Class<?> clazz1, final List<Predicate<Integer>> predicates) {
-        List<Method> result = new ArrayList<>();
-        Stack<Class<?>> classStack = new Stack<>();
-        classStack.push(clazz1);
-        while (!classStack.isEmpty()) {
-            Class<?> clazz = classStack.pop();
-            for (Method method : clazz.getDeclaredMethods()) {
-                int modifiers = method.getModifiers();
-
-                List<Boolean> modifiersChecks = new ArrayList<>();
-                for (Predicate<Integer> predicate : predicates) {
-                    if (!predicate.test(modifiers)) {
-                        modifiersChecks.add(false);
-                    } else {
-                        modifiersChecks.add(true);
-                    }
-                }
-                boolean allModifiersCheck = false;
-                for (Boolean modifiersCheck : modifiersChecks) {
-                    if (modifiersCheck) {
-                        allModifiersCheck = true;
-                        break;
-                    }
-                }
-
-                if (allModifiersCheck) {
-                    result.add(method);
-                }
-            }
-
-            if (clazz.getSuperclass() != null) {
-                classStack.push(clazz.getSuperclass());
-            }
-        }
-        return result;
-    }
-
     public static Object invokeMethod(final Object objectToInvokeOn, final String methodName, final Class<?>[] parameterTypes, final Object[] args) {
         try {
             Method method = objectToInvokeOn.getClass().getDeclaredMethod(methodName, parameterTypes);
@@ -393,10 +109,7 @@ public final class ReflectionUtils {
         throw new MethodInvokeException("Error during method invoke has been happened");
     }
 
-    public static Object invokeSingleMethod(final Object objectToInvokeOn,
-                                            final String methodName,
-                                            final Class<?> parameterType,
-                                            final Object parameter) {
+    public static Object invokeSingleMethod(final Object objectToInvokeOn, final String methodName, final Class<?> parameterType, final Object parameter) {
         try {
             final Class<?> clazz = objectToInvokeOn.getClass();
             final Method method = clazz.getMethod(methodName, parameterType);
@@ -447,8 +160,7 @@ public final class ReflectionUtils {
         return ctorTypes;
     }
 
-    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz)
-            throws NoSuchMethodException {
+    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) throws NoSuchMethodException {
         final Constructor<T> ctor = clazz.getConstructor(contTypes);
         ctor.setAccessible(true);
         return ctor;
@@ -461,7 +173,6 @@ public final class ReflectionUtils {
     public static Constructor<?>[] getDeclaredConstructors(final Class<?> clazz) {
         return clazz.getDeclaredConstructors();
     }
-
 
     /**
      * Creates a deep copy of the given object.
@@ -496,16 +207,11 @@ public final class ReflectionUtils {
         return copyObj;
     }
 
-    private static boolean isFieldPrimitiveType(final Field field) {
-        return field.getType().isPrimitive() || field.getType() == String.class ||
-                field.getType() == Integer.class || field.getType() == Long.class ||
-                field.getType() == Boolean.class || field.getType() == Byte.class ||
-                field.getType() == Character.class || field.getType() == Short.class ||
-                field.getType() == Float.class || field.getType() == Double.class;
+    public static boolean isFieldPrimitiveType(final Field field) {
+        return field.getType().isPrimitive() || field.getType() == String.class || field.getType() == Integer.class || field.getType() == Long.class || field.getType() == Boolean.class || field.getType() == Byte.class || field.getType() == Character.class || field.getType() == Short.class || field.getType() == Float.class || field.getType() == Double.class;
     }
 
-    public static List<Class<?>> getClassesByPackage(final String packageName)
-            throws ClassNotFoundException, IOException, URISyntaxException {
+    public static List<Class<?>> getClassesByPackage(final String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
         String path = packageName.replace(ReflectionConstant.DOT_SYMBOL, ReflectionConstant.SLASH);
         Enumeration<URL> resources = CLASSLOADER.getResources(path);
         List<File> directories = new ArrayList<>();
@@ -519,8 +225,7 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName)
-            throws ClassNotFoundException {
+    public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName) throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
@@ -538,8 +243,7 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation)
-            throws IOException, URISyntaxException, ClassNotFoundException {
+    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation) throws IOException, URISyntaxException, ClassNotFoundException {
         List<Class<?>> classesByPackage = getClassesByPackage(packageName);
         List<Class<?>> classes = new ArrayList<>();
         for (Class<?> aClass : classesByPackage) {
@@ -550,7 +254,7 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static List<Method> findDefaultMethodsOnInterfaces(final Class<?> clazz) {
+    public static List<Method> getDefaultMethodsOfInterfaces(final Class<?> clazz) {
         List<Method> result = new ArrayList<>();
         for (Class<?> ifc : clazz.getInterfaces()) {
             for (Method method : ifc.getMethods()) {
@@ -566,7 +270,7 @@ public final class ReflectionUtils {
         Method[] result;
         try {
             Method[] declaredMethods = clazz.getDeclaredMethods();
-            List<Method> defaultMethods = findDefaultMethodsOnInterfaces(clazz);
+            List<Method> defaultMethods = getDefaultMethodsOfInterfaces(clazz);
             result = new Method[declaredMethods.length + defaultMethods.size()];
             System.arraycopy(declaredMethods, 0, result, 0, declaredMethods.length);
             int index = declaredMethods.length;
@@ -585,7 +289,7 @@ public final class ReflectionUtils {
         List<Method> methods = new ArrayList<>();
         try {
             methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
-            methods.addAll(findDefaultMethodsOnInterfaces(clazz));
+            methods.addAll(getDefaultMethodsOfInterfaces(clazz));
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
         }
@@ -608,7 +312,7 @@ public final class ReflectionUtils {
 
     public static void clearUnselectedFields(final Object object, final Collection<String> fields) {
         if (fields != null && !fields.isEmpty()) {
-            for (Field field : getAllFields(object.getClass())) {
+            for (Field field : FieldUtils.getAllFields(object.getClass())) {
                 if (!fields.contains(field.getName())) {
                     try {
                         field.setAccessible(true);
