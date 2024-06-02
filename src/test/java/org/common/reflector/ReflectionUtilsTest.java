@@ -23,8 +23,6 @@ import org.common.reflector.data.SimpleAnnotatedEntry;
 import org.common.reflector.data.SimpleEntryClass;
 import org.common.reflector.util.TestConstant;
 import org.junit.jupiter.api.Test;
-import org.reflector.AnnotationUtils;
-import org.reflector.MethodUtils;
 import org.reflector.ReflectionUtils;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,6 +34,41 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReflectionUtilsTest {
+    @Test
+    public void getAllClassNamesTest() {
+        Object obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
+        assertAll("classNames",
+                () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS, ReflectionUtils.getClassSimpleName(obj)),
+                () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtils.getClassFullName(obj)),
+                () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtils.getClassCanonicalName(obj))
+        );
+    }
+
+    @Test
+    public void getPackageNameTest() {
+        Object obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
+        assertEquals(TestConstant.REFLECTOR_DATA_PACKAGE, ReflectionUtils.getPackage(obj));
+    }
+
+    @Test
+    public void getSuperClassTest() {
+        CustomTestInvokeClass obj = new CustomTestInvokeClass(TestConstant.SIMPLE_CLASS_SIMPLE_VALUE);
+        assertEquals(Object.class, ReflectionUtils.getSuperClass(obj));
+    }
+
+    @Test
+    public void getAllClassNamesByClassTest() {
+        assertAll("classNames",
+                () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS, ReflectionUtils.getClassSimpleNameByClass(CustomTestInvokeClass.class)),
+                () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtils.getClassFullNameByClass(CustomTestInvokeClass.class)),
+                () ->  assertEquals(TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE, ReflectionUtils.getClassCanonicalNameByClass(CustomTestInvokeClass.class))
+        );
+    }
+
+    @Test
+    public void getSuperClassFoClassTest() {
+        assertEquals(Object.class, ReflectionUtils.getSuperClass(CustomTestInvokeClass.class));
+    }
 
     @Test
     void getAllPrivateFieldsTest() {
@@ -55,7 +88,7 @@ public class ReflectionUtilsTest {
         CustomTestInvokeClass instance = (CustomTestInvokeClass) ReflectionUtils.invokeInstance(
                 TestConstant.CUSTOM_TEST_INVOKE_CLASS_PACKAGE);
         Object ret1 = ReflectionUtils.invokeMethod(instance, TestConstant.SET_VALUE,
-                                                  new Class[]{String.class}, new String[]{TestConstant.SIMPLE_VALUE});
+                new Class[]{String.class}, new String[]{TestConstant.SIMPLE_VALUE});
         String ret2 = (String) ReflectionUtils.invokeMethod(instance, TestConstant.GET_VALUE, null, null);
 
         assertAll("invokedMethodValues",
@@ -140,18 +173,31 @@ public class ReflectionUtilsTest {
         );
     }
 
+    @Test
+    public void getAllPublicMethodsTest() {
+        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicProtectedMethods(SimpleAnnotatedEntry.class);
+        assertAll("publicProtectedMethods",
+                () -> assertEquals(allPublicProtectedMethods.size(), 17)
+        );
+    }
+
+    @Test
+    public void getAllPrivateMethodsTest() {
+        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPrivateMethods(SimpleAnnotatedEntry.class);
+        assertEquals(allPublicProtectedMethods.get(0).getName(), TestConstant.DO_SOMETHING_METHOD_NAME);
+    }
 
     @Test
     public void getAllFieldsMap() {
         Map<String, Field> fields = ReflectionUtils.getAllFieldsMap(CustomTestClassForType.class);
 
         assertAll("allFields",
-                  () -> assertEquals(fields.get(TestConstant.STRING_FIELD).getName(), TestConstant.STRING_FIELD),
-                  () -> assertEquals(fields.get(TestConstant.OBJECT_FIELD).getName(), TestConstant.OBJECT_FIELD),
-                  () -> assertEquals(fields.get(TestConstant.FLOAT_FIELD).getName(), TestConstant.FLOAT_FIELD),
-                  () -> assertEquals(fields.get(TestConstant.NOT_PRIVATE_FIELD).getName(), TestConstant.NOT_PRIVATE_FIELD),
-                  () -> assertEquals(fields.get(TestConstant.ONE_CONSTANT).getName(), TestConstant.ONE_CONSTANT),
-                  () -> assertEquals(fields.size(), 5)
+                () -> assertEquals(fields.get(TestConstant.STRING_FIELD).getName(), TestConstant.STRING_FIELD),
+                () -> assertEquals(fields.get(TestConstant.OBJECT_FIELD).getName(), TestConstant.OBJECT_FIELD),
+                () -> assertEquals(fields.get(TestConstant.FLOAT_FIELD).getName(), TestConstant.FLOAT_FIELD),
+                () -> assertEquals(fields.get(TestConstant.NOT_PRIVATE_FIELD).getName(), TestConstant.NOT_PRIVATE_FIELD),
+                () -> assertEquals(fields.get(TestConstant.ONE_CONSTANT).getName(), TestConstant.ONE_CONSTANT),
+                () -> assertEquals(fields.size(), 5)
         );
     }
 
@@ -160,10 +206,10 @@ public class ReflectionUtilsTest {
         Map<String, Field> fields = ReflectionUtils.getAllPrivateFieldsMap(CustomTestClassForType.class);
         int fieldsCounter = 3;
         assertAll("privateFields",
-                  () -> assertEquals(fields.get(TestConstant.STRING_FIELD).getName(), TestConstant.STRING_FIELD),
-                  () -> assertEquals(fields.get(TestConstant.OBJECT_FIELD).getName(), TestConstant.OBJECT_FIELD),
-                  () -> assertEquals(fields.get(TestConstant.FLOAT_FIELD).getName(), TestConstant.FLOAT_FIELD),
-                  () -> assertEquals(fields.size(), fieldsCounter)
+                () -> assertEquals(fields.get(TestConstant.STRING_FIELD).getName(), TestConstant.STRING_FIELD),
+                () -> assertEquals(fields.get(TestConstant.OBJECT_FIELD).getName(), TestConstant.OBJECT_FIELD),
+                () -> assertEquals(fields.get(TestConstant.FLOAT_FIELD).getName(), TestConstant.FLOAT_FIELD),
+                () -> assertEquals(fields.size(), fieldsCounter)
         );
     }
 
@@ -188,13 +234,7 @@ public class ReflectionUtilsTest {
 
     @Test
     public void testCopy_NullObject() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            ReflectionUtils.copy(null);
-        });
-
-        String expectedMessage = "Object must not be null";
-        String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
+        assertEquals(ReflectionUtils.copy(null), null);
     }
 
     @Test
@@ -204,16 +244,34 @@ public class ReflectionUtilsTest {
     }
 
     @Test
+    public void methodAnnotationTest() {
+        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicProtectedMethods(MethodAnnotatedClass.class);
+        Method[] methods = new Method[allPublicProtectedMethods.size()];
+        for (int i = 0; i < allPublicProtectedMethods.size(); i++) {
+            methods[i] = allPublicProtectedMethods.get(i);
+        }
+        Map<Method, Annotation[]> methodDeclaredAnnotations = ReflectionUtils.getMethodDeclaredAnnotations(methods);
+        Annotation actualAnnotation = null;
+        for (Map.Entry<Method, Annotation[]> methodEntry : methodDeclaredAnnotations.entrySet()) {
+            if (methodEntry.getKey().getName().equals(TestConstant.ANNOTATED_METHOD_NAME)) {
+                actualAnnotation = methodEntry.getValue()[0];
+                break;
+            }
+        }
+        assertEquals(actualAnnotation.annotationType(), CustomMethodAnnotation.class);
+    }
+
+    @Test
     public void doesHasAnnotations() {
-        List<Method> allPublicProtectedMethods = MethodUtils.getAllPublicMethods(MethodAnnotatedClass.class);
+        List<Method> allPublicProtectedMethods = ReflectionUtils.getAllPublicMethods(MethodAnnotatedClass.class);
         List<String> expected = new ArrayList<>(Arrays.asList(TestConstant.GET_CLASS_METHOD_METHOD_ANNOTATED_CLASS,
-                                                              TestConstant.ANNOTATED_METHOD_ANNOTATED_CLASS,
-                                                              TestConstant.WAIT_METHOD_ANNOTATED_CLASS,
-                                                              TestConstant.HASH_CODE_METHOD_ANNOTATED_CLASS,
-                                                              TestConstant.EQUALS_METHOD_ANNOTATED_CLASS,
-                                                              TestConstant.NOTIFY_ALL_METHOD_ANNOTATED_CLASS,
-                                                              TestConstant.TO_STRING_METHOD_ANNOTATED_CLASS,
-                                                              TestConstant.NOTIFY_METHOD_ANNOTATED_CLASS));
+                TestConstant.ANNOTATED_METHOD_ANNOTATED_CLASS,
+                TestConstant.WAIT_METHOD_ANNOTATED_CLASS,
+                TestConstant.HASH_CODE_METHOD_ANNOTATED_CLASS,
+                TestConstant.EQUALS_METHOD_ANNOTATED_CLASS,
+                TestConstant.NOTIFY_ALL_METHOD_ANNOTATED_CLASS,
+                TestConstant.TO_STRING_METHOD_ANNOTATED_CLASS,
+                TestConstant.NOTIFY_METHOD_ANNOTATED_CLASS));
         List<String> actual = allPublicProtectedMethods.stream().map(Method::getName).collect(Collectors.toList());
         assertFalse(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
     }

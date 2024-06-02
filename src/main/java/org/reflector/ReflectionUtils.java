@@ -13,11 +13,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Stack;
+import java.util.function.Predicate;
 import org.reflector.exception.FieldAccessException;
 import org.reflector.exception.InstanceInvocationException;
 import org.reflector.exception.MethodInvokeException;
@@ -26,11 +28,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ *
  * Simple utility class for working with the reflection API
- * <p>
+ *
  * provides work with methods, fields, names, classes, instantiation
- * <p>
+ *
  * simple object copy
+ *
  */
 public final class ReflectionUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
@@ -43,8 +47,128 @@ public final class ReflectionUtils {
 
     /**
      * The private constructor of {@link ReflectionUtils}.
-     */
+     * */
     private ReflectionUtils() {
+    }
+
+    public static String getClassFullName(final Object obj) {
+        return obj.getClass().getName();
+    }
+
+    public static String getClassCanonicalName(final Object obj) {
+        return obj.getClass().getCanonicalName();
+    }
+
+    public static String getClassSimpleName(final Object obj) {
+        return obj.getClass().getSimpleName();
+    }
+
+    public static String getPackage(final Object obj) {
+        return obj.getClass().getPackage().getName();
+    }
+
+    public static String getClassFullNameByClass(final Class<?> clazz) {
+        return clazz.getName();
+    }
+
+    public static String getClassCanonicalNameByClass(final Class<?> clazz) {
+        return clazz.getCanonicalName();
+    }
+
+    public static String getClassSimpleNameByClass(final Class<?> clazz) {
+        return clazz.getSimpleName();
+    }
+
+    public static String getPackageByClass(final Class<?> clazz) {
+        return clazz.getPackage().getName();
+    }
+
+    public static String getSuperClassName(final Object obj) {
+        return obj.getClass().getSuperclass().getName();
+    }
+
+    public static String getSuperClassNameByClass(final Class<?> clazz) {
+        return clazz.getSuperclass().getName();
+    }
+
+    public static Class<?> getSuperClass(final Object obj) {
+        return obj.getClass().getSuperclass();
+    }
+
+    public static void clearUnselectedFields(final Object object, final Collection<String> fields) {
+        if (fields != null && !fields.isEmpty()) {
+            for (Field field : getAllFields(object.getClass())) {
+                if (!fields.contains(field.getName())) {
+                    try {
+                        field.setAccessible(true);
+                        field.set(object, null);
+                    } catch (Exception e) {
+                        LOGGER.error("Could not clear private field. " + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
+
+    public static Annotation[] getClassAnnotations(final Class<?> clazz) {
+        return clazz.getAnnotations();
+    }
+
+    public static Annotation[] getMethodDeclaredAnnotations(final Method method) {
+        return method.getDeclaredAnnotations();
+    }
+
+    public static Map<Method, Annotation[]> getMethodDeclaredAnnotations(final Method[] methods) {
+        Map<Method, Annotation[]> methodToAnnotations = new HashMap<>();
+        for (Method method : methods) {
+            methodToAnnotations.put(method, getMethodDeclaredAnnotations(method));
+        }
+        return methodToAnnotations;
+    }
+
+    public static boolean isMethodAnnotated(final Method method, final Class clazz) {
+        Annotation annotation = method.getAnnotation(clazz);
+        return clazz.isInstance(annotation);
+    }
+
+    public static <T> boolean isMethodParameterAnnotated(final Method method, final Class<T> clazz) {
+        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        for (Annotation[] annotations : parameterAnnotations) {
+            for (Annotation annotation : annotations) {
+                if (clazz.isInstance(annotation)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static <T> boolean isFieldAnnotated(final Field field, final Class<T> clazz) {
+        Annotation[] annotations = field.getDeclaredAnnotations();
+        for (Annotation annotation : annotations) {
+            if (clazz.isInstance(annotation)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isFieldExactAnnotated(final Field field, final Class type) {
+        Annotation annotation = field.getAnnotation(type);
+        return type.isInstance(annotation);
+    }
+
+    public static List<Field> getAllFields(final Class<?> type) {
+        return getAllFields(new ArrayList<>(), type);
+    }
+
+    private static List<Field> getAllFields(final List<Field> fields, final Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+
+        if (type.getSuperclass() != null) {
+            getAllFields(fields, type.getSuperclass());
+        }
+        return fields;
     }
 
     public static List<Field> getAllPrivateFields(final Class<?> clazz) {
@@ -60,7 +184,7 @@ public final class ReflectionUtils {
     }
 
     public static Map<String, Field> getAllFieldsMap(final Class<?> clazz) {
-        List<Field> allFields = FieldUtils.getAllFields(clazz);
+        List<Field> allFields = getAllFields(clazz);
         return getFieldsMap(allFields);
     }
 
@@ -77,9 +201,21 @@ public final class ReflectionUtils {
         return map;
     }
 
+    public static List<Method> getAllPrivateMethods(final Class<?> clazz) {
+        return getAllMethodsWithModifiers(clazz, Collections.singletonList(Modifier::isPrivate));
+    }
+
+    public static List<Method> getAllPublicProtectedMethods(final Class<?> clazz) {
+        return getAllMethodsWithModifiers(clazz, Arrays.asList(Modifier::isPublic, Modifier::isProtected));
+    }
+
+    public static List<Method> getAllPublicMethods(final Class<?> clazz) {
+        return getAllMethodsWithModifiers(clazz, Collections.singletonList(Modifier::isPublic));
+    }
+
     public static List<Field> getAllAnnotatedFields(final Class<?> type, final Class<? extends Annotation> annotation) {
         List<Field> fieldList = new ArrayList<>();
-        for (Field allField : FieldUtils.getAllFields(type)) {
+        for (Field allField : getAllFields(type)) {
             if (allField.getAnnotation(annotation) != null) {
                 fieldList.add(allField);
                 allField.setAccessible(true);
@@ -99,6 +235,43 @@ public final class ReflectionUtils {
         throw new FieldAccessException("Requested field is not accessible");
     }
 
+    private static List<Method> getAllMethodsWithModifiers(final Class<?> clazz1, final List<Predicate<Integer>> predicates) {
+        List<Method> result = new ArrayList<>();
+        Stack<Class<?>> classStack = new Stack<>();
+        classStack.push(clazz1);
+        while (!classStack.isEmpty()) {
+            Class<?> clazz = classStack.pop();
+            for (Method method : clazz.getDeclaredMethods()) {
+                int modifiers = method.getModifiers();
+
+                List<Boolean> modifiersChecks = new ArrayList<>();
+                for (Predicate<Integer> predicate : predicates) {
+                    if (!predicate.test(modifiers)) {
+                        modifiersChecks.add(false);
+                    } else {
+                        modifiersChecks.add(true);
+                    }
+                }
+                boolean allModifiersCheck = false;
+                for (Boolean modifiersCheck : modifiersChecks) {
+                    if (modifiersCheck) {
+                        allModifiersCheck = true;
+                        break;
+                    }
+                }
+
+                if (allModifiersCheck) {
+                    result.add(method);
+                }
+            }
+
+            if (clazz.getSuperclass() != null) {
+                classStack.push(clazz.getSuperclass());
+            }
+        }
+        return result;
+    }
+
     public static Object invokeMethod(final Object objectToInvokeOn, final String methodName, final Class<?>[] parameterTypes, final Object[] args) {
         try {
             Method method = objectToInvokeOn.getClass().getDeclaredMethod(methodName, parameterTypes);
@@ -109,7 +282,10 @@ public final class ReflectionUtils {
         throw new MethodInvokeException("Error during method invoke has been happened");
     }
 
-    public static Object invokeSingleMethod(final Object objectToInvokeOn, final String methodName, final Class<?> parameterType, final Object parameter) {
+    public static Object invokeSingleMethod(final Object objectToInvokeOn,
+                                            final String methodName,
+                                            final Class<?> parameterType,
+                                            final Object parameter) {
         try {
             final Class<?> clazz = objectToInvokeOn.getClass();
             final Method method = clazz.getMethod(methodName, parameterType);
@@ -160,7 +336,8 @@ public final class ReflectionUtils {
         return ctorTypes;
     }
 
-    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) throws NoSuchMethodException {
+    public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz)
+            throws NoSuchMethodException {
         final Constructor<T> ctor = clazz.getConstructor(contTypes);
         ctor.setAccessible(true);
         return ctor;
@@ -174,20 +351,22 @@ public final class ReflectionUtils {
         return clazz.getDeclaredConstructors();
     }
 
-    /**
-     * Creates a deep copy of the given object.
-     *
-     * @param object the object to be copied
-     * @return the deep copy of the object
-     * @throws IllegalStateException if copying fails
-     */
+    private static boolean isFieldPrimitiveType(final Field field) {
+        return field.getType().isPrimitive()
+                || field.getType().equals(String.class)
+                || field.getType().getSuperclass().equals(Number.class)
+                || field.getType().equals(Boolean.class);
+    }
+
     public static Object copy(final Object object) {
-        if (object == null) {
-            throw new IllegalArgumentException("Object must not be null");
-        }
         Object copyObj = null;
         try {
-            copyObj = object.getClass().newInstance();
+            try {
+                copyObj = object.getClass().newInstance();
+            } catch (Exception ex) {
+                LOGGER.error("Error copy for object{{}}", object);
+                return null;
+            }
             for (Field field : object.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
                 if (field.get(object) == null || Modifier.isFinal(field.getModifiers())) {
@@ -207,11 +386,8 @@ public final class ReflectionUtils {
         return copyObj;
     }
 
-    public static boolean isFieldPrimitiveType(final Field field) {
-        return field.getType().isPrimitive() || field.getType() == String.class || field.getType() == Integer.class || field.getType() == Long.class || field.getType() == Boolean.class || field.getType() == Byte.class || field.getType() == Character.class || field.getType() == Short.class || field.getType() == Float.class || field.getType() == Double.class;
-    }
-
-    public static List<Class<?>> getClassesByPackage(final String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+    public static List<Class<?>> getClassesByPackage(final String packageName)
+            throws ClassNotFoundException, IOException, URISyntaxException {
         String path = packageName.replace(ReflectionConstant.DOT_SYMBOL, ReflectionConstant.SLASH);
         Enumeration<URL> resources = CLASSLOADER.getResources(path);
         List<File> directories = new ArrayList<>();
@@ -225,7 +401,8 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName) throws ClassNotFoundException {
+    public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName)
+            throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
             return classes;
@@ -243,7 +420,22 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation) throws IOException, URISyntaxException, ClassNotFoundException {
+    public static Method findMethodByName(final Class<?> clazz, final String name) {
+        Class<?> classSearchType = clazz;
+        while (classSearchType != null) {
+            Method[] methods = (classSearchType.isInterface() ? classSearchType.getMethods() : getDeclaredMethods(classSearchType));
+            for (Method method : methods) {
+                if (name.equals(method.getName())) {
+                    return method;
+                }
+            }
+            classSearchType = classSearchType.getSuperclass();
+        }
+        return null;
+    }
+
+    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation)
+            throws IOException, URISyntaxException, ClassNotFoundException {
         List<Class<?>> classesByPackage = getClassesByPackage(packageName);
         List<Class<?>> classes = new ArrayList<>();
         for (Class<?> aClass : classesByPackage) {
@@ -254,7 +446,7 @@ public final class ReflectionUtils {
         return classes;
     }
 
-    public static List<Method> getDefaultMethodsOfInterfaces(final Class<?> clazz) {
+    public static List<Method> findDefaultMethodsOnInterfaces(final Class<?> clazz) {
         List<Method> result = new ArrayList<>();
         for (Class<?> ifc : clazz.getInterfaces()) {
             for (Method method : ifc.getMethods()) {
@@ -270,7 +462,7 @@ public final class ReflectionUtils {
         Method[] result;
         try {
             Method[] declaredMethods = clazz.getDeclaredMethods();
-            List<Method> defaultMethods = getDefaultMethodsOfInterfaces(clazz);
+            List<Method> defaultMethods = findDefaultMethodsOnInterfaces(clazz);
             result = new Method[declaredMethods.length + defaultMethods.size()];
             System.arraycopy(declaredMethods, 0, result, 0, declaredMethods.length);
             int index = declaredMethods.length;
@@ -278,7 +470,8 @@ public final class ReflectionUtils {
                 result[index] = defaultMethod;
                 index++;
             }
-        } catch (Throwable ex) {
+        }
+        catch (Throwable ex) {
             throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
         }
 
@@ -289,14 +482,15 @@ public final class ReflectionUtils {
         List<Method> methods = new ArrayList<>();
         try {
             methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
-            methods.addAll(getDefaultMethodsOfInterfaces(clazz));
-        } catch (Throwable ex) {
+            methods.addAll(findDefaultMethodsOnInterfaces(clazz));
+        }
+        catch (Throwable ex) {
             throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
         }
         return methods;
     }
 
-    public static Method findMethodByName(final Class<?> clazz, final String name) {
+    public static Method findMethod(final Class<?> clazz, final String name) {
         Class<?> classSearchType = clazz;
         while (classSearchType != null) {
             Method[] methods = (classSearchType.isInterface() ? classSearchType.getMethods() : getDeclaredMethods(classSearchType));
@@ -309,19 +503,5 @@ public final class ReflectionUtils {
         }
         return null;
     }
-
-    public static void clearUnselectedFields(final Object object, final Collection<String> fields) {
-        if (fields != null && !fields.isEmpty()) {
-            for (Field field : FieldUtils.getAllFields(object.getClass())) {
-                if (!fields.contains(field.getName())) {
-                    try {
-                        field.setAccessible(true);
-                        field.set(object, null);
-                    } catch (Exception e) {
-                        LOGGER.error("Could not clear private field. " + e.getMessage());
-                    }
-                }
-            }
-        }
-    }
 }
+

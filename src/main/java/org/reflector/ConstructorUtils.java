@@ -1,5 +1,8 @@
 package org.reflector;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -32,5 +35,48 @@ public class ConstructorUtils {
             throw new NullPointerException("Constructor cannot be null");
         }
         return constructor.getModifiers();
+    }
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConstructorUtils.class);
+
+    /**
+     * Retrieves all public constructors of the specified class.
+     *
+     * @param clazz the class from which to retrieve constructors
+     * @return an array of public constructors of the specified class
+     * @throws NullPointerException if the class is null
+     */
+    public static Constructor<?>[] getConstructors(final Class<?> clazz) {
+        if (clazz == null) {
+            throw new NullPointerException("Class type cannot be null");
+        }
+
+        try {
+            return clazz.getConstructors();
+        } catch (Exception e) {
+            LOGGER.error("Error retrieving constructors for class '{}'", clazz.getName(), e);
+            throw e;
+        }
+    }
+
+    /**
+     * Retrieves all declared constructors of the specified class, including public, protected, default (package), and private constructors.
+     *
+     * @param clazz the class from which to retrieve declared constructors
+     * @return an array of declared constructors of the specified class
+     * @throws NullPointerException if the class is null
+     */
+    public static Constructor<?>[] getDeclaredConstructors(final Class<?> clazz) {
+        if (clazz == null) {
+            throw new NullPointerException("Class type cannot be null");
+        }
+
+        try {
+            return clazz.getDeclaredConstructors();
+        } catch (Exception e) {
+            LOGGER.error("Error retrieving declared constructors for class '{}'", clazz.getName(), e);
+            throw e;
+        }
     }
 }

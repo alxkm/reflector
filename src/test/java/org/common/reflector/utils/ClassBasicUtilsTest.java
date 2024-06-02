@@ -292,7 +292,7 @@ public class ClassBasicUtilsTest {
         CustomClass customObject = new CustomClass();
         String fullName = ClassBasicUtils.getClassFullName(customObject);
         assertNotNull(fullName);
-        assertEquals("org.common.reflector.ClassBasicUtilsTest$1CustomClass", fullName);
+        assertEquals("org.common.reflector.utils.ClassBasicUtilsTest$1CustomClass", fullName);
     }
 
     @Test
