@@ -1,5 +1,6 @@
 package org.common.reflector.utils;
 
+import org.common.reflector.data.SimpleEntryClass;
 import org.junit.jupiter.api.Test;
 import org.reflector.ConstructorUtils;
 
@@ -42,5 +43,17 @@ public class ConstructorUtilsTest {
         assertThrows(NullPointerException.class, () -> {
             ConstructorUtils.getConstructorModifiers(null);
         });
+    }
+
+    @Test
+    public void getConstructors() {
+        Constructor<?>[] constructors = ConstructorUtils.getConstructors(SimpleEntryClass.class);
+        assertEquals(constructors.length, 3);
+    }
+
+    @Test
+    public void getDeclaredConstructors() {
+        Constructor<?>[] constructors = ConstructorUtils.getDeclaredConstructors(SimpleEntryClass.class);
+        assertEquals(constructors.length, 4);
     }
 }

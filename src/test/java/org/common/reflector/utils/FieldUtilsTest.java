@@ -1,16 +1,22 @@
 package org.common.reflector.utils;
 
+import org.common.reflector.data.SimpleAnnotatedEntry;
+import org.common.reflector.util.TestConstant;
 import org.junit.jupiter.api.Test;
 import org.reflector.FieldUtils;
+import org.reflector.ReflectionUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -455,5 +461,25 @@ public class FieldUtilsTest {
         assertThrows(NullPointerException.class, () -> {
             FieldUtils.getAllPrivateFields(null);
         });
+    }
+
+    @Test
+    void clearUnselectedFieldsTest() {
+        SimpleAnnotatedEntry entry = new SimpleAnnotatedEntry();
+        entry.setKey(TestConstant.ENTRY_KEY);
+        entry.setValue(TestConstant.ENTRY_VALUE);
+        entry.setInfo(TestConstant.ENTRY_INFO);
+
+        List<String> valuesList = new ArrayList<>();
+        valuesList.add(TestConstant.KEY);
+        valuesList.add(TestConstant.VALUE);
+
+        FieldUtils.clearUnselectedFields(entry, valuesList);
+
+        assertAll("classMultipleParametersInstance",
+                () -> assertEquals(entry.getInfo(), null),
+                () -> assertNotEquals(entry.getKey(), null),
+                () -> assertNotEquals(entry.getValue(), null)
+        );
     }
 }

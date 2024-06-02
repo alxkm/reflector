@@ -1,13 +1,21 @@
 package org.reflector;
 
+import org.reflector.exception.FieldAccessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class FieldUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldUtils.class);
 
     private FieldUtils() {
 
@@ -187,5 +195,59 @@ public final class FieldUtils {
         }
 
         return fields;
+    }
+
+    /**
+     * Retrieves all fields of a given class, including fields declared in its superclasses,
+     * and returns them as a map with field names as keys.
+     *
+     * @param clazz the class from which to retrieve fields
+     * @return a map of all fields of the specified class with field names as keys
+     * @throws NullPointerException if the clazz is null
+     */
+    public static Map<String, Field> getAllFieldsMap(final Class<?> clazz) {
+        List<Field> allFields = getAllFields(clazz);
+        Map<String, Field> fieldsMap = new HashMap<>();
+        for (Field field : allFields) {
+            fieldsMap.put(field.getName(), field);
+        }
+        return fieldsMap;
+    }
+
+    /**
+     * Reads the value of a field from an object.
+     *
+     * @param object    the object from which to read the field
+     * @param fieldName the name of the field to read
+     * @return the value of the field in the object
+     * @throws FieldAccessException if the field cannot be accessed
+     */
+    public static Object readField(final Object object, final String fieldName) {
+        try {
+            Field field = object.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(object);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            LOGGER.error("Error reading field '{}'", fieldName, e);
+            throw new FieldAccessException("Requested field is not accessible", e);
+        }
+    }
+
+
+
+
+    public static void clearUnselectedFields(final Object object, final Collection<String> fields) {
+        if (fields != null && !fields.isEmpty()) {
+            for (Field field : FieldUtils.getAllFields(object.getClass())) {
+                if (!fields.contains(field.getName())) {
+                    try {
+                        field.setAccessible(true);
+                        field.set(object, null);
+                    } catch (Exception e) {
+                        LOGGER.error("Could not clear private field. " + e.getMessage());
+                    }
+                }
+            }
+        }
     }
 }

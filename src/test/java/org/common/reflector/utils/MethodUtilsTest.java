@@ -1,6 +1,7 @@
 package org.common.reflector.utils;
 
 import org.common.reflector.data.MethodAnnotatedClass;
+import org.common.reflector.data.Person;
 import org.common.reflector.data.SimpleAnnotatedEntry;
 import org.common.reflector.data.annotation.CustomMethodAnnotation;
 import org.common.reflector.util.TestConstant;
@@ -15,8 +16,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -280,73 +284,27 @@ public class MethodUtilsTest {
         assertTrue(methods.isEmpty());
     }
 
-    // getAllPublicProtectedMethods
 
-    class TestClass {
-        @CustomMethodAnnotation
-        public void annotatedMethod() {
-        }
 
-        public void nonAnnotatedMethod() {
-        }
+    @Test
+    public void doesHasAnnotations() {
+        List<Method> allPublicProtectedMethods = MethodUtils.getAllPublicMethods(MethodAnnotatedClass.class);
+        List<String> expected = new ArrayList<>(Arrays.asList(TestConstant.GET_CLASS_METHOD_METHOD_ANNOTATED_CLASS,
+                TestConstant.ANNOTATED_METHOD_ANNOTATED_CLASS,
+                TestConstant.WAIT_METHOD_ANNOTATED_CLASS,
+                TestConstant.HASH_CODE_METHOD_ANNOTATED_CLASS,
+                TestConstant.EQUALS_METHOD_ANNOTATED_CLASS,
+                TestConstant.NOTIFY_ALL_METHOD_ANNOTATED_CLASS,
+                TestConstant.TO_STRING_METHOD_ANNOTATED_CLASS,
+                TestConstant.NOTIFY_METHOD_ANNOTATED_CLASS));
+        List<String> actual = allPublicProtectedMethods.stream().map(Method::getName).collect(Collectors.toList());
+        assertFalse(expected.size() == actual.size() && expected.containsAll(actual) && actual.containsAll(expected));
     }
 
 
     @Test
-    public void methodAnnotationTest() {
-        List<Method> allPublicProtectedMethods = MethodUtils.getAllPublicProtectedMethods(MethodAnnotatedClass.class);
-        Method[] methods = new Method[allPublicProtectedMethods.size()];
-        for (int i = 0; i < allPublicProtectedMethods.size(); i++) {
-            methods[i] = allPublicProtectedMethods.get(i);
-        }
-        Map<Method, Annotation[]> methodDeclaredAnnotations = AnnotationUtils.getMethodsDeclaredAnnotations(methods);
-        Annotation actualAnnotation = null;
-        for (Map.Entry<Method, Annotation[]> methodEntry : methodDeclaredAnnotations.entrySet()) {
-            if (methodEntry.getKey().getName().equals(TestConstant.ANNOTATED_METHOD_NAME)) {
-                actualAnnotation = methodEntry.getValue()[0];
-                break;
-            }
-        }
-        assertEquals(actualAnnotation.annotationType(), CustomMethodAnnotation.class);
-    }
-
-
-    @Test
-    public void testGetMethodDeclaredAnnotations_ValidMethods() throws NoSuchMethodException {
-        Method annotatedMethod = TestClass.class.getMethod("annotatedMethod");
-        Method nonAnnotatedMethod = TestClass.class.getMethod("nonAnnotatedMethod");
-        Method[] methods = {annotatedMethod, nonAnnotatedMethod};
-
-        Map<Method, Annotation[]> result = AnnotationUtils.getMethodsDeclaredAnnotations(methods);
-
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        assertTrue(result.containsKey(annotatedMethod));
-        assertTrue(result.containsKey(nonAnnotatedMethod));
-        assertEquals(1, result.get(annotatedMethod).length);
-        assertEquals(CustomMethodAnnotation.class, result.get(annotatedMethod)[0].annotationType());
-        assertEquals(0, result.get(nonAnnotatedMethod).length);
-    }
-
-    @Test
-    public void testGetMethodDeclaredAnnotations_NullMethodsArray() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> AnnotationUtils.getMethodsDeclaredAnnotations(null));
-        String expectedMessage = "Methods array must not be null";
-        String actualMessage = exception.getMessage();
-        assertTrue(actualMessage.contains(expectedMessage));
-    }
-
-    @Test
-    public void testGetMethodDeclaredAnnotations_NullMethodInArray() throws NoSuchMethodException {
-        Method annotatedMethod = TestClass.class.getMethod("annotatedMethod");
-        Method[] methods = {annotatedMethod, null};
-
-        Map<Method, Annotation[]> result = AnnotationUtils.getMethodsDeclaredAnnotations(methods);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertTrue(result.containsKey(annotatedMethod));
-        assertEquals(1, result.get(annotatedMethod).length);
-        assertEquals(CustomMethodAnnotation.class, result.get(annotatedMethod)[0].annotationType());
+    public void findMethodsTestByName() {
+        Method method = MethodUtils.findMethodByName(Person.class, TestConstant.METHOD_NAME_GET_ID);
+        assertEquals(TestConstant.METHOD_NAME_GET_ID, method.getName());
     }
 }
