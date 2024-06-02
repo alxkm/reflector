@@ -1,13 +1,16 @@
 package org.common.reflector.utils;
 
+import org.common.reflector.data.MethodAnnotatedClass;
 import org.common.reflector.data.annotation.ClassAnnotation;
 import org.common.reflector.data.annotation.ClassAnnotation1;
 import org.common.reflector.data.annotation.CustomAnnotationForTest;
 import org.common.reflector.data.annotation.CustomMethodAnnotation;
 import org.common.reflector.data.annotation.ParameterAnnotation;
+import org.common.reflector.util.TestConstant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.reflector.AnnotationUtils;
+import org.reflector.MethodUtils;
 import org.reflector.ReflectionUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,6 +20,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Map;
 
 public class AnnotationUtilsTest {
 
@@ -341,6 +346,61 @@ public class AnnotationUtilsTest {
         assertTrue(actualMessage.contains(expectedMessage));
     }
 
+    @Test
+    public void methodAnnotationTest() {
+        List<Method> allPublicProtectedMethods = MethodUtils.getAllPublicProtectedMethods(MethodAnnotatedClass.class);
+        Method[] methods = new Method[allPublicProtectedMethods.size()];
+        for (int i = 0; i < allPublicProtectedMethods.size(); i++) {
+            methods[i] = allPublicProtectedMethods.get(i);
+        }
+        Map<Method, Annotation[]> methodDeclaredAnnotations = AnnotationUtils.getMethodsDeclaredAnnotations(methods);
+        Annotation actualAnnotation = null;
+        for (Map.Entry<Method, Annotation[]> methodEntry : methodDeclaredAnnotations.entrySet()) {
+            if (methodEntry.getKey().getName().equals(TestConstant.ANNOTATED_METHOD_NAME)) {
+                actualAnnotation = methodEntry.getValue()[0];
+                break;
+            }
+        }
+        assertEquals(actualAnnotation.annotationType(), CustomMethodAnnotation.class);
+    }
 
+    @Test
+    public void testGetMethodDeclaredAnnotations_ValidMethods() throws NoSuchMethodException {
+        Method annotatedMethod = TestClass.class.getMethod("annotatedMethod");
+        Method nonAnnotatedMethod = TestClass.class.getMethod("nonAnnotatedMethod");
+        Method[] methods = {annotatedMethod, nonAnnotatedMethod};
+
+        Map<Method, Annotation[]> result = AnnotationUtils.getMethodsDeclaredAnnotations(methods);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.containsKey(annotatedMethod));
+        assertTrue(result.containsKey(nonAnnotatedMethod));
+        assertEquals(1, result.get(annotatedMethod).length);
+        assertEquals(CustomMethodAnnotation.class, result.get(annotatedMethod)[0].annotationType());
+        assertEquals(0, result.get(nonAnnotatedMethod).length);
+    }
+
+    @Test
+    public void testGetMethodDeclaredAnnotations_NullMethodsArray() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> AnnotationUtils.getMethodsDeclaredAnnotations(null));
+        String expectedMessage = "Methods array must not be null";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void testGetMethodDeclaredAnnotations_NullMethodInArray() throws NoSuchMethodException {
+        Method annotatedMethod = TestClass.class.getMethod("annotatedMethod");
+        Method[] methods = {annotatedMethod, null};
+
+        Map<Method, Annotation[]> result = AnnotationUtils.getMethodsDeclaredAnnotations(methods);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertTrue(result.containsKey(annotatedMethod));
+        assertEquals(1, result.get(annotatedMethod).length);
+        assertEquals(CustomMethodAnnotation.class, result.get(annotatedMethod)[0].annotationType());
+    }
 }
 
