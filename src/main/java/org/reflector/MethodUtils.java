@@ -1,16 +1,19 @@
 package org.reflector;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.IntPredicate;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class MethodUtils {
+public final class MethodUtils {
+
+    private MethodUtils() {}
+
     /**
      * Retrieves the parameter types of the given method.
      *
@@ -157,50 +160,93 @@ public class MethodUtils {
         return methods;
     }
 
-
+    /**
+     * Retrieves all default methods from the interfaces implemented by the specified class.
+     *
+     * @param clazz the class whose interfaces' default methods are to be retrieved.
+     * @return a list of default methods from the interfaces implemented by the specified class.
+     * @throws IllegalArgumentException if the class parameter is null.
+     */
     public static List<Method> getDefaultMethodsOfInterfaces(final Class<?> clazz) {
-        List<Method> result = new ArrayList<>();
-        for (Class<?> ifc : clazz.getInterfaces()) {
-            for (Method method : ifc.getMethods()) {
-                if (method.isDefault()) {
-                    result.add(method);
-                }
-            }
+        if (clazz == null) {
+            throw new IllegalArgumentException("Class parameter cannot be null");
         }
-        return result;
+
+        return Stream.of(clazz.getInterfaces())
+                .flatMap(ifc -> Stream.of(ifc.getMethods()))
+                .filter(Method::isDefault)
+                .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves all declared methods of the specified class, including default methods from its interfaces.
+     *
+     * @param clazz the class whose declared methods and default interface methods are to be retrieved.
+     * @return an array of {@link Method} objects reflecting all declared methods of the class,
+     *         including default methods from its interfaces.
+     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws IllegalStateException if an error occurs while retrieving the methods.
+     */
     public static Method[] getDeclaredMethods(final Class<?> clazz) {
-        Method[] result;
+        if (clazz == null) {
+            throw new IllegalArgumentException("Class parameter cannot be null");
+        }
+
         try {
             Method[] declaredMethods = clazz.getDeclaredMethods();
             List<Method> defaultMethods = getDefaultMethodsOfInterfaces(clazz);
-            result = new Method[declaredMethods.length + defaultMethods.size()];
+
+            Method[] result = new Method[declaredMethods.length + defaultMethods.size()];
             System.arraycopy(declaredMethods, 0, result, 0, declaredMethods.length);
+
             int index = declaredMethods.length;
             for (Method defaultMethod : defaultMethods) {
-                result[index] = defaultMethod;
-                index++;
+                result[index++] = defaultMethod;
             }
+
+            return result;
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
         }
-
-        return result;
     }
 
+    /**
+     * Retrieves all declared methods of the specified class, including default methods from its interfaces,
+     * and returns them as a list.
+     *
+     * @param clazz the class whose declared methods and default interface methods are to be retrieved.
+     * @return a list of {@link Method} objects reflecting all declared methods of the class,
+     *         including default methods from its interfaces.
+     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws IllegalStateException if an error occurs while retrieving the methods.
+     */
     public static List<Method> getDeclaredMethodsList(final Class<?> clazz) {
-        List<Method> methods = new ArrayList<>();
+        if (clazz == null) {
+            throw new IllegalArgumentException("Class parameter cannot be null");
+        }
+
         try {
-            methods.addAll(Arrays.asList(clazz.getDeclaredMethods()));
+            List<Method> methods = new ArrayList<>(Arrays.asList(clazz.getDeclaredMethods()));
             methods.addAll(getDefaultMethodsOfInterfaces(clazz));
+            return methods;
         } catch (Throwable ex) {
             throw new IllegalStateException("Failed to get declared methods for Class [" + clazz.getName() + "] from ClassLoader [" + clazz.getClassLoader() + "]", ex);
         }
-        return methods;
     }
 
+    /**
+     * Finds a method by name in the specified class or its superclasses and interfaces.
+     *
+     * @param clazz the class in which to search for the method.
+     * @param name the name of the method to search for.
+     * @return the {@link Method} object if a method with the specified name is found, or null if not found.
+     * @throws IllegalArgumentException if the class or method name parameter is null.
+     */
     public static Method findMethodByName(final Class<?> clazz, final String name) {
+        if (clazz == null || name == null) {
+            throw new IllegalArgumentException("Class and method name parameters cannot be null");
+        }
+
         Class<?> classSearchType = clazz;
         while (classSearchType != null) {
             Method[] methods = (classSearchType.isInterface() ? classSearchType.getMethods() : getDeclaredMethods(classSearchType));

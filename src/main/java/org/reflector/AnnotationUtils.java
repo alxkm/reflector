@@ -9,17 +9,20 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class AnnotationUtils {
+public final class AnnotationUtils {
+
+    private AnnotationUtils() {}
+
     /**
      * Retrieves all annotations present on the given class.
      *
      * @param clazz the class whose annotations are to be retrieved
      * @return an array of annotations present on the given class
-     * @throws IllegalArgumentException if the provided class is null
+     * @throws NullPointerException if the provided class is null
      */
     public static Annotation[] getClassAnnotations(final Class<?> clazz) {
         if (clazz == null) {
-            throw new IllegalArgumentException("Class must not be null");
+            throw new NullPointerException("Class must not be null");
         }
 
         return clazz.getAnnotations();
@@ -74,11 +77,11 @@ public class AnnotationUtils {
      *
      * @param methods the array of methods whose declared annotations are to be retrieved
      * @return a map where the keys are the methods and the values are arrays of their declared annotations
-     * @throws IllegalArgumentException if the methods array is null
+     * @throws NullPointerException if the methods array is null
      */
     public static Map<Method, Annotation[]> getMethodsDeclaredAnnotations(final Method[] methods) {
         if (methods == null) {
-            throw new IllegalArgumentException("Methods array must not be null");
+            throw new NullPointerException("Methods array must not be null");
         }
         return Stream.of(methods).filter(Objects::nonNull).collect(Collectors.toMap(method -> method, Method::getDeclaredAnnotations));
     }
@@ -110,14 +113,14 @@ public class AnnotationUtils {
      * @param clazz  the annotation class to look for on the method parameters
      * @param <T>    the type of the annotation
      * @return true if any parameter of the method is annotated with the specified annotation, false otherwise
-     * @throws IllegalArgumentException if the provided method or annotation class is null
+     * @throws NullPointerException if the provided method or annotation class is null
      */
     public static <T extends Annotation> boolean isMethodParameterAnnotated(final Method method, final Class<T> clazz) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
         if (clazz == null) {
-            throw new IllegalArgumentException("Annotation class must not be null");
+            throw new NullPointerException("Annotation class must not be null");
         }
 
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
@@ -136,10 +139,11 @@ public class AnnotationUtils {
      *
      * @param field the field whose annotations are to be retrieved
      * @return an array of annotations present on the field
+     * @throws NullPointerException if the provided method or annotation class is null
      */
     public static Annotation[] getFieldAnnotations(final Field field) {
         if (field == null) {
-            throw new IllegalArgumentException("Field must not be null");
+            throw new NullPointerException("Field must not be null");
         }
         return field.getAnnotations();
     }
@@ -152,14 +156,14 @@ public class AnnotationUtils {
      * @param clazz  the annotation class to look for on the method
      * @param <T>    the type of the annotation
      * @return true if the method is annotated with the specified annotation, false otherwise
-     * @throws IllegalArgumentException if the provided method or annotation class is null
+     * @throws NullPointerException if the provided method or annotation class is null
      */
     public static <T extends Annotation> boolean isMethodAnnotated(final Method method, final Class<T> clazz) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
         if (clazz == null) {
-            throw new IllegalArgumentException("Annotation class must not be null");
+            throw new NullPointerException("Annotation class must not be null");
         }
 
         return method.getAnnotation(clazz) != null;

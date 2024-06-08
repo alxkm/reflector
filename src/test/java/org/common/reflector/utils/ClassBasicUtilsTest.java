@@ -42,7 +42,7 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetEnclosingClass_NullClass() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getEnclosingClass(null);
         });
         String expectedMessage = "Class must not be null";
@@ -71,8 +71,8 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetSuperClassName_NullObject() {
-        // Test with a null object (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        // Test with a null object (should throw NullPointerException)
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getSuperClassNameForObject(null);
         });
 
@@ -149,7 +149,7 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetInterfaces_NullClass() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getInterfaces(null);
         });
         String expectedMessage = "Class must not be null";
@@ -190,8 +190,8 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetSuperClassNameByClass_NullClass() {
-        // Test with null class (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        // Test with null class (should throw NullPointerException)
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getSuperClassNameByClass(null);
         });
 
@@ -228,7 +228,7 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetSuperClass_NullObject() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getSuperClass(null);
         });
         String expectedMessage = "Object must not be null";
@@ -276,7 +276,7 @@ public class ClassBasicUtilsTest {
     @Test
     public void testGetClassFullName_NullObject() {
         // Test with a null object (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getClassFullName(null);
         });
 
@@ -323,8 +323,8 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetClassCanonicalName_NullObject() {
-        // Test with a null object (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        // Test with a null object (should throw NullPointerException)
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getClassCanonicalName(null);
         });
 
@@ -375,8 +375,8 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetPackage_NullObject() {
-        // Test with a null object (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        // Test with a null object (should throw NullPointerException)
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getPackage(null);
         });
 
@@ -476,8 +476,8 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetClassSimpleNameByClass_NullClass() {
-        // Test with a null class (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        // Test with a null class (should throw NullPointerException)
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getClassSimpleNameByClass(null);
         });
 
@@ -514,8 +514,8 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetClassSimpleName_NullObject() {
-        // Test with a null object (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        // Test with a null object (should throw NullPointerException)
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getClassSimpleName(null);
         });
 
@@ -576,8 +576,8 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetPackageByClass_NullClass() {
-        // Test with a null class (should throw IllegalArgumentException)
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        // Test with a null class (should throw NullPointerException)
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getPackageByClass(null);
         });
 

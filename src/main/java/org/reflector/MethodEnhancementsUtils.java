@@ -6,7 +6,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MethodEnhancementsUtils {
+public final class MethodEnhancementsUtils {
+
+    private MethodEnhancementsUtils() {}
 
     /**
      * Retrieves methods annotated with a specific annotation.

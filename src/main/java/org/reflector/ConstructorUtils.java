@@ -7,7 +7,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 
-public class ConstructorUtils {
+public final class ConstructorUtils {
+
+    private ConstructorUtils() {}
 
     /**
      * Retrieves the parameters of a constructor.

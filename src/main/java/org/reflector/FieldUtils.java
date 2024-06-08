@@ -17,9 +17,7 @@ import java.util.Map;
 public final class FieldUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldUtils.class);
 
-    private FieldUtils() {
-
-    }
+    private FieldUtils() {}
 
     /**
      * Retrieves the type of a specified field in the given class.
@@ -233,18 +231,30 @@ public final class FieldUtils {
         }
     }
 
+    /**
+     * Clears the values of unselected fields of the given object.
+     *
+     * <p>For each field of the object's class, if the field name is not present in the specified
+     * collection of selected fields, the field value is set to null.
+     *
+     * @param object the object whose fields are to be cleared
+     * @param selectedFields a collection containing the names of the fields to keep
+     * @throws IllegalArgumentException if the object is null
+     */
+    public static void clearUnselectedFields(final Object object, final Collection<String> selectedFields) {
+        if (object == null) {
+            throw new IllegalArgumentException("Object cannot be null");
+        }
 
-
-
-    public static void clearUnselectedFields(final Object object, final Collection<String> fields) {
-        if (fields != null && !fields.isEmpty()) {
-            for (Field field : FieldUtils.getAllFields(object.getClass())) {
-                if (!fields.contains(field.getName())) {
+        if (selectedFields != null && !selectedFields.isEmpty()) {
+            Class<?> clazz = object.getClass();
+            for (Field field : FieldUtils.getAllFields(clazz)) {
+                if (!selectedFields.contains(field.getName())) {
                     try {
                         field.setAccessible(true);
                         field.set(object, null);
                     } catch (Exception e) {
-                        LOGGER.error("Could not clear private field. " + e.getMessage());
+                        LOGGER.error("Failed to clear field '{}'. Error: {}", field.getName(), e.getMessage());
                     }
                 }
             }
