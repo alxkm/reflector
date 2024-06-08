@@ -7,7 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FieldsExtraUtils {
+public final class FieldsExtraUtils {
+
+    private FieldsExtraUtils() {}
+
     /**
      * Retrieves all private fields of a given class, including fields declared in its superclasses.
      *

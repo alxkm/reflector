@@ -3,13 +3,10 @@ package org.common.reflector.utils;
 import org.common.reflector.data.MethodAnnotatedClass;
 import org.common.reflector.data.Person;
 import org.common.reflector.data.SimpleAnnotatedEntry;
-import org.common.reflector.data.annotation.CustomMethodAnnotation;
 import org.common.reflector.util.TestConstant;
 import org.junit.jupiter.api.Test;
-import org.reflector.AnnotationUtils;
 import org.reflector.MethodUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -19,7 +16,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -306,5 +302,272 @@ public class MethodUtilsTest {
     public void findMethodsTestByName() {
         Method method = MethodUtils.findMethodByName(Person.class, TestConstant.METHOD_NAME_GET_ID);
         assertEquals(TestConstant.METHOD_NAME_GET_ID, method.getName());
+    }
+
+    //getDefaultMethodsOfInterfaces
+
+    /**
+     * An interface with a default method for testing.
+     */
+    interface TestInterfaceWithMethod1 {
+        default void defaultMethod1() {
+            System.out.println("Default Method 1");
+        }
+
+        void nonDefaultMethod1();
+    }
+
+    /**
+     * Another interface with a default method for testing.
+     */
+    interface TestInterfaceWithMethod2 {
+        default void defaultMethod2() {
+            System.out.println("Default Method 2");
+        }
+
+        void nonDefaultMethod2();
+    }
+
+    /**
+     * A class implementing the test interfaces.
+     */
+    class AggregatedTestClass implements TestInterfaceWithMethod1, TestInterfaceWithMethod2 {
+        @Override
+        public void nonDefaultMethod1() {}
+
+        @Override
+        public void nonDefaultMethod2() {}
+    }
+
+    /**
+     * Tests if getDefaultMethodsOfInterfaces retrieves the correct default methods.
+     */
+    @Test
+    void testGetDefaultMethodsOfInterfaces() throws NoSuchMethodException {
+        List<Method> defaultMethods = MethodUtils.getDefaultMethodsOfInterfaces(AggregatedTestClass.class);
+
+        assertEquals(2, defaultMethods.size());
+
+        Method defaultMethod1 = TestInterfaceWithMethod1.class.getMethod("defaultMethod1");
+        Method defaultMethod2 = TestInterfaceWithMethod2.class.getMethod("defaultMethod2");
+
+        assertTrue(defaultMethods.contains(defaultMethod1));
+        assertTrue(defaultMethods.contains(defaultMethod2));
+    }
+
+    /**
+     * Tests if getDefaultMethodsOfInterfaces returns an empty list when no default methods are present.
+     */
+    @Test
+    void testGetDefaultMethodsOfInterfaces_noDefaultMethods() {
+        class NoDefaultMethodClass {}
+
+        List<Method> defaultMethods = MethodUtils.getDefaultMethodsOfInterfaces(NoDefaultMethodClass.class);
+        assertTrue(defaultMethods.isEmpty());
+    }
+
+    /**
+     * Tests if getDefaultMethodsOfInterfaces returns an empty list when the class has no interfaces.
+     */
+    @Test
+    void testGetDefaultMethodsOfInterfaces_classWithNoInterfaces() {
+        class NoInterfacesClass {}
+
+        List<Method> defaultMethods = MethodUtils.getDefaultMethodsOfInterfaces(NoInterfacesClass.class);
+        assertTrue(defaultMethods.isEmpty());
+    }
+
+    /**
+     * Tests if getDefaultMethodsOfInterfaces throws an IllegalArgumentException when the class is null.
+     */
+    @Test
+    void testGetDefaultMethodsOfInterfaces_nullClass() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            MethodUtils.getDefaultMethodsOfInterfaces(null);
+        });
+
+        assertEquals("Class parameter cannot be null", exception.getMessage());
+    }
+
+
+    /**
+     * An interface with a default method for testing.
+     */
+    interface TestInterfaceWithDefaultAndNotDefaultMethods1 {
+        default void defaultMethod1() {
+            System.out.println("Default Method 1");
+        }
+
+        void nonDefaultMethod1();
+    }
+
+    /**
+     * Another interface with a default method for testing.
+     */
+    interface TestInterfaceWithDefaultAndNotDefaultMethods2 {
+        default void defaultMethod2() {
+            System.out.println("Default Method 2");
+        }
+
+        void nonDefaultMethod2();
+    }
+
+    /**
+     * A class implementing the test interfaces.
+     */
+    class AggregatedTestClassForInterfacesWithDefaultMethods implements TestInterfaceWithDefaultAndNotDefaultMethods1, TestInterfaceWithDefaultAndNotDefaultMethods2 {
+        @Override
+        public void nonDefaultMethod1() {}
+
+        @Override
+        public void nonDefaultMethod2() {}
+
+        public void declaredMethod1() {}
+
+        private void declaredMethod2() {}
+    }
+
+    /**
+     * Tests if getDeclaredMethodsList retrieves the correct declared methods and default methods.
+     */
+    @Test
+    void testGetDeclaredMethodsList() throws NoSuchMethodException {
+        List<Method> methods = MethodUtils.getDeclaredMethodsList(AggregatedTestClassForInterfacesWithDefaultMethods.class);
+
+        assertEquals(6, methods.size());
+
+        Method declaredMethod1 = AggregatedTestClassForInterfacesWithDefaultMethods.class.getDeclaredMethod("declaredMethod1");
+        Method declaredMethod2 = AggregatedTestClassForInterfacesWithDefaultMethods.class.getDeclaredMethod("declaredMethod2");
+        Method defaultMethod1 = TestInterfaceWithDefaultAndNotDefaultMethods1.class.getMethod("defaultMethod1");
+        Method defaultMethod2 = TestInterfaceWithDefaultAndNotDefaultMethods2.class.getMethod("defaultMethod2");
+
+        assertTrue(methods.contains(declaredMethod1));
+        assertTrue(methods.contains(declaredMethod2));
+        assertTrue(methods.contains(defaultMethod1));
+        assertTrue(methods.contains(defaultMethod2));
+    }
+
+    /**
+     * Tests if getDeclaredMethodsList returns only declared methods when no default methods are present.
+     */
+    @Test
+    void testGetDeclaredMethodsList_noDefaultMethods() {
+        class NoDefaultMethodClass {
+            public void declaredMethod() {}
+        }
+
+        List<Method> methods = MethodUtils.getDeclaredMethodsList(NoDefaultMethodClass.class);
+        assertEquals(1, methods.size());
+    }
+
+    /**
+     * Tests if getDeclaredMethodsList returns only declared methods when the class has no interfaces.
+     */
+    @Test
+    void testGetDeclaredMethodsList_classWithNoInterfaces() {
+        class NoInterfacesClass {
+            public void declaredMethod() {}
+        }
+
+        List<Method> methods = MethodUtils.getDeclaredMethodsList(NoInterfacesClass.class);
+        assertEquals(1, methods.size());
+    }
+
+    /**
+     * Tests if getDeclaredMethodsList throws an IllegalArgumentException when the class parameter is null.
+     */
+    @Test
+    void testGetDeclaredMethodsList_nullClass() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            MethodUtils.getDeclaredMethodsList(null);
+        });
+
+        assertEquals("Class parameter cannot be null", exception.getMessage());
+    }
+
+    //MethodUtils.findMethodByName
+
+
+    interface TestInterface1 {
+        default void defaultMethod1() {
+            System.out.println("Default Method 1");
+        }
+
+        void nonDefaultMethod1();
+    }
+
+    interface TestInterface2 {
+        default void defaultMethod2() {
+            System.out.println("Default Method 2");
+        }
+
+        void nonDefaultMethod2();
+    }
+
+    class TestClass implements TestInterface1, TestInterface2 {
+        @Override
+        public void nonDefaultMethod1() {}
+
+        @Override
+        public void nonDefaultMethod2() {}
+
+        public void declaredMethod1() {}
+
+        private void declaredMethod2() {}
+    }
+
+    class SubTestClass extends TestClass {
+        public void subDeclaredMethod() {}
+    }
+
+    /**
+     * Tests if findMethodByName retrieves the correct method by name from the class hierarchy.
+     */
+    @Test
+    void testFindMethodByName() throws NoSuchMethodException {
+        Method method = MethodUtils.findMethodByName(SubTestClass.class, "subDeclaredMethod");
+        assertNotNull(method);
+        assertEquals("subDeclaredMethod", method.getName());
+
+        method = MethodUtils.findMethodByName(SubTestClass.class, "declaredMethod1");
+        assertNotNull(method);
+        assertEquals("declaredMethod1", method.getName());
+
+        method = MethodUtils.findMethodByName(SubTestClass.class, "defaultMethod1");
+        assertNotNull(method);
+        assertEquals("defaultMethod1", method.getName());
+    }
+
+    /**
+     * Tests if findMethodByName returns null when the method name is not found.
+     */
+    @Test
+    void testFindMethodByName_notFound() {
+        Method method = MethodUtils.findMethodByName(SubTestClass.class, "nonExistentMethod");
+        assertNull(method);
+    }
+
+    /**
+     * Tests if findMethodByName throws an IllegalArgumentException when the class parameter is null.
+     */
+    @Test
+    void testFindMethodByName_nullClass() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            MethodUtils.findMethodByName(null, "someMethod");
+        });
+
+        assertEquals("Class and method name parameters cannot be null", exception.getMessage());
+    }
+
+    /**
+     * Tests if findMethodByName throws an IllegalArgumentException when the method name parameter is null.
+     */
+    @Test
+    void testFindMethodByName_nullMethodName() {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            MethodUtils.findMethodByName(SubTestClass.class, null);
+        });
+
+        assertEquals("Class and method name parameters cannot be null", exception.getMessage());
     }
 }
