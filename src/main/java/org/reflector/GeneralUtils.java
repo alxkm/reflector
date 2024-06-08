@@ -1,6 +1,8 @@
 package org.reflector;
 
-public class GeneralUtils {
+public final class GeneralUtils {
+
+    private GeneralUtils() {}
 
     /**
      * Checks if a given class is an interface.

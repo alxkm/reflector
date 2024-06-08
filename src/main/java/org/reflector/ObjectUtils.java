@@ -6,12 +6,29 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public class ObjectUtils {
+public final class ObjectUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectUtils.class);
 
+    private ObjectUtils() {}
+
+    /**
+     * Checks if the type of a field is a primitive type or a wrapper class.
+     *
+     * @param field the field to check
+     * @return true if the type of the field is a primitive type or a wrapper class, false otherwise
+     */
     public static boolean isFieldPrimitiveType(final Field field) {
-        return field.getType().isPrimitive() || field.getType() == String.class || field.getType() == Integer.class || field.getType() == Long.class || field.getType() == Boolean.class || field.getType() == Byte.class || field.getType() == Character.class || field.getType() == Short.class || field.getType() == Float.class || field.getType() == Double.class;
+        return field.getType().isPrimitive() ||
+                field.getType() == String.class ||
+                field.getType() == Integer.class ||
+                field.getType() == Long.class ||
+                field.getType() == Boolean.class ||
+                field.getType() == Byte.class ||
+                field.getType() == Character.class ||
+                field.getType() == Short.class ||
+                field.getType() == Float.class ||
+                field.getType() == Double.class;
     }
 
     /**

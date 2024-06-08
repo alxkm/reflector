@@ -3,7 +3,9 @@ package org.reflector;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-public class SecurityUtils {
+public final class SecurityUtils {
+
+    private SecurityUtils() {}
 
     /**
      * Sets a method to be accessible.
