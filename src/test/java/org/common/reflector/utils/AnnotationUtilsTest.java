@@ -151,7 +151,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testGetClassAnnotations_NullClass() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.getClassAnnotations(null);
         });
         String expectedMessage = "Class must not be null";
@@ -226,7 +226,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testIsMethodParameterAnnotated_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.isMethodParameterAnnotated(null, ParameterAnnotation.class);
         });
         String expectedMessage = "Method must not be null";
@@ -237,7 +237,7 @@ public class AnnotationUtilsTest {
     @Test
     public void testIsMethodParameterAnnotated_NullAnnotationClass() throws NoSuchMethodException {
         Method method = TestClassWithAnnotaedAndNotMethod.class.getMethod("annotatedMethod", String.class);
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.isMethodParameterAnnotated(method, null);
         });
         String expectedMessage = "Annotation class must not be null";
@@ -291,7 +291,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testGetFieldAnnotations_NullField() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.getFieldAnnotations(null);
         });
 
@@ -327,7 +327,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testIsMethodAnnotated_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.isMethodAnnotated(null, CustomMethodAnnotation.class);
         });
         String expectedMessage = "Method must not be null";
@@ -338,7 +338,7 @@ public class AnnotationUtilsTest {
     @Test
     public void testIsMethodAnnotated_NullAnnotationClass() throws NoSuchMethodException {
         Method method = TestClass.class.getMethod("annotatedMethod");
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.isMethodAnnotated(method, null);
         });
         String expectedMessage = "Annotation class must not be null";
@@ -383,7 +383,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testGetMethodDeclaredAnnotations_NullMethodsArray() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> AnnotationUtils.getMethodsDeclaredAnnotations(null));
+        Exception exception = assertThrows(NullPointerException.class, () -> AnnotationUtils.getMethodsDeclaredAnnotations(null));
         String expectedMessage = "Methods array must not be null";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));

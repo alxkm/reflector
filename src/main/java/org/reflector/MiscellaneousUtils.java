@@ -1,10 +1,11 @@
 package org.reflector;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class MiscellaneousUtils {
+public final class MiscellaneousUtils {
+
+    private MiscellaneousUtils() {}
 
     /**
      * Creates a new instance of a class using its no-argument constructor.

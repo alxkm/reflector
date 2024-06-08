@@ -1,8 +1,6 @@
 package org.reflector;
 
 import org.reflector.util.ReflectionConstant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,25 +13,35 @@ import java.util.List;
 
 public final class PackageUtils {
 
-    private PackageUtils() {
-
-    }
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PackageUtils.class);
     private static final ClassLoader CLASSLOADER;
 
     static {
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : ReflectionUtils.class.getClassLoader();
+        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : PackageUtils.class.getClassLoader();
     }
 
+    private PackageUtils() {}
+
+    /**
+     * Retrieves all classes within a package.
+     *
+     * @param packageName the name of the package
+     * @return a list of classes within the specified package
+     * @throws ClassNotFoundException if a class cannot be found
+     * @throws IOException            if an I/O error occurs
+     * @throws URISyntaxException     if a URI syntax error occurs
+     */
     public static List<Class<?>> getClassesByPackage(final String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+        // Convert package name to directory path
         String path = packageName.replace(ReflectionConstant.DOT_SYMBOL, ReflectionConstant.SLASH);
+        // Get resources within the package
         Enumeration<URL> resources = CLASSLOADER.getResources(path);
         List<File> directories = new ArrayList<>();
+        // Store directories containing resources
         while (resources.hasMoreElements()) {
             directories.add(new File(new URI(resources.nextElement().toString()).getPath()));
         }
+        // Store classes found in directories
         List<Class<?>> classes = new ArrayList<>();
         for (File directory : directories) {
             classes.addAll(getClassesByDirectoryAndPackage(directory, packageName));
@@ -41,6 +49,14 @@ public final class PackageUtils {
         return classes;
     }
 
+    /**
+     * Retrieves all classes within a directory and its subdirectories.
+     *
+     * @param directory    the directory to search for classes
+     * @param packageName  the name of the package
+     * @return a list of classes within the specified directory and package
+     * @throws ClassNotFoundException if a class cannot be found
+     */
     public static List<Class<?>> getClassesByDirectoryAndPackage(final File directory, final String packageName) throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();
         if (!directory.exists()) {
@@ -59,6 +75,16 @@ public final class PackageUtils {
         return classes;
     }
 
+    /**
+     * Retrieves all classes within a package that are annotated with a specific annotation.
+     *
+     * @param packageName the name of the package
+     * @param annotation  the annotation to filter classes by
+     * @return a list of classes within the specified package that are annotated with the specified annotation
+     * @throws IOException            if an I/O error occurs
+     * @throws URISyntaxException     if a URI syntax error occurs
+     * @throws ClassNotFoundException if a class cannot be found
+     */
     public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation) throws IOException, URISyntaxException, ClassNotFoundException {
         List<Class<?>> classesByPackage = getClassesByPackage(packageName);
         List<Class<?>> classes = new ArrayList<>();
