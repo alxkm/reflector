@@ -1,7 +1,7 @@
 # Reflector <img src="https://www.svgrepo.com/show/144446/mirror-horizontally.svg" height="32px" alt="Reflector" />
 
-[![Build Status](https://app.travis-ci.com/alxkm/reflector.svg?branch=master)](https://app.travis-ci.com/alxkm/reflector)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Java CI with Gradle](https://github.com/alxkm/reflector/actions/workflows/gradle.yml/badge.svg)](https://github.com/alxkm/reflector/actions/workflows/gradle.yml)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<!--[![Build Status](https://app.travis-ci.com/alxkm/reflector.svg?branch=master)](https://app.travis-ci.com/alxkm/reflector)-->
 
 Reflector is library, which offers a comprehensive suite of utilities for harnessing the power of the Java Reflection API. With a focus on simplicity and efficiency, it empowers developers to interact with class metadata, methods, fields, constructors, and annotations effortlessly.
 
