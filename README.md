@@ -1467,7 +1467,7 @@ ReflectionUtils.setConstructorAccessible(myConstructor);
 
 ### Changelog
 
-#### 0.0.3:
+#### 0.0.1:
 - initial release
 
 
