@@ -42,7 +42,7 @@ public final class FieldsExtraUtils {
      * @return a map with field names as keys and Field objects as values
      */
     public static Map<String, Field> getFieldsMap(final List<Field> fields) {
-        Map<String, Field> map = new HashMap<String, Field>();
+        Map<String, Field> map = new HashMap<>();
         for (Field field : fields) {
             map.put(field.getName(), field);
         }
@@ -63,7 +63,7 @@ public final class FieldsExtraUtils {
             throw new NullPointerException("Class type and annotation cannot be null");
         }
 
-        List<Field> annotatedFields = new ArrayList<Field>();
+        List<Field> annotatedFields = new ArrayList<>();
         for (Field field : FieldUtils.getAllFields(type)) {
             if (field.isAnnotationPresent(annotation)) {
                 field.setAccessible(true); // Ensure the field is accessible
