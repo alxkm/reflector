@@ -18,7 +18,7 @@ public final class MethodEnhancementsUtils {
      * @return a list of methods annotated with the specified annotation
      * @throws NullPointerException if the clazz or annotationClass is null
      */
-    public static List<Method> getAnnotatedMethods(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+    public static List<Method> getAnnotatedMethods(final Class<?> clazz, Class<? extends Annotation> annotationClass) {
         if (clazz == null || annotationClass == null) {
             throw new NullPointerException("Class and annotation class cannot be null");
         }
@@ -40,7 +40,7 @@ public final class MethodEnhancementsUtils {
      * @return a list of constructors annotated with the specified annotation
      * @throws NullPointerException if the clazz or annotationClass is null
      */
-    public static List<Constructor<?>> getAnnotatedConstructors(Class<?> clazz, Class<? extends Annotation> annotationClass) {
+    public static List<Constructor<?>> getAnnotatedConstructors(final Class<?> clazz, Class<? extends Annotation> annotationClass) {
         if (clazz == null || annotationClass == null) {
             throw new NullPointerException("Class and annotation class cannot be null");
         }

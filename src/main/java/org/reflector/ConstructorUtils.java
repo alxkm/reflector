@@ -8,6 +8,8 @@ import java.lang.reflect.Parameter;
 
 public final class ConstructorUtils {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConstructorUtils.class);
+
     private ConstructorUtils() {}
 
     /**
@@ -37,9 +39,6 @@ public final class ConstructorUtils {
         }
         return constructor.getModifiers();
     }
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConstructorUtils.class);
 
     /**
      * Retrieves all public constructors of the specified class.
