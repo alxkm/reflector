@@ -66,7 +66,7 @@ public final class FieldsExtraUtils {
         List<Field> annotatedFields = new ArrayList<>();
         for (Field field : FieldUtils.getAllFields(type)) {
             if (field.isAnnotationPresent(annotation)) {
-                field.setAccessible(true); // Ensure the field is accessible
+                field.setAccessible(true);
                 annotatedFields.add(field);
             }
         }
