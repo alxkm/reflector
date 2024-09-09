@@ -14,9 +14,9 @@ public final class MiscellaneousUtils {
      * @return a new instance of the specified class
      * @throws NullPointerException if the class is null
      * @throws InstantiationException if the class represents an abstract class, an interface, an array class, a primitive type, or void;
-     *                                or if the class has no nullary constructor
-     * @throws IllegalAccessException if the class or its nullary constructor is not accessible
-     * @throws InvocationTargetException if the nullary constructor throws an exception
+     *                                or if the class has no nullable constructor
+     * @throws IllegalAccessException if the class or its nullable constructor is not accessible
+     * @throws InvocationTargetException if the nullable constructor throws an exception
      */
     public static <T> T newInstance(Class<T> clazz) throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
         if (clazz == null) {
