@@ -7,10 +7,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 
 public final class ConstructorUtils {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ConstructorUtils.class);
 
-    private ConstructorUtils() {}
+    private ConstructorUtils() {
+    }
 
     /**
      * Retrieves the parameters of a constructor.

@@ -7,10 +7,10 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 public final class ObjectUtils {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(ObjectUtils.class);
 
-    private ObjectUtils() {}
+    private ObjectUtils() {
+    }
 
     /**
      * Checks if the type of a field is a primitive type or a wrapper class.

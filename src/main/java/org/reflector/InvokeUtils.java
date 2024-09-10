@@ -11,7 +11,8 @@ import java.lang.reflect.Method;
 public final class InvokeUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(InvokeUtils.class);
 
-    private InvokeUtils() {}
+    private InvokeUtils() {
+    }
 
     /**
      * Invokes a method on an object.
