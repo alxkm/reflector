@@ -17,7 +17,8 @@ import java.util.Map;
 public final class FieldUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldUtils.class);
 
-    private FieldUtils() {}
+    private FieldUtils() {
+    }
 
     /**
      * Retrieves the type of a specified field in the given class.
