@@ -26,16 +26,20 @@ public final class InvokeUtils {
      */
     public static Object invokeMethod(final Object objectToInvokeOn, final String methodName, final Class<?>[] parameterTypes, final Object[] args) {
         try {
-            Method method = objectToInvokeOn.getClass().getDeclaredMethod(methodName, parameterTypes);
+            final Method method = objectToInvokeOn.getClass().getDeclaredMethod(methodName, parameterTypes);
+            method.setAccessible(true);
             return method.invoke(objectToInvokeOn, args);
         } catch (Exception e) {
-            LOGGER.error("Could not invoke method", e);
+            LOGGER.error("Could not invoke method {{}}", methodName, e);
+            throw new MethodInvokeException("Could not invoke method " + methodName, e);
         }
-        throw new MethodInvokeException("Error during method invoke has been happened");
     }
 
     /**
      * Invokes a single-parameter method on an object.
+     *
+     * <p>Resolves public methods only. Use
+     * {@link #invokeMethod(Object, String, Class[], Object[])} to reach a private one.</p>
      *
      * @param objectToInvokeOn the object to invoke the method on
      * @param methodName        the name of the method to invoke
@@ -50,9 +54,9 @@ public final class InvokeUtils {
             final Method method = clazz.getMethod(methodName, parameterType);
             return method.invoke(objectToInvokeOn, parameter);
         } catch (Exception e) {
-            LOGGER.error("Could not invoke {{}} method ", methodName, e);
+            LOGGER.error("Could not invoke method {{}}", methodName, e);
+            throw new MethodInvokeException("Could not invoke method " + methodName, e);
         }
-        throw new MethodInvokeException("Error during method invoke has been happened");
     }
 
     /**
@@ -66,9 +70,9 @@ public final class InvokeUtils {
         try {
             return Class.forName(className).newInstance();
         } catch (Exception e) {
-            LOGGER.error("Could not instantiate class object ", e);
+            LOGGER.error("Could not instantiate class {{}}", className, e);
+            throw new InstanceInvocationException("Could not instantiate class " + className, e);
         }
-        throw new InstanceInvocationException("Error during instance invoke has been happened");
     }
 
     /**
@@ -86,9 +90,9 @@ public final class InvokeUtils {
             final Constructor<?> ctor = getAccessibleConstructor(ctorTypes, clazz);
             return ctor.newInstance(args);
         } catch (Exception e) {
-            LOGGER.error("Could not instantiate class {{}} object ", classFullName, e);
+            LOGGER.error("Could not instantiate class {{}}", classFullName, e);
+            throw new InstanceInvocationException("Could not instantiate class " + classFullName, e);
         }
-        throw new InstanceInvocationException("Error during instance invoke has been happened");
     }
 
     /**
@@ -106,9 +110,9 @@ public final class InvokeUtils {
             final Constructor<T> ctor = getAccessibleConstructor(ctorTypes, clazz);
             return ctor.newInstance(args);
         } catch (Exception e) {
-            LOGGER.error("Could not instantiate class {{}} object ", clazz, e);
+            LOGGER.error("Could not instantiate class {{}}", clazz, e);
+            throw new InstanceInvocationException("Could not instantiate class " + clazz, e);
         }
-        throw new InstanceInvocationException("Error during instance invoke has been happened");
     }
 
     /**
@@ -127,6 +131,9 @@ public final class InvokeUtils {
 
     /**
      * Gets a constructor with accessible flag set.
+     *
+     * <p>Matches on exact parameter types, so a primitive parameter is not matched by its
+     * wrapper class.</p>
      *
      * @param contTypes the types of the constructor parameters
      * @param clazz     the class

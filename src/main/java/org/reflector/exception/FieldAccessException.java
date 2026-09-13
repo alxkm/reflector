@@ -1,10 +1,17 @@
 package org.reflector.exception;
 
+/**
+ * Thrown when a field cannot be read or written reflectively.
+ */
 public class FieldAccessException extends RuntimeException {
-    public FieldAccessException(String cause) {
-        super(cause);
+
+    private static final long serialVersionUID = 1L;
+
+    public FieldAccessException(final String message) {
+        super(message);
     }
-    public FieldAccessException(String cause, ReflectiveOperationException e) {
-        super(cause, e);
+
+    public FieldAccessException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }
