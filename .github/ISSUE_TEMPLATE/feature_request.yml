@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest a utility method or an improvement
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do
+      description: Describe the reflection task that is awkward today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: How would the call look?
+      render: java
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered

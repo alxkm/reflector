@@ -340,17 +340,6 @@ public final class ReflectionUtils {
         return FieldUtils.getAllFields(type);
     }
 
-//    /**
-//     * Retrieves all private fields of a given class, including fields declared in its superclasses.
-//     *
-//     * @param clazz the class from which to retrieve private fields
-//     * @return a list of all private fields of the specified class
-//     * @throws NullPointerException if the clazz is null
-//     */
-//    public static List<Field> getAllPrivateFields(final Class<?> clazz) {
-//        return FieldUtils.getAllPrivateFields(clazz);
-//    }
-
     /**
      * Retrieves all fields of a given class, including fields declared in its superclasses,
      * and returns them as a map with field names as keys.
@@ -387,6 +376,149 @@ public final class ReflectionUtils {
      */
     public static void clearUnselectedFields(final Object object, final Collection<String> selectedFields) {
         FieldUtils.clearUnselectedFields(object, selectedFields);
+    }
+
+    // ClassBasicUtils
+
+    /**
+     * Gets the full name (including the package name) of the class of the given object.
+     *
+     * @param obj the object whose class full name is to be retrieved
+     * @return the full name of the class of the object
+     * @throws NullPointerException if the input object is null
+     */
+    public static String getClassFullName(final Object obj) {
+        return ClassBasicUtils.getClassFullName(obj);
+    }
+
+    /**
+     * Gets the canonical name of the class of the given object.
+     *
+     * @param obj the object whose class canonical name is to be retrieved
+     * @return the canonical name of the class of the object
+     * @throws NullPointerException if the input object is null
+     */
+    public static String getClassCanonicalName(final Object obj) {
+        return ClassBasicUtils.getClassCanonicalName(obj);
+    }
+
+    /**
+     * Gets the simple name of the class of the given object.
+     *
+     * @param obj the object whose class simple name is to be retrieved
+     * @return the simple name of the class of the object
+     * @throws NullPointerException if the input object is null
+     */
+    public static String getClassSimpleName(final Object obj) {
+        return ClassBasicUtils.getClassSimpleName(obj);
+    }
+
+    /**
+     * Gets the package name of the class of the given object.
+     *
+     * @param obj the object whose class package name is to be retrieved
+     * @return the package name of the class of the object, or null if the class has no package
+     * @throws NullPointerException if the input object is null
+     */
+    public static String getPackage(final Object obj) {
+        return ClassBasicUtils.getPackage(obj);
+    }
+
+    /**
+     * Gets the full name (including the package name) of the given class.
+     *
+     * @param clazz the class whose full name is to be retrieved
+     * @return the full name of the class, or an empty string if the class is null
+     */
+    public static String getClassFullNameByClass(final Class<?> clazz) {
+        return ClassBasicUtils.getClassFullNameByClass(clazz);
+    }
+
+    /**
+     * Gets the canonical name of the given class.
+     *
+     * @param clazz the class whose canonical name is to be retrieved
+     * @return the canonical name of the class, or null if the class is null
+     */
+    public static String getClassCanonicalNameByClass(final Class<?> clazz) {
+        return ClassBasicUtils.getClassCanonicalNameByClass(clazz);
+    }
+
+    /**
+     * Gets the simple name of the given class.
+     *
+     * @param clazz the class whose simple name is to be retrieved
+     * @return the simple name of the class
+     * @throws NullPointerException if the input class is null
+     */
+    public static String getClassSimpleNameByClass(final Class<?> clazz) {
+        return ClassBasicUtils.getClassSimpleNameByClass(clazz);
+    }
+
+    /**
+     * Gets the package name of the given class.
+     *
+     * @param clazz the class whose package name is to be retrieved
+     * @return the package name of the class, or null if the class has no package
+     * @throws NullPointerException if the input class is null
+     */
+    public static String getPackageByClass(final Class<?> clazz) {
+        return ClassBasicUtils.getPackageByClass(clazz);
+    }
+
+    /**
+     * Gets the name of the superclass of the given object's class.
+     *
+     * @param obj the object whose superclass name is to be retrieved
+     * @return the name of the superclass, or null if the class has no superclass
+     * @throws NullPointerException if the input object is null
+     */
+    public static String getSuperClassNameForObject(final Object obj) {
+        return ClassBasicUtils.getSuperClassNameForObject(obj);
+    }
+
+    /**
+     * Retrieves the name of the superclass of the given class.
+     *
+     * @param clazz the class for which the superclass name is to be retrieved
+     * @return the name of the superclass, or null if the class has no superclass
+     * @throws NullPointerException if the provided class is null
+     */
+    public static String getSuperClassNameByClass(final Class<?> clazz) {
+        return ClassBasicUtils.getSuperClassNameByClass(clazz);
+    }
+
+    /**
+     * Retrieves the superclass of the given object's class.
+     *
+     * @param obj the object whose class's superclass is to be retrieved
+     * @return the superclass of the given object's class
+     * @throws NullPointerException if the provided object is null
+     */
+    public static Class<?> getSuperClass(final Object obj) {
+        return ClassBasicUtils.getSuperClass(obj);
+    }
+
+    /**
+     * Retrieves the enclosing class of the given class if it is an inner class.
+     *
+     * @param clazz the class whose enclosing class is to be retrieved
+     * @return the enclosing class if the given class is an inner class, null otherwise
+     * @throws NullPointerException if the provided class is null
+     */
+    public static Class<?> getEnclosingClass(final Class<?> clazz) {
+        return ClassBasicUtils.getEnclosingClass(clazz);
+    }
+
+    /**
+     * Retrieves the interfaces implemented by the given class.
+     *
+     * @param clazz the class whose implemented interfaces are to be retrieved
+     * @return a list of classes representing the interfaces implemented by the given class
+     * @throws NullPointerException if the provided class is null
+     */
+    public static List<Class<?>> getInterfaces(final Class<?> clazz) {
+        return ClassBasicUtils.getInterfaces(clazz);
     }
 
     // GeneralUtils

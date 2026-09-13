@@ -1,0 +1,39 @@
+name: Bug report
+description: Something does not behave the way the documentation says it should
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you expect, and what did you get instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction
+      description: The smallest snippet that shows the problem. A failing test is ideal.
+      render: java
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Reflector version
+      placeholder: release.v0.0.1.1
+    validations:
+      required: true
+  - type: input
+    id: java-version
+    attributes:
+      label: Java version
+      placeholder: "17 (Temurin)"
+    validations:
+      required: true
+  - type: textarea
+    id: stacktrace
+    attributes:
+      label: Stack trace
+      description: Paste the full stack trace if there is one.
+      render: text

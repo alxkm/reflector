@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -276,7 +277,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetAllMethodsWithModifiers_emptyPredicates() {
-        List<Method> methods = MethodUtils.getAllMethodsWithModifiers(SampleClass.class, List.of());
+        List<Method> methods = MethodUtils.getAllMethodsWithModifiers(SampleClass.class, Collections.emptyList());
         assertTrue(methods.isEmpty());
     }
 
