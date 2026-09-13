@@ -1,30 +1,117 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'jacoco'
 }
 
-group 'org.reflector'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+group = 'org.reflector'
+version = '0.0.1'
+description = 'Java reflection utilities for classes, fields, methods, constructors and annotations'
+
+ext {
+    slf4jVersion = '2.0.13'
+    junitVersion = '5.10.2'
+}
 
 repositories {
     mavenCentral()
 }
 
-allprojects {
-    project.ext {
-        sl4jVersion = '2.0.3'
-        junitVersion = '5.9.1'
-    }
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 dependencies {
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: sl4jVersion
-    testImplementation group: 'org.slf4j', name: 'slf4j-log4j12', version: sl4jVersion, ext: 'pom'
+    implementation "org.slf4j:slf4j-api:${slf4jVersion}"
 
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
-    testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
+    testImplementation platform("org.junit:junit-bom:${junitVersion}")
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testRuntimeOnly "org.slf4j:slf4j-simple:${slf4jVersion}"
 }
 
-test {
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // Keep the published bytecode usable on Java 8 regardless of the JDK running the build.
+    // --release also checks the API against Java 8, which plain source/target compatibility
+    // does not. It only exists from JDK 9 on, hence the fallback.
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.release = 8
+    } else {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    // Targeting 8 is deliberate, no need to be reminded on every compile.
+    options.compilerArgs << '-Xlint:-options'
+}
+
+tasks.named('test') {
     useJUnitPlatform()
+    // Instrument the library only. Instrumenting the test fixtures would add a synthetic
+    // $jacocoData field to them and skew the tests that enumerate declared fields.
+    jacoco {
+        includes = ['org.reflector.*']
+    }
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+    }
+    finalizedBy tasks.named('jacocoTestReport')
+}
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test')
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+tasks.named('javadoc') {
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+tasks.named('jar') {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Automatic-Module-Name': 'org.reflector'
+        )
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = 'reflector'
+            pom {
+                name = 'Reflector'
+                description = project.description
+                url = 'https://github.com/alxkm/reflector'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'alxkm'
+                        name = 'Oleksandr Klymenko'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/alxkm/reflector'
+                    connection = 'scm:git:https://github.com/alxkm/reflector.git'
+                }
+            }
+        }
+    }
 }
