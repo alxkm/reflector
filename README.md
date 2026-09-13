@@ -153,13 +153,16 @@ for (Method method : ReflectionUtils.getAnnotatedMethods(service.getClass(), Sta
 <summary><b>Filter methods by modifier</b></summary>
 
 ```java
-List<Method> publicStatic = ReflectionUtils.getAllMethodsWithModifiers(
-        MyClass.class, Arrays.asList(Modifier::isPublic, Modifier::isStatic));
+List<Method> publicOrProtected = ReflectionUtils.getAllMethodsWithModifiers(
+        MyClass.class, Arrays.asList(Modifier::isPublic, Modifier::isProtected));
 ```
 
-Predicates are combined with AND, so the example above returns methods that are both
-public and static. `getAllPrivateMethods`, `getAllPublicMethods` and
-`getAllPublicProtectedMethods` cover the common cases without writing predicates.
+Predicates are combined with OR, so a method is returned when it matches any of them.
+`getAllPrivateMethods`, `getAllPublicMethods` and `getAllPublicProtectedMethods` cover the
+common cases without writing predicates.
+
+Only methods declared by the class itself are considered - inherited methods are not
+returned. This differs from the field helpers, which do walk the hierarchy.
 </details>
 
 <details>

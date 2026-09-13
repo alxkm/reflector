@@ -13,6 +13,10 @@ public final class MethodEnhancementsUtils {
     /**
      * Retrieves methods annotated with a specific annotation.
      *
+     * <p>Only methods declared by the class itself are considered, inherited methods are not
+     * returned. This differs from {@link FieldsExtraUtils#getAllAnnotatedFields}, which walks the
+     * hierarchy.</p>
+     *
      * @param clazz the class from which to retrieve methods
      * @param annotationClass the Class object corresponding to the annotation type
      * @return a list of methods annotated with the specified annotation
@@ -34,6 +38,9 @@ public final class MethodEnhancementsUtils {
 
     /**
      * Retrieves constructors annotated with a specific annotation.
+     *
+     * <p>Constructors are never inherited, so only the declared constructors of the class are
+     * considered.</p>
      *
      * @param clazz the class from which to retrieve constructors
      * @param annotationClass the Class object corresponding to the annotation type
