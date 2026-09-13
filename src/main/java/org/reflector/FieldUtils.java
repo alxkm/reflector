@@ -216,6 +216,10 @@ public final class FieldUtils {
     /**
      * Reads the value of a field from an object.
      *
+     * <p>The field is looked up on the runtime class of the object only, so a field declared
+     * by a superclass is not found. Use {@link #getAllFieldsMap(Class)} when inherited fields
+     * matter.</p>
+     *
      * @param object    the object from which to read the field
      * @param fieldName the name of the field to read
      * @return the value of the field in the object
@@ -236,7 +240,8 @@ public final class FieldUtils {
      * Clears the values of unselected fields of the given object.
      *
      * <p>For each field of the object's class, if the field name is not present in the specified
-     * collection of selected fields, the field value is set to null.
+     * collection of selected fields, the field value is set to null. Only reference fields are
+     * cleared - a primitive field cannot be set to {@code null} and keeps its value.
      *
      * @param object the object whose fields are to be cleared
      * @param selectedFields a collection containing the names of the fields to keep

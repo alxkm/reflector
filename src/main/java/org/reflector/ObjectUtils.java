@@ -34,6 +34,10 @@ public final class ObjectUtils {
     /**
      * Creates a deep copy of the given object.
      *
+     * <p>The class needs a no-argument constructor. Without one the failure is logged and
+     * {@code null} is returned. Primitives, their wrappers and {@code String} are copied by
+     * value, other fields are copied recursively, and {@code final} fields are skipped.</p>
+     *
      * @param object the object to be copied
      * @return the deep copy of the object
      * @throws IllegalStateException if copying fails
