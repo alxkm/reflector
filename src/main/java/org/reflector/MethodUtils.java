@@ -137,6 +137,10 @@ public final class MethodUtils {
     /**
      * Retrieves all methods of a class that match the given modifiers.
      *
+     * <p>A method is returned when it matches <em>any</em> of the predicates, so the list is
+     * combined with OR, not AND. Only methods declared by the class itself are considered,
+     * inherited methods are not returned.</p>
+     *
      * @param clazz     the class from which to retrieve methods
      * @param modifiers the list of predicates to match the method modifiers
      * @return a list of methods that match the given modifiers
