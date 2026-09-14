@@ -12,6 +12,13 @@
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <img src="https://img.shields.io/badge/Java-8%2B-orange.svg" alt="Java 8+">
   <a href="https://jitpack.io/#alxkm/reflector"><img src="https://jitpack.io/v/alxkm/reflector.svg" alt="JitPack"></a>
+  <a href="https://codecov.io/gh/alxkm/reflector"><img src="https://codecov.io/gh/alxkm/reflector/branch/master/graph/badge.svg" alt="Coverage"></a>
+</p>
+
+<p align="center">
+  <a href="docs/README.md">Documentation</a> &middot;
+  <a href="https://alxkm.github.io/reflector/">Javadoc</a> &middot;
+  <a href="CHANGELOG.md">Changelog</a>
 </p>
 
 ---
@@ -153,13 +160,16 @@ for (Method method : ReflectionUtils.getAnnotatedMethods(service.getClass(), Sta
 <summary><b>Filter methods by modifier</b></summary>
 
 ```java
-List<Method> publicStatic = ReflectionUtils.getAllMethodsWithModifiers(
-        MyClass.class, Arrays.asList(Modifier::isPublic, Modifier::isStatic));
+List<Method> publicOrProtected = ReflectionUtils.getAllMethodsWithModifiers(
+        MyClass.class, Arrays.asList(Modifier::isPublic, Modifier::isProtected));
 ```
 
-Predicates are combined with AND, so the example above returns methods that are both
-public and static. `getAllPrivateMethods`, `getAllPublicMethods` and
-`getAllPublicProtectedMethods` cover the common cases without writing predicates.
+Predicates are combined with OR, so a method is returned when it matches any of them.
+`getAllPrivateMethods`, `getAllPublicMethods` and `getAllPublicProtectedMethods` cover the
+common cases without writing predicates.
+
+Only methods declared by the class itself are considered - inherited methods are not
+returned. This differs from the field helpers, which do walk the hierarchy.
 </details>
 
 <details>
@@ -181,8 +191,8 @@ Scanning walks the file system classpath. Classes packaged inside a jar are not 
 ReflectionUtils.clearUnselectedFields(order, Arrays.asList("id", "name"));
 ```
 
-Only reference fields are cleared. Primitive fields cannot be set to `null` and keep their
-value.
+Reference fields are set to `null` and primitive fields to their default value, since a
+primitive cannot hold `null`. Static and final fields are left alone.
 </details>
 
 <details>
@@ -193,8 +203,8 @@ Person duplicate = (Person) ReflectionUtils.copy(person);
 ```
 
 Primitives, their wrappers and `String` are copied by value, other fields are copied
-recursively, and `final` fields are skipped. The class needs a no-argument constructor -
-without one the call returns `null`.
+recursively, and `final` fields are skipped. The class needs a no-argument constructor of
+any visibility - without one the call throws `InstanceInvocationException`.
 </details>
 
 ## What is in the box
@@ -221,10 +231,10 @@ Reflector fails fast instead of returning `null` to signal a problem.
 
 | Situation | Behaviour |
 |-----------|-----------|
-| `null` argument | `NullPointerException` or `IllegalArgumentException`, documented per method |
-| Field read fails | `FieldAccessException` |
+| `null` argument | `NullPointerException` |
+| Field read fails, or no such field | `FieldAccessException` |
 | Method invocation fails | `MethodInvokeException` |
-| Instantiation fails | `InstanceInvocationException` |
+| Instantiation fails, including `copy` on a class without a no-arg constructor | `InstanceInvocationException` |
 | Nothing matched a lookup | An empty collection, never `null` |
 
 All three library exceptions are unchecked and carry the original reflective failure as
@@ -234,12 +244,15 @@ exception the JDK throws.
 
 ## Known limitations
 
-- `invokeInstance(Class, Object...)` resolves the constructor from the runtime types of the
-  arguments, so it matches public constructors with reference parameter types. A
-  constructor declaring a primitive parameter such as `int` is not matched - declare the
-  parameter as `Integer`, or use `getAccessibleConstructor` directly.
 - `invokeSingleMethod` resolves public methods only. Use `invokeMethod` to reach a private
   one.
+- Constructor resolution matches on the runtime types of the arguments. It handles
+  primitive parameters and subtypes, but it does not pick between overloads the way `javac`
+  would - the first applicable constructor wins. Use `getAccessibleConstructor` when a class
+  has ambiguous overloads.
+- The method helpers look at declared methods only, while the field helpers walk the
+  superclass chain. `getAnnotatedMethods` on a subclass does not return an annotated method
+  inherited from its parent.
 - Package scanning reads directories, not jar entries.
 
 ## Building from source

@@ -280,9 +280,9 @@ Map<String, Field> fieldsMap = ReflectionUtils.getAllFieldsMap(MyClass.class);
 ## readField
 
 **Description:**
-Reads the value of a field from an object. The field is looked up on the runtime class of
-the object only - a field declared by a superclass is not found. Use `getAllFieldsMap` when
-you need inherited fields.
+Reads the value of a field from an object. The field is looked up on the runtime class and
+then on each superclass, so an inherited field is found as well. When several classes in
+the hierarchy declare a field with the same name, the one closest to the runtime class wins.
 
 **Parameters:**
 - `object` (Object): The object from which to read the field.
@@ -301,8 +301,8 @@ Object value = ReflectionUtils.readField(myObject, "myField");
 
 ## clearUnselectedFields
 
-**Note:** only reference fields are cleared. A primitive field cannot be set to `null` and
-keeps its value.
+**Note:** reference fields are set to `null` and primitive fields to their default value,
+since a primitive cannot hold `null`. Static and final fields are left alone.
 
 **Description:**
 Clears the values of unselected fields of the given object. For each field of the object's class, if the field name is not present in the specified collection of selected fields, the field value is set to null.

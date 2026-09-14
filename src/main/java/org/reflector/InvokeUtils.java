@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.lang.reflect.Method;
 
 public final class InvokeUtils {
@@ -52,6 +53,8 @@ public final class InvokeUtils {
         try {
             final Class<?> clazz = objectToInvokeOn.getClass();
             final Method method = clazz.getMethod(methodName, parameterType);
+            // A public method on a package-private class is still not callable without this.
+            method.setAccessible(true);
             return method.invoke(objectToInvokeOn, parameter);
         } catch (Exception e) {
             LOGGER.error("Could not invoke method {{}}", methodName, e);
@@ -68,7 +71,9 @@ public final class InvokeUtils {
      */
     public static Object invokeInstance(final String className) throws InstanceInvocationException {
         try {
-            return Class.forName(className).newInstance();
+            final Constructor<?> ctor = Class.forName(className).getDeclaredConstructor();
+            ctor.setAccessible(true);
+            return ctor.newInstance();
         } catch (Exception e) {
             LOGGER.error("Could not instantiate class {{}}", className, e);
             throw new InstanceInvocationException("Could not instantiate class " + className, e);
@@ -116,15 +121,21 @@ public final class InvokeUtils {
     }
 
     /**
-     * Gets the types of the arguments.
+     * Gets the runtime types of the arguments.
      *
-     * @param args the arguments
-     * @return an array of argument types
+     * <p>A null argument yields a null entry, which {@link #getAccessibleConstructor} treats as
+     * matching any reference parameter.</p>
+     *
+     * @param args the arguments, may be null
+     * @return an array of argument types, empty when args is null
      */
     public static Class<?>[] getArrayValuesTypesByArgs(final Object[] args) {
+        if (args == null) {
+            return new Class<?>[0];
+        }
         final Class<?>[] ctorTypes = new Class[args.length];
         for (int i = 0; i < args.length; i++) {
-            ctorTypes[i] = args[i].getClass();
+            ctorTypes[i] = (args[i] != null) ? args[i].getClass() : null;
         }
         return ctorTypes;
     }
@@ -132,18 +143,104 @@ public final class InvokeUtils {
     /**
      * Gets a constructor with accessible flag set.
      *
-     * <p>Matches on exact parameter types, so a primitive parameter is not matched by its
-     * wrapper class.</p>
+     * <p>An exact match on the declared parameter types is preferred. Failing that, the declared
+     * constructors are scanned for one whose parameters can accept the given types, which is what
+     * makes a constructor taking {@code int} reachable when the argument is an {@code Integer}.
+     * Non-public constructors are considered by the second pass.</p>
      *
      * @param contTypes the types of the constructor parameters
      * @param clazz     the class
      * @param <T>       the type of the class
      * @return the constructor
-     * @throws NoSuchMethodException if the constructor is not found
+     * @throws NoSuchMethodException if no matching constructor is found
      */
+    @SuppressWarnings("unchecked")
     public static <T> Constructor<T> getAccessibleConstructor(final Class<?>[] contTypes, final Class<T> clazz) throws NoSuchMethodException {
-        final Constructor<T> ctor = clazz.getConstructor(contTypes);
-        ctor.setAccessible(true);
-        return ctor;
+        if (clazz == null) {
+            throw new NullPointerException("Class cannot be null");
+        }
+        final Class<?>[] types = (contTypes != null) ? contTypes : new Class<?>[0];
+
+        try {
+            final Constructor<T> exact = clazz.getConstructor(types);
+            exact.setAccessible(true);
+            return exact;
+        } catch (NoSuchMethodException exactMissing) {
+            // fall through to the assignability scan below
+        }
+
+        for (Constructor<?> candidate : clazz.getDeclaredConstructors()) {
+            if (isApplicable(candidate.getParameterTypes(), types)) {
+                candidate.setAccessible(true);
+                return (Constructor<T>) candidate;
+            }
+        }
+
+        throw new NoSuchMethodException(clazz.getName() + ".<init>" + Arrays.toString(types));
+    }
+
+    /**
+     * Tells whether arguments of the given types can be passed to the given parameter list.
+     *
+     * @param parameterTypes the declared parameter types of a constructor
+     * @param argumentTypes  the runtime types of the arguments
+     * @return true if each argument is assignable to the matching parameter
+     */
+    private static boolean isApplicable(final Class<?>[] parameterTypes, final Class<?>[] argumentTypes) {
+        if (parameterTypes.length != argumentTypes.length) {
+            return false;
+        }
+        for (int i = 0; i < parameterTypes.length; i++) {
+            final Class<?> parameter = parameterTypes[i];
+            final Class<?> argument = argumentTypes[i];
+            if (argument == null) {
+                if (parameter.isPrimitive()) {
+                    return false;
+                }
+                continue;
+            }
+            if (parameter.isAssignableFrom(argument)) {
+                continue;
+            }
+            if (parameter.isPrimitive() && wrapperOf(parameter) == argument) {
+                continue;
+            }
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Maps a primitive type to its wrapper class.
+     *
+     * @param primitive the primitive type
+     * @return the matching wrapper class, or null if the type is not primitive
+     */
+    private static Class<?> wrapperOf(final Class<?> primitive) {
+        if (primitive == int.class) {
+            return Integer.class;
+        }
+        if (primitive == long.class) {
+            return Long.class;
+        }
+        if (primitive == boolean.class) {
+            return Boolean.class;
+        }
+        if (primitive == double.class) {
+            return Double.class;
+        }
+        if (primitive == float.class) {
+            return Float.class;
+        }
+        if (primitive == short.class) {
+            return Short.class;
+        }
+        if (primitive == byte.class) {
+            return Byte.class;
+        }
+        if (primitive == char.class) {
+            return Character.class;
+        }
+        return null;
     }
 }

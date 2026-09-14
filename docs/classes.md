@@ -404,8 +404,8 @@ boolean isPrimitive = ReflectionUtils.isFieldPrimitiveType(myField);
 
 ## copy
 
-**Note:** the class needs a no-argument constructor. Without one the call logs the failure
-and returns `null`.
+**Note:** the class needs a no-argument constructor of any visibility. Without one the call
+throws `InstanceInvocationException`.
 
 **Description:**
 Creates a deep copy of the given object.
