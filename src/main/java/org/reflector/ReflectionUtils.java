@@ -39,7 +39,7 @@ public final class ReflectionUtils {
      *
      * @param clazz the class whose annotations are to be retrieved
      * @return an array of annotations present on the given class
-     * @throws IllegalArgumentException if the provided class is null
+     * @throws NullPointerException if the provided class is null
      */
     public static Annotation[] getClassAnnotations(final Class<?> clazz) {
         return AnnotationUtils.getClassAnnotations(clazz);
@@ -324,7 +324,9 @@ public final class ReflectionUtils {
      * @param <T> the type of the annotation
      * @return true if the field is exactly annotated with the specified annotation, false otherwise
      * @throws NullPointerException if the field or annotationClass is null
+     * @deprecated identical to {@link #isFieldAnnotated(Field, Class)}.
      */
+    @Deprecated
     public static <T extends Annotation> boolean isFieldExactAnnotated(final Field field, final Class<T> annotationClass) {
         return FieldUtils.isFieldExactAnnotated(field, annotationClass);
     }
@@ -372,7 +374,7 @@ public final class ReflectionUtils {
      *
      * @param object the object whose fields are to be cleared
      * @param selectedFields a collection containing the names of the fields to keep
-     * @throws IllegalArgumentException if the object is null
+     * @throws NullPointerException if the object is null
      */
     public static void clearUnselectedFields(final Object object, final Collection<String> selectedFields) {
         FieldUtils.clearUnselectedFields(object, selectedFields);
@@ -705,7 +707,7 @@ public final class ReflectionUtils {
      *
      * @param method the method whose parameter types are to be retrieved
      * @return an array of Classes representing the parameter types of the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Class<?>[] getParameterTypes(final Method method) {
         return MethodUtils.getParameterTypes(method);
@@ -716,7 +718,7 @@ public final class ReflectionUtils {
      *
      * @param method the method whose return type is to be retrieved
      * @return the Class representing the return type of the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Class<?> getReturnType(final Method method) {
         return MethodUtils.getReturnType(method);
@@ -727,7 +729,7 @@ public final class ReflectionUtils {
      *
      * @param method the method whose exception types are to be retrieved
      * @return an array of Classes representing the exception types thrown by the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Class<?>[] getExceptionTypes(final Method method) {
         return MethodUtils.getExceptionTypes(method);
@@ -738,7 +740,7 @@ public final class ReflectionUtils {
      *
      * @param method the method whose modifiers are to be retrieved
      * @return an int representing the modifiers of the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static int getMethodModifiers(final Method method) {
         return MethodUtils.getMethodModifiers(method);
@@ -749,7 +751,7 @@ public final class ReflectionUtils {
      *
      * @param method the method to be checked
      * @return true if the method takes a variable number of arguments, false otherwise
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static boolean isMethodVarArgs(final Method method) {
         return MethodUtils.isMethodVarArgs(method);
@@ -760,7 +762,7 @@ public final class ReflectionUtils {
      *
      * @param method the method whose annotation element's default value is to be retrieved
      * @return the default value of the annotation element, or null if none
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Object getDefaultValue(final Method method) {
         return MethodUtils.getDefaultValue(method);
@@ -816,7 +818,7 @@ public final class ReflectionUtils {
      *
      * @param clazz the class whose interfaces' default methods are to be retrieved.
      * @return a list of default methods from the interfaces implemented by the specified class.
-     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws NullPointerException if the class parameter is null.
      */
     public static List<Method> getDefaultMethodsOfInterfaces(final Class<?> clazz) {
         return MethodUtils.getDefaultMethodsOfInterfaces(clazz);
@@ -828,7 +830,7 @@ public final class ReflectionUtils {
      * @param clazz the class whose declared methods and default interface methods are to be retrieved.
      * @return an array of {@link Method} objects reflecting all declared methods of the class,
      *         including default methods from its interfaces.
-     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws NullPointerException if the class parameter is null.
      * @throws IllegalStateException if an error occurs while retrieving the methods.
      */
     public static Method[] getDeclaredMethods(final Class<?> clazz) {
@@ -842,7 +844,7 @@ public final class ReflectionUtils {
      * @param clazz the class whose declared methods and default interface methods are to be retrieved.
      * @return a list of {@link Method} objects reflecting all declared methods of the class,
      *         including default methods from its interfaces.
-     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws NullPointerException if the class parameter is null.
      * @throws IllegalStateException if an error occurs while retrieving the methods.
      */
     public static List<Method> getDeclaredMethodsList(final Class<?> clazz) {
@@ -855,7 +857,7 @@ public final class ReflectionUtils {
      * @param clazz the class in which to search for the method.
      * @param name the name of the method to search for.
      * @return the {@link Method} object if a method with the specified name is found, or null if not found.
-     * @throws IllegalArgumentException if the class or method name parameter is null.
+     * @throws NullPointerException if the class or method name parameter is null.
      */
     public static Method findMethodByName(final Class<?> clazz, final String name) {
         return MethodUtils.findMethodByName(clazz, name);
@@ -896,9 +898,23 @@ public final class ReflectionUtils {
      *
      * @param field the field to check
      * @return true if the type of the field is a primitive type or a wrapper class, false otherwise
+     * @deprecated the name says primitive but the check also answers true for the wrapper classes
+     *             and for {@code String}. Use {@link #isSimpleValueType(Field)}.
      */
+    @Deprecated
     public static boolean isFieldPrimitiveType(final Field field) {
         return ObjectUtils.isFieldPrimitiveType(field);
+    }
+
+    /**
+     * Checks whether a field holds a simple value - a primitive, a wrapper or {@code String}.
+     *
+     * @param field the field to check
+     * @return true if the field type is a primitive, a wrapper or {@code String}
+     * @throws NullPointerException if the field is null
+     */
+    public static boolean isSimpleValueType(final Field field) {
+        return ObjectUtils.isSimpleValueType(field);
     }
 
     /**
@@ -949,7 +965,7 @@ public final class ReflectionUtils {
      * @throws URISyntaxException     if a URI syntax error occurs
      * @throws ClassNotFoundException if a class cannot be found
      */
-    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation) throws IOException, URISyntaxException, ClassNotFoundException {
+    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class<? extends Annotation> annotation) throws IOException, URISyntaxException, ClassNotFoundException {
         return PackageUtils.getAllAnnotatedClassesByPackage(packageName, annotation);
     }
 

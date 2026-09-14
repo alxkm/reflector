@@ -28,8 +28,21 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.function.Predicate;
 
+/**
+ * The pre-split API of early versions, kept so existing code keeps compiling.
+ *
+ * <p>Every method here has an equivalent on {@link ReflectionUtils} or on one of the focused
+ * utility classes, which are the ones that get fixes and new methods. Nothing is added to this
+ * class any more.</p>
+ *
+ * @deprecated use {@link ReflectionUtils} or the focused utility class for the area you need -
+ *             {@link FieldUtils}, {@link MethodUtils}, {@link ConstructorUtils},
+ *             {@link AnnotationUtils}, {@link InvokeUtils}, {@link PackageUtils},
+ *             {@link ClassBasicUtils}, {@link ObjectUtils} or {@link SecurityUtils}.
+ */
+@Deprecated
 public class ReflectionUtilsLegacy {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReflectionUtilsLegacy.class);
     private static final ClassLoader CLASSLOADER;
 
     static {
