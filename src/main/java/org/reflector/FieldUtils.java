@@ -125,14 +125,19 @@ public final class FieldUtils {
     }
 
     /**
-     * Checks if a field is exactly annotated with a specific annotation.
+     * Checks if a field is annotated with a specific annotation.
      *
      * @param field the field to check
      * @param annotationClass the annotation class to look for
      * @param <T> the type of the annotation
-     * @return true if the field is exactly annotated with the specified annotation, false otherwise
+     * @return true if the field is annotated with the specified annotation, false otherwise
      * @throws NullPointerException if the field or annotationClass is null
+     * @deprecated identical to {@link #isFieldAnnotated(Field, Class)}. {@code isAnnotationPresent}
+     *             is defined by the JDK as {@code getAnnotation(x) != null}, and a field annotation
+     *             is never inherited, so there is nothing for "exact" to distinguish. Use
+     *             {@link #isFieldAnnotated(Field, Class)}.
      */
+    @Deprecated
     public static <T extends Annotation> boolean isFieldExactAnnotated(final Field field, final Class<T> annotationClass) {
         if (field == null) {
             throw new NullPointerException("Field cannot be null");
@@ -216,54 +221,115 @@ public final class FieldUtils {
     /**
      * Reads the value of a field from an object.
      *
-     * <p>The field is looked up on the runtime class of the object only, so a field declared
-     * by a superclass is not found. Use {@link #getAllFieldsMap(Class)} when inherited fields
-     * matter.</p>
+     * <p>The field is looked up on the runtime class of the object and then on each superclass,
+     * so a field declared by a parent is found as well. When several classes in the hierarchy
+     * declare a field with the same name, the one closest to the runtime class wins.</p>
      *
      * @param object    the object from which to read the field
      * @param fieldName the name of the field to read
      * @return the value of the field in the object
-     * @throws FieldAccessException if the field cannot be accessed
+     * @throws NullPointerException if the object or the field name is null
+     * @throws FieldAccessException if no such field exists or it cannot be accessed
      */
     public static Object readField(final Object object, final String fieldName) {
-        try {
-            Field field = object.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(object);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            LOGGER.error("Error reading field '{}'", fieldName, e);
-            throw new FieldAccessException("Requested field is not accessible", e);
+        if (object == null) {
+            throw new NullPointerException("Object cannot be null");
         }
+        if (fieldName == null) {
+            throw new NullPointerException("Field name cannot be null");
+        }
+
+        for (Class<?> current = object.getClass(); current != null; current = current.getSuperclass()) {
+            final Field field;
+            try {
+                field = current.getDeclaredField(fieldName);
+            } catch (NoSuchFieldException e) {
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+                return field.get(object);
+            } catch (IllegalAccessException e) {
+                LOGGER.error("Error reading field '{}'", fieldName, e);
+                throw new FieldAccessException("Requested field is not accessible: " + fieldName, e);
+            }
+        }
+
+        LOGGER.error("No field '{}' on {}", fieldName, object.getClass().getName());
+        throw new FieldAccessException("No field '" + fieldName + "' on " + object.getClass().getName());
     }
 
     /**
      * Clears the values of unselected fields of the given object.
      *
      * <p>For each field of the object's class, if the field name is not present in the specified
-     * collection of selected fields, the field value is set to null. Only reference fields are
-     * cleared - a primitive field cannot be set to {@code null} and keeps its value.
+     * collection of selected fields, the field is reset. A reference field is set to
+     * {@code null}, a primitive field to its default value - {@code 0}, {@code false} or the
+     * null character - since a primitive cannot hold {@code null}.
+     *
+     * <p>Static and final fields are left alone.
      *
      * @param object the object whose fields are to be cleared
      * @param selectedFields a collection containing the names of the fields to keep
-     * @throws IllegalArgumentException if the object is null
+     * @throws NullPointerException if the object is null
      */
     public static void clearUnselectedFields(final Object object, final Collection<String> selectedFields) {
         if (object == null) {
-            throw new IllegalArgumentException("Object cannot be null");
+            throw new NullPointerException("Object cannot be null");
         }
 
-        if (selectedFields != null && !selectedFields.isEmpty()) {
-            Class<?> clazz = object.getClass();
-            for (Field field : FieldUtils.getAllFields(clazz)) {
-                if (!selectedFields.contains(field.getName())) {
-                    try {
-                        field.setAccessible(true);
-                        field.set(object, null);
-                    } catch (Exception e) {
-                        LOGGER.error("Failed to clear field '{}'. Error: {}", field.getName(), e.getMessage());
-                    }
-                }
+        if (selectedFields == null || selectedFields.isEmpty()) {
+            return;
+        }
+
+        for (Field field : getAllFields(object.getClass())) {
+            if (selectedFields.contains(field.getName())) {
+                continue;
+            }
+            final int modifiers = field.getModifiers();
+            if (Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
+                continue;
+            }
+            try {
+                field.setAccessible(true);
+                field.set(object, defaultValueOf(field.getType()));
+            } catch (Exception e) {
+                LOGGER.error("Failed to clear field '{}'. Error: {}", field.getName(), e.getMessage());
             }
         }
+    }
+
+    /**
+     * Returns the value a freshly allocated field of the given type holds.
+     *
+     * @param type the field type
+     * @return {@code null} for a reference type, otherwise the zero value of the primitive
+     */
+    private static Object defaultValueOf(final Class<?> type) {
+        if (!type.isPrimitive()) {
+            return null;
+        }
+        if (type == boolean.class) {
+            return Boolean.FALSE;
+        }
+        if (type == char.class) {
+            return Character.valueOf(' ');
+        }
+        if (type == byte.class) {
+            return (byte) 0;
+        }
+        if (type == short.class) {
+            return (short) 0;
+        }
+        if (type == int.class) {
+            return 0;
+        }
+        if (type == long.class) {
+            return 0L;
+        }
+        if (type == float.class) {
+            return 0.0f;
+        }
+        return 0.0d;
     }
 }
