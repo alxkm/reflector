@@ -31,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SuppressWarnings("deprecation") // exercises the deprecated API on purpose
 public class ReflectionUtilsLegacyTest {
     @Test
     public void getAllClassNamesTest() {

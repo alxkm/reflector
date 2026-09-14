@@ -3,6 +3,7 @@ package org.reflector;
 import org.reflector.util.ReflectionConstant;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,17 +14,27 @@ import java.util.List;
 
 public final class PackageUtils {
 
-    private static final ClassLoader CLASSLOADER;
-
-    static {
-        final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        CLASSLOADER = (threadClassLoader != null) ? threadClassLoader : PackageUtils.class.getClassLoader();
-    }
-
     private PackageUtils() {}
 
     /**
+     * Resolves the class loader to scan with.
+     *
+     * <p>Resolved per call rather than cached in a static field. In a container the context
+     * class loader of the thread that first touched this class is not necessarily the one that
+     * can see the caller's classes.</p>
+     *
+     * @return the context class loader of the current thread, or the loader of this class
+     */
+    private static ClassLoader classLoader() {
+        final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+        return (threadClassLoader != null) ? threadClassLoader : PackageUtils.class.getClassLoader();
+    }
+
+    /**
      * Retrieves all classes within a package.
+     *
+     * <p>Scanning walks the file system entries of the classpath. Classes packaged inside a jar
+     * are not found.</p>
      *
      * @param packageName the name of the package
      * @return a list of classes within the specified package
@@ -32,10 +43,13 @@ public final class PackageUtils {
      * @throws URISyntaxException     if a URI syntax error occurs
      */
     public static List<Class<?>> getClassesByPackage(final String packageName) throws ClassNotFoundException, IOException, URISyntaxException {
+        if (packageName == null) {
+            throw new NullPointerException("Package name cannot be null");
+        }
         // Convert package name to directory path
         String path = packageName.replace(ReflectionConstant.DOT_SYMBOL, ReflectionConstant.SLASH);
         // Get resources within the package
-        Enumeration<URL> resources = CLASSLOADER.getResources(path);
+        Enumeration<URL> resources = classLoader().getResources(path);
         List<File> directories = new ArrayList<>();
         // Store directories containing resources
         while (resources.hasMoreElements()) {
@@ -85,7 +99,10 @@ public final class PackageUtils {
      * @throws URISyntaxException     if a URI syntax error occurs
      * @throws ClassNotFoundException if a class cannot be found
      */
-    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class annotation) throws IOException, URISyntaxException, ClassNotFoundException {
+    public static List<Class<?>> getAllAnnotatedClassesByPackage(final String packageName, final Class<? extends Annotation> annotation) throws IOException, URISyntaxException, ClassNotFoundException {
+        if (annotation == null) {
+            throw new NullPointerException("Annotation cannot be null");
+        }
         List<Class<?>> classesByPackage = getClassesByPackage(packageName);
         List<Class<?>> classes = new ArrayList<>();
         for (Class<?> aClass : classesByPackage) {

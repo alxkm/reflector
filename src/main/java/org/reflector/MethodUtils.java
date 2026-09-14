@@ -19,11 +19,11 @@ public final class MethodUtils {
      *
      * @param method the method whose parameter types are to be retrieved
      * @return an array of Classes representing the parameter types of the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Class<?>[] getParameterTypes(final Method method) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
 
         return method.getParameterTypes();
@@ -34,11 +34,11 @@ public final class MethodUtils {
      *
      * @param method the method whose return type is to be retrieved
      * @return the Class representing the return type of the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Class<?> getReturnType(final Method method) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
 
         return method.getReturnType();
@@ -49,11 +49,11 @@ public final class MethodUtils {
      *
      * @param method the method whose exception types are to be retrieved
      * @return an array of Classes representing the exception types thrown by the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Class<?>[] getExceptionTypes(final Method method) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
 
         return method.getExceptionTypes();
@@ -64,11 +64,11 @@ public final class MethodUtils {
      *
      * @param method the method whose modifiers are to be retrieved
      * @return an int representing the modifiers of the method
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static int getMethodModifiers(final Method method) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
         return method.getModifiers();
     }
@@ -78,11 +78,11 @@ public final class MethodUtils {
      *
      * @param method the method to be checked
      * @return true if the method takes a variable number of arguments, false otherwise
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static boolean isMethodVarArgs(final Method method) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
         return method.isVarArgs();
     }
@@ -92,11 +92,11 @@ public final class MethodUtils {
      *
      * @param method the method whose annotation element's default value is to be retrieved
      * @return the default value of the annotation element, or null if none
-     * @throws IllegalArgumentException if the provided method is null
+     * @throws NullPointerException if the provided method is null
      */
     public static Object getDefaultValue(final Method method) {
         if (method == null) {
-            throw new IllegalArgumentException("Method must not be null");
+            throw new NullPointerException("Method must not be null");
         }
         return method.getDefaultValue();
     }
@@ -137,6 +137,10 @@ public final class MethodUtils {
     /**
      * Retrieves all methods of a class that match the given modifiers.
      *
+     * <p>A method is returned when it matches <em>any</em> of the predicates, so the list is
+     * combined with OR, not AND. Only methods declared by the class itself are considered,
+     * inherited methods are not returned.</p>
+     *
      * @param clazz     the class from which to retrieve methods
      * @param modifiers the list of predicates to match the method modifiers
      * @return a list of methods that match the given modifiers
@@ -165,11 +169,11 @@ public final class MethodUtils {
      *
      * @param clazz the class whose interfaces' default methods are to be retrieved.
      * @return a list of default methods from the interfaces implemented by the specified class.
-     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws NullPointerException if the class parameter is null.
      */
     public static List<Method> getDefaultMethodsOfInterfaces(final Class<?> clazz) {
         if (clazz == null) {
-            throw new IllegalArgumentException("Class parameter cannot be null");
+            throw new NullPointerException("Class parameter cannot be null");
         }
 
         return Stream.of(clazz.getInterfaces())
@@ -184,12 +188,12 @@ public final class MethodUtils {
      * @param clazz the class whose declared methods and default interface methods are to be retrieved.
      * @return an array of {@link Method} objects reflecting all declared methods of the class,
      *         including default methods from its interfaces.
-     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws NullPointerException if the class parameter is null.
      * @throws IllegalStateException if an error occurs while retrieving the methods.
      */
     public static Method[] getDeclaredMethods(final Class<?> clazz) {
         if (clazz == null) {
-            throw new IllegalArgumentException("Class parameter cannot be null");
+            throw new NullPointerException("Class parameter cannot be null");
         }
 
         try {
@@ -217,12 +221,12 @@ public final class MethodUtils {
      * @param clazz the class whose declared methods and default interface methods are to be retrieved.
      * @return a list of {@link Method} objects reflecting all declared methods of the class,
      *         including default methods from its interfaces.
-     * @throws IllegalArgumentException if the class parameter is null.
+     * @throws NullPointerException if the class parameter is null.
      * @throws IllegalStateException if an error occurs while retrieving the methods.
      */
     public static List<Method> getDeclaredMethodsList(final Class<?> clazz) {
         if (clazz == null) {
-            throw new IllegalArgumentException("Class parameter cannot be null");
+            throw new NullPointerException("Class parameter cannot be null");
         }
 
         try {
@@ -240,11 +244,11 @@ public final class MethodUtils {
      * @param clazz the class in which to search for the method.
      * @param name the name of the method to search for.
      * @return the {@link Method} object if a method with the specified name is found, or null if not found.
-     * @throws IllegalArgumentException if the class or method name parameter is null.
+     * @throws NullPointerException if the class or method name parameter is null.
      */
     public static Method findMethodByName(final Class<?> clazz, final String name) {
         if (clazz == null || name == null) {
-            throw new IllegalArgumentException("Class and method name parameters cannot be null");
+            throw new NullPointerException("Class and method name parameters cannot be null");
         }
 
         Class<?> classSearchType = clazz;

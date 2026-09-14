@@ -180,7 +180,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testIsAnnotationPresent_NullClass() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.isAnnotationOnClassPresent(null, ClassAnnotation.class);
         });
         String expectedMessage = "Class must not be null";
@@ -190,7 +190,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testIsAnnotationPresent_NullAnnotationClass() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             AnnotationUtils.isAnnotationOnClassPresent(AnnotatedClass.class, null);
         });
         String expectedMessage = "Annotation class must not be null";

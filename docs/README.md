@@ -29,14 +29,21 @@ List<Field> fields = ReflectionUtils.getAllPrivateFields(Person.class);
 List<Field> fields = FieldUtils.getAllPrivateFields(Person.class);
 ```
 
-`ReflectionUtilsLegacy` keeps the pre-split API of early versions. It is still shipped so
-existing code keeps compiling, but new code should not use it.
+`ReflectionUtilsLegacy` keeps the pre-split API of early versions. It is `@Deprecated` and
+still shipped so existing code keeps compiling, but it gets no fixes and no new methods.
+
+## Deprecated methods
+
+| Deprecated | Use instead | Why |
+|------------|-------------|-----|
+| `isFieldExactAnnotated` | `isFieldAnnotated` | Identical behaviour. `isAnnotationPresent(x)` is defined by the JDK as `getAnnotation(x) != null`, and a field annotation is never inherited, so there is nothing for "exact" to distinguish. |
+| `isFieldPrimitiveType` | `isSimpleValueType` | The name says primitive but the check also answers true for the wrapper classes and for `String`. |
+| `ReflectionUtilsLegacy` | `ReflectionUtils` or a focused utility | Superseded by the split API. |
 
 ## Conventions
 
 - All utility classes are `final` with a private constructor. Everything is `static`.
-- `null` arguments fail fast with `NullPointerException` or `IllegalArgumentException`
-  instead of returning `null`. The exact type is documented per method.
+- A `null` argument fails fast with `NullPointerException` instead of returning `null`.
 - Invocation and instantiation helpers wrap reflective failures in the library's own
   unchecked exceptions - `FieldAccessException`, `MethodInvokeException` and
   `InstanceInvocationException` - so a call site does not need a `try`/`catch` block.

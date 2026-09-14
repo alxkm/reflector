@@ -238,7 +238,11 @@ List<Method> publicMethods = ReflectionUtils.getAllPublicMethods(MyClass.class);
 ## getAllMethodsWithModifiers
 
 **Description:**
-Retrieves all methods of a class that match the given modifiers.
+Retrieves all methods of a class that match the given modifiers. A method is returned when
+it matches any of the predicates, so the list is combined with OR, not AND.
+
+Only methods declared by the class itself are considered - inherited methods are not
+returned.
 
 **Parameters:**
 - `clazz` (Class<?>): The class from which to retrieve methods.
