@@ -275,7 +275,7 @@ public class ClassBasicUtilsTest {
 
     @Test
     public void testGetClassFullName_NullObject() {
-        // Test with a null object (should throw IllegalArgumentException)
+        // Test with a null object (should throw NullPointerException)
         Exception exception = assertThrows(NullPointerException.class, () -> {
             ClassBasicUtils.getClassFullName(null);
         });
