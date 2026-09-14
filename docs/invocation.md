@@ -83,10 +83,11 @@ Object instance = ReflectionUtils.invokeInstance("com.example.MyClass");
 
 ## invokeInstance (with arguments)
 
-**Note:** the constructor is resolved from the runtime types of the arguments, so it matches
-public constructors whose parameters are reference types. A constructor declaring a
-primitive parameter such as `int` is not matched - declare it as `Integer`, or resolve the
-constructor yourself with `getAccessibleConstructor`.
+**Note:** the constructor is resolved from the runtime types of the arguments. An exact
+match on the declared parameter types is preferred; failing that the declared constructors
+are scanned for one that can accept the arguments, which covers primitive parameters and
+subtypes. The first applicable constructor wins, so use `getAccessibleConstructor` directly
+when a class has ambiguous overloads.
 
 **Description:**
 Instantiates a class with constructor arguments.
@@ -108,10 +109,11 @@ Object instance = ReflectionUtils.invokeInstance("com.example.MyClass", "arg1", 
 
 ## invokeInstance (generic)
 
-**Note:** the constructor is resolved from the runtime types of the arguments, so it matches
-public constructors whose parameters are reference types. A constructor declaring a
-primitive parameter such as `int` is not matched - declare it as `Integer`, or resolve the
-constructor yourself with `getAccessibleConstructor`.
+**Note:** the constructor is resolved from the runtime types of the arguments. An exact
+match on the declared parameter types is preferred; failing that the declared constructors
+are scanned for one that can accept the arguments, which covers primitive parameters and
+subtypes. The first applicable constructor wins, so use `getAccessibleConstructor` directly
+when a class has ambiguous overloads.
 
 **Description:**
 Instantiates a class with constructor arguments.
