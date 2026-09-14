@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'signing'
     id 'jacoco'
 }
 
@@ -86,7 +87,27 @@ tasks.named('jar') {
     }
 }
 
+// Maven Central needs signed artifacts and credentials. Both are opt in: set ossrhUsername,
+// ossrhPassword and the signing.* properties in ~/.gradle/gradle.properties, or pass them as
+// -P flags. Without them the build still works and publishes to the local Maven repository.
+final boolean canSign = project.hasProperty('signing.keyId') || project.hasProperty('signingKey')
+final boolean hasOssrhCredentials = project.hasProperty('ossrhUsername') && project.hasProperty('ossrhPassword')
+
 publishing {
+    repositories {
+        if (hasOssrhCredentials) {
+            maven {
+                name = 'ossrh'
+                url = version.toString().endsWith('SNAPSHOT')
+                        ? 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                        : 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                credentials {
+                    username = project.property('ossrhUsername')
+                    password = project.property('ossrhPassword')
+                }
+            }
+        }
+    }
     publications {
         mavenJava(MavenPublication) {
             from components.java
@@ -114,4 +135,14 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    required { canSign && !version.toString().endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('publish') }
+    if (project.hasProperty('signingKey')) {
+        useInMemoryPgpKeys(
+                project.property('signingKey').toString(),
+                project.findProperty('signingPassword')?.toString())
+    }
+    sign publishing.publications.mavenJava
 }
