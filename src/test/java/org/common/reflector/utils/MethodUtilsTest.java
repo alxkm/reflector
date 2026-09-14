@@ -75,7 +75,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetParameterTypes_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.getParameterTypes(null);
         });
         String expectedMessage = "Method must not be null";
@@ -93,7 +93,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetReturnType_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.getReturnType(null);
         });
         String expectedMessage = "Method must not be null";
@@ -121,7 +121,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetExceptionTypes_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.getExceptionTypes(null);
         });
         String expectedMessage = "Method must not be null";
@@ -138,7 +138,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetMethodModifiers_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.getMethodModifiers(null);
         });
         String expectedMessage = "Method must not be null";
@@ -162,7 +162,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testIsMethodVarArgs_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.isMethodVarArgs(null);
         });
         String expectedMessage = "Method must not be null";
@@ -187,7 +187,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testGetDefaultValue_NullMethod() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.getDefaultValue(null);
         });
         String expectedMessage = "Method must not be null";
@@ -379,11 +379,11 @@ public class MethodUtilsTest {
     }
 
     /**
-     * Tests if getDefaultMethodsOfInterfaces throws an IllegalArgumentException when the class is null.
+     * Tests if getDefaultMethodsOfInterfaces throws a NullPointerException when the class is null.
      */
     @Test
     void testGetDefaultMethodsOfInterfaces_nullClass() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.getDefaultMethodsOfInterfaces(null);
         });
 
@@ -475,11 +475,11 @@ public class MethodUtilsTest {
     }
 
     /**
-     * Tests if getDeclaredMethodsList throws an IllegalArgumentException when the class parameter is null.
+     * Tests if getDeclaredMethodsList throws a NullPointerException when the class parameter is null.
      */
     @Test
     void testGetDeclaredMethodsList_nullClass() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.getDeclaredMethodsList(null);
         });
 
@@ -549,11 +549,11 @@ public class MethodUtilsTest {
     }
 
     /**
-     * Tests if findMethodByName throws an IllegalArgumentException when the class parameter is null.
+     * Tests if findMethodByName throws a NullPointerException when the class parameter is null.
      */
     @Test
     void testFindMethodByName_nullClass() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.findMethodByName(null, "someMethod");
         });
 
@@ -561,11 +561,11 @@ public class MethodUtilsTest {
     }
 
     /**
-     * Tests if findMethodByName throws an IllegalArgumentException when the method name parameter is null.
+     * Tests if findMethodByName throws a NullPointerException when the method name parameter is null.
      */
     @Test
     void testFindMethodByName_nullMethodName() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
             MethodUtils.findMethodByName(SubTestClass.class, null);
         });
 

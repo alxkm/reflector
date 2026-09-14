@@ -75,6 +75,9 @@ public final class AnnotationUtils {
     /**
      * Retrieves a map of methods to their declared annotations for the given array of methods.
      *
+     * <p>Null entries in the array are skipped. If the same method appears more than once the
+     * first entry wins, rather than the call failing.</p>
+     *
      * @param methods the array of methods whose declared annotations are to be retrieved
      * @return a map where the keys are the methods and the values are arrays of their declared annotations
      * @throws NullPointerException if the methods array is null
@@ -83,7 +86,9 @@ public final class AnnotationUtils {
         if (methods == null) {
             throw new NullPointerException("Methods array must not be null");
         }
-        return Stream.of(methods).filter(Objects::nonNull).collect(Collectors.toMap(method -> method, Method::getDeclaredAnnotations));
+        return Stream.of(methods)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(method -> method, Method::getDeclaredAnnotations, (first, duplicate) -> first));
     }
 
     /**
@@ -93,14 +98,14 @@ public final class AnnotationUtils {
      * @param annotationClass the annotation class to look for
      * @param <T>             the type of the annotation
      * @return true if the specified annotation is present on the class, false otherwise
-     * @throws IllegalArgumentException if the provided class or annotation class is null
+     * @throws NullPointerException if the provided class or annotation class is null
      */
     public static <T extends Annotation> boolean isAnnotationOnClassPresent(final Class<?> clazz, final Class<T> annotationClass) {
         if (clazz == null) {
-            throw new IllegalArgumentException("Class must not be null");
+            throw new NullPointerException("Class must not be null");
         }
         if (annotationClass == null) {
-            throw new IllegalArgumentException("Annotation class must not be null");
+            throw new NullPointerException("Annotation class must not be null");
         }
 
         return clazz.isAnnotationPresent(annotationClass);
