@@ -47,7 +47,18 @@ tasks.withType(JavaCompile).configureEach {
     options.compilerArgs << '-Xlint:-options'
 }
 
+// The library targets Java 8 while Gradle itself needs a modern JDK, and the two moved
+// apart: Gradle 9 no longer runs on Java 8 or 11. Running the build on one JDK and the
+// tests on another keeps the compatibility matrix honest without pinning the wrapper to
+// whatever the oldest supported Java version allows.
+// CI passes -PtestJavaVersion=8|11|17|21. Without the property the tests run on the JDK
+// that runs the build, which is what you want locally.
 tasks.named('test') {
+    if (project.hasProperty('testJavaVersion')) {
+        javaLauncher = javaToolchains.launcherFor {
+            languageVersion = JavaLanguageVersion.of(project.property('testJavaVersion').toString())
+        }
+    }
     useJUnitPlatform()
     // Instrument the library only. Instrumenting the test fixtures would add a synthetic
     // $jacocoData field to them and skew the tests that enumerate declared fields.
@@ -55,8 +66,8 @@ tasks.named('test') {
         includes = ['org.reflector.*']
     }
     testLogging {
-        events 'passed', 'skipped', 'failed'
-        exceptionFormat 'full'
+        events = ['passed', 'skipped', 'failed']
+        exceptionFormat = 'full'
     }
     finalizedBy tasks.named('jacocoTestReport')
 }
@@ -138,7 +149,7 @@ publishing {
 }
 
 signing {
-    required { canSign && !version.toString().endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('publish') }
+    required = { canSign && !version.toString().endsWith('SNAPSHOT') && gradle.taskGraph.hasTask('publish') }
     if (project.hasProperty('signingKey')) {
         useInMemoryPgpKeys(
                 project.property('signingKey').toString(),
