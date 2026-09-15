@@ -11,7 +11,7 @@ description = 'Java reflection utilities for classes, fields, methods, construct
 
 ext {
     slf4jVersion = '2.0.19'
-    junitVersion = '5.10.2'
+    junitVersion = '5.14.4'
 }
 
 repositories {
