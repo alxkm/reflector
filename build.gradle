@@ -10,7 +10,7 @@ version = '0.0.1'
 description = 'Java reflection utilities for classes, fields, methods, constructors and annotations'
 
 ext {
-    slf4jVersion = '2.0.19'
+    slf4jVersion = '2.0.20'
     junitVersion = '5.14.4'
 }
 
